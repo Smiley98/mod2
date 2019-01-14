@@ -4,18 +4,13 @@
 #include <cstdio>
 
 int main() {
-	m2GameObject::initComponentContainers();
+	m2GameObject::allocateComponentContainers();
 
-	m2GameObject* tester = new m2GameObject;
-	makeTest(*tester);
-	printf("Transform data: %i %i\n", *tester->getComponent<m2Transform>().data, tester->getComponent<m2Transform>().otherData);
+	m2GameObject tester;
+	makeTest(tester);
+	printf("Transform data: %i %i\n", *tester.getComponent<m2Transform>().data, tester.getComponent<m2Transform>().otherData);
 
-	getchar();
-	printf("Deleting test object!\n");
-	delete tester;
-	printf("Deleted test object.\n");
-
-	m2GameObject::killComponentContainers();
+	m2GameObject::deallocateComponentContainers();
 	getchar();
 	return 0;
 }

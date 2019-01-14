@@ -11,14 +11,15 @@ m2GameObject::m2GameObject()
 
 m2GameObject::~m2GameObject()
 {
+	printf("Destructor called.\n");
 	if (m_components[m2ComponentType::TRANSFORM])
-		m2MemoryManager<m2Transform>::remove(reinterpret_cast<void*>(&getComponent<m2Transform>()));
+		removeComponent<m2Transform>();
 
 	/*if (m_components[m2ComponentType::RENDERER])
-		m2MemoryManager<m2Renderer>::remove(reinterpret_cast<void*>(&getComponent<m2Renderer>()));
+		removeComponent<m2Renderer>();
 
 	if (m_components[m2ComponentType::COLLIDER])
-		m2MemoryManager<m2Collider>::remove(reinterpret_cast<void*>(&getComponent<m2Collider>()));*/
+		removeComponent<m2Collider>();*/
 }
 
 void m2GameObject::allocateComponentContainers()

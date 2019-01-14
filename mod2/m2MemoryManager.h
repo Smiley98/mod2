@@ -61,11 +61,13 @@ public:
 	static void* add() {
 		if (m_index >= m_capacity)
 			_resize(m_capacity * 2U);
+		//printf("Adding object at index %p.\n", m_memory + m_index);
 		return m_memory + m_index++;
 	}
 	
 	static void remove(void* memory) {
 		//Overwrites the passed-in location with the last occupied element.
+		//printf("Removing object at index %p.\n(Passed in address = %p)\n", m_memory + m_index - 1, memory);
 		memmove(memory, m_memory + --m_index, m_bytesPerElement);
 	}
 
