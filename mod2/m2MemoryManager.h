@@ -3,9 +3,6 @@
 #include <memory>
 #include <assert.h>
 
-//This is annoying. I wanted to make this non-static, but I can't do that if I want to nest templated methods inside m2GameObject as far as I know.
-//Other than that, there's no good justification for giving friendship. Its annoying that anything that includes GameObject can use MM, but it
-//would also be unnecessary to give GameObject, and anything else that uses MM access to the internals. Plus that's more work.
 template<typename T>
 class m2MemoryManager {
 public:
@@ -30,6 +27,7 @@ public:
 	static void destroy() {
 		_clear();
 		free(m_memory);
+		printf("Removed all %s.\n", typeid(T).name());
 	}
 
 	static void resize(u_int capacity) {

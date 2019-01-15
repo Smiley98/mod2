@@ -8,6 +8,7 @@ public:
 	~m2Transform();
 
 	static m2ComponentType getType();
+	void update();
 
 	int* data;
 	int otherData;
