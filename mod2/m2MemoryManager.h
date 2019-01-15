@@ -18,16 +18,23 @@ public:
 		destroy();
 	}*/
 
+	//Called initialize instead of allocate cause the parameter represents number of elements rather than number of bytes.
 	static void initialize(u_int capacity) {
 		assert(capacity > 0);
 		m_bytesPerElement = sizeof(T);
 		_resize(capacity);
 	}
 
+	//This probably shouldn't be a thing, or, at least don't use this in conjunction with GameObject because GameObject manages lifetimes.
 	static void destroy() {
 		_clear();
 		free(m_memory);
-		printf("Removed all %s.\n", typeid(T).name());
+		//printf("Removed all %s.\n", typeid(T).name());
+	}
+
+	//Make sure destructors have been called before calling this, otherwise say hello to memory leaks!
+	static void deallocate() {
+		free(m_memory);
 	}
 
 	static void resize(u_int capacity) {

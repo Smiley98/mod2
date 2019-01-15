@@ -15,9 +15,14 @@ void test(){}
 int main() {
 	m2GameObject::allocateComponentContainers();
 
-	m2GameObject tester;
-	makeTest(tester);
-	printf("Transform data: %i %i\n", *tester.getComponent<m2Transform>().data, tester.getComponent<m2Transform>().otherData);
+	//deallocateComponentContainers() must be the last line to run. This doesn't work with stack-allocated objects because the don't get destroyed till main exits.
+	//m2GameObject tester;
+	//makeTest(tester);
+	//printf("Transform data: %i %i\n", *tester.getComponent<m2Transform>().data, tester.getComponent<m2Transform>().otherData);
+
+	m2GameObject* tester = new m2GameObject;
+	makeTest(*tester);
+	printf("Transform data: %i %i\n", *tester->getComponent<m2Transform>().data, tester->getComponent<m2Transform>().otherData);
 
 	while (true) {
 		if (GetAsyncKeyState(VK_ESCAPE)) break;
@@ -35,8 +40,11 @@ int main() {
 			frameTime = duration_cast<duration<double>>(high_resolution_clock::now() - start).count();
 		}
 	}
+
+	delete tester;
 	printf("Loop exited!\n");
 	m2GameObject::deallocateComponentContainers();
+	//Transform's destructor gets called here.
 	printf("Press enter to terminate the program.\n");
 	getchar();
 	return 0;

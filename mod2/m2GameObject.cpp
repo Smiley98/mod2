@@ -9,9 +9,9 @@ m2GameObject::m2GameObject()
 	m_components.resize(m2ComponentType::NUM_COMPONENTS);
 }
 
+//*Have to delete before deallocateComponentContainers() is called otherwise MM will call memmove() on garbage.
 m2GameObject::~m2GameObject()
 {
-	printf("GameObject destructor called.\n");
 	if (exists(m2ComponentType::TRANSFORM))
 		removeComponent<m2Transform>();
 
@@ -34,8 +34,8 @@ void m2GameObject::allocateComponentContainers()
 void m2GameObject::deallocateComponentContainers()
 {
 	assert(s_componentsAllocated);
-	m2MemoryManager<m2Transform>::destroy();
-	//m2MemoryManager<m2Renderer>::destroy();
-	//m2MemoryManager<m2Collider>::destroy();
+	m2MemoryManager<m2Transform>::deallocate();
+	//m2MemoryManager<m2Renderer>::deallocate();
+	//m2MemoryManager<m2Collider>::deallocate();
 	s_componentsAllocated = false;
 }

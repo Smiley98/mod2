@@ -80,8 +80,8 @@ inline void m2GameObject::removeComponent()
 	u_char index = T::getType();
 	if (exists(index)) {
 		T* component = reinterpret_cast<T*>(m_components[index]);
-		component->~T();
-		m2MemoryManager<T>::remove(reinterpret_cast<void*>(component));
+		component->~T();												//Necessary for cleaning up associated data.
+		m2MemoryManager<T>::remove(reinterpret_cast<void*>(component));	//Necessary for keeping active components together at the front.
 		component = nullptr;
 	}
 #if _DEBUG
