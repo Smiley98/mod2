@@ -20,5 +20,5 @@ m2ComponentType m2Transform::getType()
 
 void m2Transform::update()
 {
-	//printf("Values: %i %i.\n", *data, otherData);
+	printf("Values: %i %i.\n", *data, otherData);
 }

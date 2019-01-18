@@ -57,6 +57,10 @@ public:
 		return m_memory[index];
 	}
 
+	static T& back() {
+		return m_memory[m_index - 1];
+	}
+
 	//Clears all data (calls destructors) and marks the entire container as unoccupied.
 	static void clear() {
 		_clear();
@@ -74,6 +78,7 @@ public:
 		//Overwrites the passed-in location with the last occupied element.
 		//printf("Removing object at index %p.\n(Passed in address = %p)\n", m_memory + m_index - 1, memory);
 		memmove(memory, m_memory + --m_index, m_bytesPerElement);
+		//m_memory + --m_index = reinterpret_cast<T*>(memory);
 	}
 
 	static u_int capacity() {

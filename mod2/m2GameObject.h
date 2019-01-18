@@ -1,21 +1,16 @@
-#pragma once
-
-#include "m2MemoryManager.h"
-//#include "m2Component.h"
 //Include a precompiled header containing the majority of the standard template library soon!
-#include <algorithm>
+#pragma once
+#include "m2Component.h"
 #include <vector>
 #include <cstdio>
 
-class m2Component;
-class m2GameObject
-{
-	//All GameObject really does is control the lifetime of components. It also makes the code really organized cause it stores
-	//any components which can be retrieved later by specifying a template parameter (super powerful). Overall, worth!
+//GameObject controls the lifetime of components and provides the familiarity of OOP.
+class m2GameObject {
 public:
 	m2GameObject();
 	~m2GameObject();
 
+	//These three functions don't really belong here. Consider making a component manager class or component management namespace.
 	static void allocateComponentContainers();
 	static void deallocateComponentContainers();
 
@@ -34,7 +29,8 @@ public:
 	bool active = true;
 
 private:
-	std::vector<m2Component*> m_components = { nullptr };
+	//void* memes = { nullptr };	//Can't use [] to make a variable without also using new. Dynamic arrays may be less legible, but also less ambiguous.
+	std::vector<void*> m_components = { nullptr };
 	void checkAdd(u_char);
 	void checkGet(u_char);
 	bool exists(u_char);
@@ -47,7 +43,7 @@ template<typename T>
 inline void m2GameObject::update()
 {
 	T* components = m2MemoryManager<T>::data();
-	for (u_int i = 0U; i < m2MemoryManager<T>::size(); i++) {
+	for (u_int i = 0U; i < m2Component<T>::getActiveCount();/*m2MemoryManager<T>::size();*/ i++) {
 		components[i].update();
 	}
 }
@@ -71,7 +67,7 @@ inline T& m2GameObject::getComponent()
 {	//printf("Internal address: %p.\n", m_components[index]);
 	u_char index = T::getType();
 	checkGet(index);
-	return reinterpret_cast<T&>(*m_components[index]);
+	return *reinterpret_cast<T*>(m_components[index]);
 }
 
 template<typename T>
@@ -80,8 +76,8 @@ inline void m2GameObject::removeComponent()
 	u_char index = T::getType();
 	if (exists(index)) {
 		T* component = reinterpret_cast<T*>(m_components[index]);
-		component->~T();												//Necessary for cleaning up associated data.
-		m2MemoryManager<T>::remove(reinterpret_cast<void*>(component));	//Necessary for keeping active components together at the front.
+		component->~T();						//Necessary for cleaning up associated data.
+		m2MemoryManager<T>::remove(component);	//Necessary for keeping active components together at the front.
 		component = nullptr;
 	}
 #if _DEBUG
