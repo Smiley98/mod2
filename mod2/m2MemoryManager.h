@@ -1,5 +1,5 @@
 #include "m2TypeDef.h"
-//#include "m2MemDef.h"//MemDef not needed since everything has been reverted from non-static to static.
+#include "m2MemDef.h"//MemDef not needed since everything has been reverted from non-static to static, however it still makes sense to include it here.
 #include <memory>
 #include <assert.h>
 
@@ -18,11 +18,18 @@ public:
 		destroy();
 	}*/
 
-	//Called initialize instead of allocate cause the parameter represents number of elements rather than number of bytes.
-	static void initialize(u_int capacity) {
+	static void allocate(u_int capacity) {
 		assert(capacity > 0);
 		m_bytesPerElement = sizeof(T);
 		_resize(capacity);
+	}
+
+	static void allocateMin() {
+		allocate(MIN_CONTAINER_SIZE);
+	}
+
+	static void allocateMax() {
+		allocate(MAX_CONTAINER_SIZE);
 	}
 
 	//This probably shouldn't be a thing, or, at least don't use this in conjunction with GameObject because GameObject manages lifetimes.
@@ -67,6 +74,10 @@ public:
 		m_index = 0U;
 	}
 
+	static bool initialized() {
+		return m_capacity > 0;
+	}
+
 	static void* add() {
 		if (m_index >= m_capacity)
 			_resize(m_capacity * 2U);
@@ -75,10 +86,7 @@ public:
 	}
 	
 	static void remove(void* memory) {
-		//Overwrites the passed-in location with the last occupied element.
-		//printf("Removing object at index %p.\n(Passed in address = %p)\n", m_memory + m_index - 1, memory);
-		memmove(memory, m_memory + --m_index, m_bytesPerElement);
-		//m_memory + --m_index = reinterpret_cast<T*>(memory);
+		m_memory[--m_index] = *reinterpret_cast<T*>(memory);
 	}
 
 	static u_int capacity() {

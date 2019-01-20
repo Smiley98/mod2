@@ -1,5 +1,6 @@
 #include "m2EntityFactory.h"
 #include "m2GameObject.h"
+#include "m2ComponentManager.h"
 #include "m2Transform.h"
 #include <Windows.h>
 #include <thread>
@@ -10,15 +11,8 @@
 #define FRAMES_PER_SECOND 60.0
 #define MILLISECONDS_PER_FRAME 1.0 / FRAMES_PER_SECOND
 
-void test(){}
-
 int main() {
-	m2GameObject::allocateComponentContainers();
-
-	//deallocateComponentContainers() must be the last line to run. This doesn't work with stack-allocated objects because the don't get destroyed till main exits.
-	//m2GameObject tester;
-	//makeTest(tester);
-	//printf("Transform data: %i %i\n", *tester.getComponent<m2Transform>().data, tester.getComponent<m2Transform>().otherData);
+	m2ComponentManager::allocateMaxContainers();
 
 	m2GameObject* tester = new m2GameObject;
 	makeTest(*tester);
@@ -29,7 +23,7 @@ int main() {
 		using namespace std::chrono;
 		high_resolution_clock::time_point start = high_resolution_clock::now();
 		
-		std::thread transforms(m2GameObject::update<m2Transform>);
+		std::thread transforms(m2ComponentManager::updateComponentsOfType<m2Transform>);
 		transforms.join();
 
 		double frameTime = duration_cast<duration<double>>(high_resolution_clock::now() - start).count();
@@ -43,8 +37,8 @@ int main() {
 
 	delete tester;
 	printf("Loop exited!\n");
-	m2GameObject::deallocateComponentContainers();
-	//Transform's destructor gets called here.
+	m2ComponentManager::deallocateContainers();
+
 	printf("Press enter to terminate the program.\n");
 	getchar();
 	return 0;

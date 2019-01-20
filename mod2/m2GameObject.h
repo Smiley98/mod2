@@ -10,13 +10,6 @@ public:
 	m2GameObject();
 	~m2GameObject();
 
-	//These three functions don't really belong here. Consider making a component manager class or component management namespace.
-	static void allocateComponentContainers();
-	static void deallocateComponentContainers();
-
-	template<typename T>
-	static void update();
-
 	template<typename T, typename... Args>
 	T& addComponent(Args&&...);
 
@@ -26,27 +19,19 @@ public:
 	template<typename T>
 	void removeComponent();
 
-	bool active = true;
+	//Not in use. Might wanna consider Making a method that does this. Between this and the destructor, referencing each Component<T> seems to be a
+	//frequent occurance. Perhaps I can do some template nonsense where I somehow pass the method name as a parameter and each specialization executes it??
+	//Maybe take in a function pointer which takes in a variadic template so I can do fptr<T>(args...); for each component.
+	//Search, "How to make a function pointer that takes a variadic template".
+	//bool active = true;
 
 private:
 	//void* memes = { nullptr };	//Can't use [] to make a variable without also using new. Dynamic arrays may be less legible, but also less ambiguous.
-	std::vector<void*> m_components = { nullptr };
+	std::vector<void*> m_components = { nullptr };//*NOTE* If I switch to dynamic arrays, I will need to make void** cause its an array of pointers.
 	void checkAdd(u_char);
 	void checkGet(u_char);
 	bool exists(u_char);
-
-	static bool s_componentsAllocated;
-
 };
-
-template<typename T>
-inline void m2GameObject::update()
-{
-	T* components = m2MemoryManager<T>::data();
-	for (u_int i = 0U; i < m2Component<T>::getActiveCount();/*m2MemoryManager<T>::size();*/ i++) {
-		components[i].update();
-	}
-}
 
 template<typename T, typename... Args>
 inline T& m2GameObject::addComponent(Args&&... args)

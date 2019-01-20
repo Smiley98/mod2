@@ -117,6 +117,7 @@
   <ItemGroup>
     <ClInclude Include="m2Component.h" />
     <ClInclude Include="m2ComponentDef.h" />
+    <ClInclude Include="m2ComponentManager.h" />
     <ClInclude Include="m2EntityFactory.h" />
     <ClInclude Include="m2MemDef.h" />
     <ClInclude Include="m2GameObject.h" />
@@ -125,6 +126,7 @@
     <ClInclude Include="m2TypeDef.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="m2ComponentManager.cpp" />
     <ClCompile Include="m2EntityFactory.cpp" />
     <ClCompile Include="m2GameObject.cpp" />
     <ClCompile Include="m2Transform.cpp" />
