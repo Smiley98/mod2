@@ -19,18 +19,28 @@ public:
 	template<typename T>
 	void removeComponent();
 
-	//Not in use. Might wanna consider Making a method that does this. Between this and the destructor, referencing each Component<T> seems to be a
-	//frequent occurance. Perhaps I can do some template nonsense where I somehow pass the method name as a parameter and each specialization executes it??
-	//Maybe take in a function pointer which takes in a variadic template so I can do fptr<T>(args...); for each component.
-	//Search, "How to make a function pointer that takes a variadic template".
-	//bool active = true;
+	void activate();
+	void deactivate();
+
+	//Makes the passed in object the parent of the callee (*this).
+	void setParent(m2GameObject&);
+	//Adds the passed in object as a child of the callee (*this).
+	void addChild(m2GameObject&);
 
 private:
-	//void* memes = { nullptr };	//Can't use [] to make a variable without also using new. Dynamic arrays may be less legible, but also less ambiguous.
-	std::vector<void*> m_components = { nullptr };//*NOTE* If I switch to dynamic arrays, I will need to make void** cause its an array of pointers.
+	//Pointer to parent, pointer cause references suck.
+	m2GameObject* m_parent = nullptr;
+	//Best remain a vector cause we don't know how many children we'll have. Moreover, we'll rarely access this so make a pointer to it to reduce size of GameObject.
+	std::vector<m2GameObject*>* m_children;
+	//Since GameObject is memory-critical as it there is the potential things in massive quantities such as particles will be GameObjects, even vectors are avoided.
+	void* m_components[m2ComponentType::NUM_COMPONENTS] = { nullptr };
+	
+	//These are used within templated methods, so their definition must stay within the header too (otherwise scary linker errors)!
 	void checkAdd(u_char);
 	void checkGet(u_char);
 	bool exists(u_char);
+	
+	inline bool isThisChildOf(m2GameObject&);
 };
 
 template<typename T, typename... Args>
