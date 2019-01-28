@@ -19,13 +19,18 @@ public:
 	template<typename T>
 	void removeComponent();
 
-	void activate();
-	void deactivate();
+	//These can't exist as far as I'm concerned. Activate/deactivate are based on MM<T> so we can't even cast to something like base or null component.
+	//void activate();
+	//void deactivate();
 
 	//Makes the passed in object the parent of the callee (*this).
 	void setParent(m2GameObject&);
 	//Adds the passed in object as a child of the callee (*this).
 	void addChild(m2GameObject&);
+	//We don't want to give the programmer the ability to remove children.
+
+	//This can work as long as we don't include the transform m_components. Probably better this way cause we're saving space.
+	//m2TransformComponent& transform;
 
 private:
 	//Pointer to parent, pointer cause references suck.
@@ -33,19 +38,19 @@ private:
 	//Best remain a vector cause we don't know how many children we'll have. Moreover, we'll rarely access this so make a pointer to it to reduce size of GameObject.
 	std::vector<m2GameObject*>* m_children;
 	//Since GameObject is memory-critical as it there is the potential things in massive quantities such as particles will be GameObjects, even vectors are avoided.
-	void* m_components[m2ComponentType::NUM_COMPONENTS] = { nullptr };
+	void* m_components[m2ComponentType::NUM_COMPONENTS] = { nullptr };//(Automatically deallocated despite being an array of pointers).
 	
 	//These are used within templated methods, so their definition must stay within the header too (otherwise scary linker errors)!
 	void checkAdd(u_char);
 	void checkGet(u_char);
-	bool exists(u_char);
+	bool componentExists(u_char);
 	
 	inline bool isThisChildOf(m2GameObject&);
 };
 
 template<typename T, typename... Args>
 inline T& m2GameObject::addComponent(Args&&... args)
-{
+{	//Write some sort of assertion to verify that T is of type m2Component.
 	T* component = new (m2MemoryManager<T>::add()) T(args...);
 
 	u_char index = T::getType();
@@ -69,7 +74,7 @@ template<typename T>
 inline void m2GameObject::removeComponent()
 {	//printf("External address: %p.\n", &getComponent<T>());
 	u_char index = T::getType();
-	if (exists(index)) {
+	if (componentExists(index)) {
 		T* component = reinterpret_cast<T*>(m_components[index]);
 		component->~T();						//Necessary for cleaning up associated data.
 		m2MemoryManager<T>::remove(component);	//Necessary for keeping active components together at the front.
@@ -97,7 +102,7 @@ inline void m2GameObject::checkGet(u_char i)
 #endif
 }
 
-inline bool m2GameObject::exists(u_char i)
+inline bool m2GameObject::componentExists(u_char i)
 {
 	if (m_components[i] == nullptr)
 		return false;

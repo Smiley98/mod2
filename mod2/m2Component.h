@@ -14,6 +14,7 @@ public:
 
 	m2GameObject* parent = nullptr;
 
+
 	bool active();
 	void activate();
 	void deactivate();
@@ -36,23 +37,23 @@ inline bool m2Component<T>::active()
 template<class T>
 inline void m2Component<T>::activate()
 {	//Swap this with the first inactive component (s_active count points to the 1st inactive component, so we need postfix increment), increment the counter.
-/*#if _DEBUG
-	if (active<T>()) {
+#if _DEBUG
+	if (active()) {
 		printf("Tried to activate a currently active component of %s.\n", typeid(T).name());
 		return;
 	}
-#endif*/
+#endif
 	std::swap(&m2MemoryManager<T>::at(s_activeCount++), this);
 }
 
 template<class T>
 inline void m2Component<T>::deactivate()
 {	//Swap this with the last active component (s_active count points to the 1st inactive component, so we need prefix decrement), decrement the counter.
-/*#if _DEBUG
-	if (!active<T>()) {
+#if _DEBUG
+	if (!active()) {
 		printf("Tried to deactivate a currently inactive component of %s.\n", typeid(T).name());
 		return;
 	}
-#endif*/
+#endif
 	std::swap(&m2MemoryManager<T>::at(--s_activeCount), this);
 }

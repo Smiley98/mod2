@@ -1,33 +1,45 @@
 #include "m2GameObject.h"
 #include "m2MemDef.h"
-#include "m2Transform.h"
+#include "m2TransformComponent.h"
 #include <algorithm>
-
-m2GameObject::m2GameObject()
+							//Works as long as we don't include it in m_components. This way, we don't have to worry about allocating memory before the transform.
+m2GameObject::m2GameObject()// : transform(addComponent<m2TransformComponent>())
 {
 	//m_components.resize(m2ComponentType::NUM_COMPONENTS);
 }
 
 //*Have to delete before deallocateComponentContainers() is called otherwise MM will call memmove() on garbage.
 m2GameObject::~m2GameObject()
-{
-	if (exists(m2ComponentType::TRANSFORM))
-		removeComponent<m2Transform>();
+{	//Can automatically remove if we don't include transform in m_components.
+	if (componentExists(m2ComponentType::TRANSFORM))
+		removeComponent<m2TransformComponent>();
 
 	/*if (exists(m2ComponentType::RENDERER))
 		removeComponent<m2Renderer>();
 
 	if (exists(m2ComponentType::COLLIDER))
 		removeComponent<m2Collider>();*/
+	
+	if (m_parent) {
+		std::vector<m2GameObject*>& childrenList = *m_parent->m_children;
+		for (u_char i = 0; i < childrenList.size(); i++) {
+			if (childrenList[i] == this) {
+				childrenList.erase(childrenList.begin() + i);
+				break;
+			}
+		}
+	}
 }
 
-void m2GameObject::activate()
+/*void m2GameObject::activate()
 {
+
 }
 
 void m2GameObject::deactivate()
 {
-}
+
+}*/
 
 void m2GameObject::setParent(m2GameObject& parent)
 {

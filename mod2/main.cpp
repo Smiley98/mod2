@@ -1,7 +1,7 @@
 #include "m2EntityFactory.h"
 #include "m2GameObject.h"
 #include "m2ComponentManager.h"
-#include "m2Transform.h"
+#include "m2TransformComponent.h"
 #include <Windows.h>
 #include <thread>
 #include <chrono>
@@ -16,14 +16,14 @@ int main() {
 
 	m2GameObject* tester = new m2GameObject;
 	makeTest(*tester);
-	printf("Transform data: %i %i\n", *tester->getComponent<m2Transform>().data, tester->getComponent<m2Transform>().otherData);
 
 	while (true) {
 		if (GetAsyncKeyState(VK_ESCAPE)) break;
 		using namespace std::chrono;
 		high_resolution_clock::time_point start = high_resolution_clock::now();
 		
-		std::thread transforms(m2ComponentManager::updateComponentsOfType<m2Transform>);
+		//Don't actually update transforms cause they don't need to be.
+		std::thread transforms(m2ComponentManager::updateComponentsOfType<m2TransformComponent>);
 		transforms.join();
 
 		double frameTime = duration_cast<duration<double>>(high_resolution_clock::now() - start).count();

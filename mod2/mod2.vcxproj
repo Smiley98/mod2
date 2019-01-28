@@ -69,7 +69,9 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IncludePath>./include;$(IncludePath)</IncludePath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -123,13 +125,16 @@
     <ClInclude Include="m2GameObject.h" />
     <ClInclude Include="m2MemoryManager.h" />
     <ClInclude Include="m2Transform.h" />
+    <ClInclude Include="m2TransformComponent.h" />
     <ClInclude Include="m2TypeDef.h" />
+    <ClInclude Include="Singleton.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="m2ComponentManager.cpp" />
     <ClCompile Include="m2EntityFactory.cpp" />
     <ClCompile Include="m2GameObject.cpp" />
     <ClCompile Include="m2Transform.cpp" />
+    <ClCompile Include="m2TransformComponent.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

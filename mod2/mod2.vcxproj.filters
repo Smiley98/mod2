@@ -13,51 +13,78 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Components">
+      <UniqueIdentifier>{b5ee359b-e3d4-45ab-ad02-97a3037181f1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Entities">
+      <UniqueIdentifier>{b0ababd5-5948-4396-a25e-93dee63e853e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Systems">
+      <UniqueIdentifier>{a98b9337-6a13-4130-9852-edf5bb9bf24e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Definitions">
+      <UniqueIdentifier>{ea1f213a-7526-4668-8ec0-ed2e96e4d77f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Math">
+      <UniqueIdentifier>{fecf82aa-5bcf-4a98-bcca-54fb7c955f65}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utilities">
+      <UniqueIdentifier>{145d5380-ab82-4fed-a2fd-63ffa9ef14bf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="m2GameObject.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="m2MemoryManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="m2Component.h">
-      <Filter>Header Files</Filter>
+      <Filter>Components</Filter>
     </ClInclude>
     <ClInclude Include="m2ComponentDef.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="m2MemDef.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="m2Transform.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="m2TypeDef.h">
-      <Filter>Header Files</Filter>
+      <Filter>Components</Filter>
     </ClInclude>
     <ClInclude Include="m2EntityFactory.h">
-      <Filter>Header Files</Filter>
+      <Filter>Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="m2GameObject.h">
+      <Filter>Entities</Filter>
     </ClInclude>
     <ClInclude Include="m2ComponentManager.h">
-      <Filter>Header Files</Filter>
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Singleton.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="m2MemoryManager.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="m2MemDef.h">
+      <Filter>Definitions</Filter>
+    </ClInclude>
+    <ClInclude Include="m2TypeDef.h">
+      <Filter>Definitions</Filter>
+    </ClInclude>
+    <ClInclude Include="m2TransformComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="m2Transform.h">
+      <Filter>Math</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="m2GameObject.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="m2Transform.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="m2EntityFactory.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="m2EntityFactory.cpp">
+      <Filter>Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="m2GameObject.cpp">
+      <Filter>Entities</Filter>
+    </ClCompile>
     <ClCompile Include="m2ComponentManager.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="m2TransformComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="m2Transform.cpp">
+      <Filter>Math</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

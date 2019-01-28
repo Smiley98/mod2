@@ -1,12 +1,10 @@
 #include "m2EntityFactory.h"
 #include "m2GameObject.h"
-#include "m2Transform.h"
+#include "m2TransformComponent.h"
 
 void makeTest(m2GameObject& g)
 {
-	m2Transform& transform = g.addComponent<m2Transform>();
-	*transform.data = 5;
-	transform.otherData = 7;
+	m2TransformComponent& transform = g.addComponent<m2TransformComponent>();
 }
 
 void makeMeme(m2GameObject& g)
