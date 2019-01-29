@@ -127,7 +127,7 @@
     <ClInclude Include="m2Transform.h" />
     <ClInclude Include="m2TransformComponent.h" />
     <ClInclude Include="m2TypeDef.h" />
-    <ClInclude Include="Singleton.h" />
+    <ClInclude Include="m2Singleton.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="m2ComponentManager.cpp" />

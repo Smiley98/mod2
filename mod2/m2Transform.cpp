@@ -84,22 +84,23 @@ float m2Transform::getLocalRotationZ()
 
 glm::vec3 m2Transform::getScale()
 {
-	return glm::vec3(glm::length(m_localTransformation[0]), glm::length(m_localTransformation[1]), glm::length(m_localTransformation[2]));
+	//return glm::vec3(glm::length(m_localTransformation[0]), glm::length(m_localTransformation[1]), glm::length(m_localTransformation[2]));
+	return glm::vec3(getScaleX(), getScaleY(), getScaleZ());
 }
 
 float m2Transform::getScaleX()
 {
-	return glm::length(m_localTransformation[0]);
+	return m_localTransformation[0][0] / _extractRotation00();
 }
 
 float m2Transform::getScaleY()
 {
-	return glm::length(m_localTransformation[1]);
+	return m_localTransformation[1][1] / _extractRotation11();
 }
 
 float m2Transform::getScaleZ()
 {
-	return glm::length(m_localTransformation[2]);
+	return m_localTransformation[2][2] / _extractRotation22();
 }
 
 const glm::vec3 m2Transform::getFront()
@@ -211,31 +212,45 @@ void m2Transform::setScale(float scale)
 
 void m2Transform::setScaleX(float sx)
 {
-	m_localTransformation[0] /= getScaleX();
-	m_localTransformation[0] *= sx;
+	m_localTransformation[0][0] = sx * _extractRotation00();
 }
 
 void m2Transform::setScaleY(float sy)
 {
-	m_localTransformation[1] /= getScaleY();
-	m_localTransformation[1] *= sy;
+	m_localTransformation[1][1] = sy * _extractRotation11();
 }
 
 void m2Transform::setScaleZ(float sz)
 {
-	m_localTransformation[2] /= getScaleZ();
-	m_localTransformation[2] *= sz;
+	m_localTransformation[2][2] = sz * _extractRotation22();
 }
 
 inline void m2Transform::_scale(glm::vec3 scale)
-{	//Can't just multiply assign ie if we call _scale(0.65) twice, the scale will be 65% of 0.65.
-	glm::vec3 scaleCopy = getScale();
-	m_localTransformation[0] /= scaleCopy.x;
-	m_localTransformation[1] /= scaleCopy.y;
-	m_localTransformation[2] /= scaleCopy.z;
-	m_localTransformation[0] *= scale.x;
-	m_localTransformation[1] *= scale.y;
-	m_localTransformation[2] *= scale.z;
+{
+	glm::vec3 rotation = _extractRotations();
+	m_localTransformation[0][0] = scale.x * rotation.x;
+	m_localTransformation[1][1] = scale.y * rotation.y;
+	m_localTransformation[2][2] = scale.z * rotation.z;
+}
+
+inline glm::vec3 m2Transform::_extractRotations()
+{
+	return glm::vec3(_extractRotation00(), _extractRotation11(), _extractRotation22());
+}
+
+inline float m2Transform::_extractRotation00()
+{
+	return 1.0f - glm::sqrt(m_localTransformation[0][1] * m_localTransformation[0][1] + m_localTransformation[0][2] * m_localTransformation[0][2]);
+}
+
+inline float m2Transform::_extractRotation11()
+{
+	return 1.0f - glm::sqrt(m_localTransformation[1][0] * m_localTransformation[1][0] + m_localTransformation[1][2] * m_localTransformation[1][2]);
+}
+
+inline float m2Transform::_extractRotation22()
+{
+	return 1.0f - glm::sqrt(m_localTransformation[2][0] * m_localTransformation[2][0] + m_localTransformation[2][1] * m_localTransformation[2][1]);
 }
 
 inline void m2Transform::setDirections(glm::vec3 front, glm::vec3 right, glm::vec3 up)

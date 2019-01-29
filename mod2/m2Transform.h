@@ -21,13 +21,9 @@ public:
 	float getLocalRotationY();
 	float getLocalRotationZ();
 
-	//{ length(mat[0]), length(mat[1]), length(mat[2]) }
 	glm::vec3 getScale();
-	//length(mat[0])
 	float getScaleX();
-	//length(mat[1])
 	float getScaleY();
-	//length(mat[2])
 	float getScaleZ();
 
 	//mat[2] / scale_Z
@@ -71,6 +67,10 @@ private:
 	static glm::vec3 s_up;
 
 	inline void _scale(glm::vec3);
+	inline glm::vec3 _extractRotations();
+	inline float _extractRotation00();
+	inline float _extractRotation11();
+	inline float _extractRotation22();
 	inline void setDirections(glm::vec3 front, glm::vec3 right, glm::vec3 up);
 };
 
