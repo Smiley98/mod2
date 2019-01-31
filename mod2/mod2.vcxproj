@@ -128,6 +128,7 @@
     <ClInclude Include="m2TransformComponent.h" />
     <ClInclude Include="m2TypeDef.h" />
     <ClInclude Include="m2Singleton.h" />
+    <ClInclude Include="m2Utilities.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="m2ComponentManager.cpp" />
@@ -136,6 +137,7 @@
     <ClCompile Include="m2Transform.cpp" />
     <ClCompile Include="m2TransformComponent.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="m2Utilities.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

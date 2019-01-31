@@ -7,7 +7,7 @@ class m2Transform
 public:
 	m2Transform();
 	~m2Transform();
-
+	
 	const glm::mat4 getWorldTransformation();
 	const glm::vec3 getWorldPosition();
 	const glm::vec3 getWorldTranslation();
@@ -52,7 +52,7 @@ public:
 	void setDeltaRotationY(float);
 	void setDeltaRotationZ(float);
 
-	void setScale(glm::vec3);
+	void setScale(const glm::vec3);
 	void setScale(float);
 	void setScaleX(float);
 	void setScaleY(float);
@@ -66,11 +66,15 @@ private:
 	static glm::vec4 s_vIdentity;
 	static glm::vec3 s_up;
 
-	inline void _scale(glm::vec3);
-	inline glm::vec3 _extractRotations();
-	inline float _extractRotation00();
-	inline float _extractRotation11();
-	inline float _extractRotation22();
-	inline void setDirections(glm::vec3 front, glm::vec3 right, glm::vec3 up);
+	//Extracts rotation (overhead of 3 square roots), then multiplies by desired scale. Necessary cause we don't want to "delta-scale".
+	inline void _scaleSafe(const glm::vec3);
+	//Applies the desired scale. No square root overhead, but there must be a uniform scale must be 1 for this to work correctly.
+	inline void _scaleUnsafe(const glm::vec3);
+
+	inline glm::vec3 _extractRotations(const glm::mat4&);
+	inline float _extractRotation00(const glm::mat4&);
+	inline float _extractRotation11(const glm::mat4&);
+	inline float _extractRotation22(const glm::mat4&);
+	inline void _setDirections(glm::vec3 front, glm::vec3 right, glm::vec3 up);
 };
 

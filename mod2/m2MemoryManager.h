@@ -86,7 +86,7 @@ public:
 	}
 	
 	static void remove(void* memory) {
-		m_memory[--m_index] = *reinterpret_cast<T*>(memory);
+		*reinterpret_cast<T*>(memory) = m_memory[--m_index];
 	}
 
 	static u_int capacity() {

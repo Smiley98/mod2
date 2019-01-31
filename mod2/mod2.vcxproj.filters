@@ -66,6 +66,9 @@
     <ClInclude Include="m2Singleton.h">
       <Filter>Systems</Filter>
     </ClInclude>
+    <ClInclude Include="m2Utilities.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -85,6 +88,9 @@
     </ClCompile>
     <ClCompile Include="m2Transform.cpp">
       <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="m2Utilities.cpp">
+      <Filter>Utilities</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -2,11 +2,12 @@
 #include "m2GameObject.h"
 #include "m2ComponentManager.h"
 #include "m2TransformComponent.h"
+#include "m2Utilities.h"
+
 #include <Windows.h>
 #include <thread>
 #include <chrono>
 #include <cstdio>
-#include <functional>
 
 #define FRAMES_PER_SECOND 60.0
 #define MILLISECONDS_PER_FRAME 1.0 / FRAMES_PER_SECOND
@@ -16,6 +17,9 @@ int main() {
 
 	m2GameObject* tester = new m2GameObject;
 	makeTest(*tester);
+	m2TransformComponent& transform = tester->getComponent<m2TransformComponent>();
+	glm::mat4& matrix = const_cast<glm::mat4&>(transform.getLocalTransformation());
+	Utils::printMatrix(matrix);
 
 	while (true) {
 		if (GetAsyncKeyState(VK_ESCAPE)) break;
