@@ -22,8 +22,16 @@ int main() {
 	transform.setRotation(45.0f, 30.0f, 60.0f);
 	transform.setScale(5.0f);
 	m2Utils::printMatrix(matrix);
-	transform.setScale(6.0f);
+
+	transform.setScaleX(1.0f);
 	m2Utils::printMatrix(matrix);
+
+	transform.setScaleY(2.0f);
+	m2Utils::printMatrix(matrix);
+
+	transform.setScaleZ(3.0f);
+	m2Utils::printMatrix(matrix);
+
 	transform.setScale(5.0f);
 	m2Utils::printMatrix(matrix);
 
