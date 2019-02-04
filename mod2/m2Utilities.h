@@ -1,8 +1,8 @@
 #pragma once
 #include <glm/glm.hpp>
 #include <cstdio>
-namespace Utils {
-	void printMatrix(glm::mat4& matrix);
+namespace m2Utils {
+	void printMatrix(const glm::mat4& matrix);
 
 	template<typename T = glm::vec3>
 	void printVector(T& vector) {

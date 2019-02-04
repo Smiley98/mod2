@@ -86,6 +86,7 @@ public:
 	}
 	
 	static void remove(void* memory) {
+		//Overwrite the memory which we want to remove with last active element. (Stuff won't be sorted, but we are guarenteed all active elements are contiguous and at the front).
 		*reinterpret_cast<T*>(memory) = m_memory[--m_index];
 	}
 

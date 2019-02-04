@@ -8,15 +8,15 @@ public:
 	m2Transform();
 	~m2Transform();
 	
-	const glm::mat4 getWorldTransformation();
-	const glm::vec3 getWorldPosition();
-	const glm::vec3 getWorldTranslation();
-	const glm::vec3 getWorldRotation();
+	glm::mat4 getWorldTransformation();
+	glm::vec3 getWorldPosition();
+	glm::vec3 getWorldTranslation();
+	glm::vec3 getWorldRotation();
 	
 	const glm::mat4& getLocalTransformation();
-	const glm::vec3 getLocalPosition();
-	const glm::vec3 getLocalTranslation();
-	const glm::vec3 getLocalRotation();
+	glm::vec3 getLocalPosition();
+	glm::vec3 getLocalTranslation();
+	glm::vec3 getLocalRotation();
 	float getLocalRotationX();
 	float getLocalRotationY();
 	float getLocalRotationZ();
@@ -26,33 +26,37 @@ public:
 	float getScaleY();
 	float getScaleZ();
 
-	//mat[2] / scale_Z
-	const glm::vec3 getFront();
-	//mat[0] / scale_X
-	const glm::vec3 getRight();
-	//mat[1] / scale_Y
-	const glm::vec3 getAbove();
+	//mat[2][2] / scale_Z
+	glm::vec3 getFront();
+	//mat[0][0] / scale_X
+	glm::vec3 getRight();
+	//mat[1][1] / scale_Y
+	glm::vec3 getAbove();
 
 	//Right and above will correct automatically.
-	void setFront(const glm::vec3);
+	void setFront(glm::vec3);
 	//Front and above will correct automatically.
-	void setRight(const glm::vec3);
+	void setRight(glm::vec3);
 	//Front and right will correct automatically.
-	void setAbove(const glm::vec3);
+	void setAbove(glm::vec3);
 
-	void setTranslation(const glm::vec3);
-	void setRotation(const glm::vec3);
+	void setTranslation(glm::vec3);
+	void setRotation(glm::vec3);
+	void setTranslation(float, float, float);
+	void setRotation(float, float, float);
 	void setRotationX(float);
 	void setRotationY(float);
 	void setRotationZ(float);
 
-	void setDeltaTranslation(const glm::vec3);
-	void setDeltaRotation(const glm::vec3);
+	void setDeltaTranslation(glm::vec3);
+	void setDeltaRotation(glm::vec3);
+	void setDeltaTranslation(float, float, float);
+	void setDeltaRotation(float, float, float);
 	void setDeltaRotationX(float);
 	void setDeltaRotationY(float);
 	void setDeltaRotationZ(float);
 
-	void setScale(const glm::vec3);
+	void setScale(glm::vec3);
 	void setScale(float);
 	void setScaleX(float);
 	void setScaleY(float);
@@ -67,9 +71,9 @@ private:
 	static glm::vec3 s_up;
 
 	//Extracts rotation (overhead of 3 square roots), then multiplies by desired scale. Necessary cause we don't want to "delta-scale".
-	inline void _scaleSafe(const glm::vec3);
+	inline void _scaleSafe(glm::vec3);
 	//Applies the desired scale. No square root overhead, but there must be a uniform scale must be 1 for this to work correctly.
-	inline void _scaleUnsafe(const glm::vec3);
+	inline void _scaleUnsafe(glm::vec3);
 
 	inline glm::vec3 _extractRotations(const glm::mat4&);
 	inline float _extractRotation00(const glm::mat4&);

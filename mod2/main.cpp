@@ -18,8 +18,14 @@ int main() {
 	m2GameObject* tester = new m2GameObject;
 	makeTest(*tester);
 	m2TransformComponent& transform = tester->getComponent<m2TransformComponent>();
-	glm::mat4& matrix = const_cast<glm::mat4&>(transform.getLocalTransformation());
-	Utils::printMatrix(matrix);
+	const glm::mat4& matrix = transform.getLocalTransformation();
+	transform.setRotation(45.0f, 30.0f, 60.0f);
+	transform.setScale(5.0f);
+	m2Utils::printMatrix(matrix);
+	transform.setScale(6.0f);
+	m2Utils::printMatrix(matrix);
+	transform.setScale(5.0f);
+	m2Utils::printMatrix(matrix);
 
 	while (true) {
 		if (GetAsyncKeyState(VK_ESCAPE)) break;

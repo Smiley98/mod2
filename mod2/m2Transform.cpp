@@ -16,31 +16,30 @@ m2Transform::~m2Transform()
 {
 }
 
-const glm::mat4 m2Transform::getWorldTransformation()
+glm::mat4 m2Transform::getWorldTransformation()
 {
 	if (m_parent)
 		return m_parent->getWorldTransformation() * m_localTransformation;
 	return m_localTransformation;
 }
 
-const glm::vec3 m2Transform::getWorldPosition()
+glm::vec3 m2Transform::getWorldPosition()
 {	//Chances are no math is actually being done with the position ie not gonna multiply by an external matrix, probably just gonna compare.
 	//Although technically incorrect, its not that hard to 
 	return getWorldTransformation() * s_vIdentity;
 }
 
-const glm::vec3 m2Transform::getWorldTranslation()
+glm::vec3 m2Transform::getWorldTranslation()
 {
 	return getWorldTransformation()[3];
 }
 
-const glm::vec3 m2Transform::getWorldRotation()
+glm::vec3 m2Transform::getWorldRotation()
 {
 	glm::vec3 result;
 	glm::mat4 worldTransformation = getWorldTransformation();
-	//Takes a reference parameter so saving it ensures we're not taking in a null reference.
 	glm::extractEulerAngleXYZ(worldTransformation, result.x, result.y, result.z);
-	return result;
+	return glm::degrees(result);
 }
 
 const glm::mat4 & m2Transform::getLocalTransformation()
@@ -48,33 +47,33 @@ const glm::mat4 & m2Transform::getLocalTransformation()
 	return m_localTransformation;
 }
 
-const glm::vec3 m2Transform::getLocalPosition()
+glm::vec3 m2Transform::getLocalPosition()
 {
 	return m_localTransformation * s_vIdentity;
 }
 
-const glm::vec3 m2Transform::getLocalTranslation()
+glm::vec3 m2Transform::getLocalTranslation()
 {
 	return m_localTransformation[3];
 }
 
 //If this doesn't account for scale, this has the potential to have significantly even worse performance.
-const glm::vec3 m2Transform::getLocalRotation()
+glm::vec3 m2Transform::getLocalRotation()
 {	//Pretty sure this doesn't account for scale. If it doesn't, we'll have to form a new matrix with a scale of 1.
 	glm::vec3 result;
 	glm::extractEulerAngleXYZ(m_localTransformation, result.x, result.y, result.z);
-	return result;
+	return glm::degrees(result);
 }
 
 float m2Transform::getLocalRotationX()
 {	//X component of extractEulerAnglesXYZ().
-	return -glm::atan2<float, glm::defaultp>(m_localTransformation[2][1], m_localTransformation[2][2]);
+	return glm::degrees(-glm::atan2<float, glm::defaultp>(m_localTransformation[2][1], m_localTransformation[2][2]));
 }
 
 float m2Transform::getLocalRotationY()
 {	//Y component of extractEulerAnglesXYZ(). Returns the negated angle 
 	float magnitude = glm::sqrt(m_localTransformation[0][0] * m_localTransformation[0][0] + m_localTransformation[1][0] * m_localTransformation[1][0]);
-	return -glm::atan2<float, glm::defaultp>(-m_localTransformation[2][0], magnitude);
+	return glm::degrees(-glm::atan2<float, glm::defaultp>(-m_localTransformation[2][0], magnitude));
 }
 
 float m2Transform::getLocalRotationZ()
@@ -82,7 +81,7 @@ float m2Transform::getLocalRotationZ()
 	float xRotation = getLocalRotationX();
 	float xSin = sin(xRotation);
 	float xCos = cos(xRotation);
-	return -glm::atan2<float, glm::defaultp>(xSin * m_localTransformation[0][2] - xCos * m_localTransformation[0][1], xCos * m_localTransformation[1][1] - xSin * m_localTransformation[1][2]);
+	return glm::degrees(-glm::atan2<float, glm::defaultp>(xSin * m_localTransformation[0][2] - xCos * m_localTransformation[0][1], xCos * m_localTransformation[1][1] - xSin * m_localTransformation[1][2]));
 }
 
 glm::vec3 m2Transform::getScale()
@@ -105,62 +104,75 @@ float m2Transform::getScaleZ()
 	return m_localTransformation[2][2] / _extractRotation22(m_localTransformation);
 }
 
-const glm::vec3 m2Transform::getFront()
+glm::vec3 m2Transform::getFront()
 {
 	glm::vec3 front = m_localTransformation[2];
 	front.z /= getScaleZ();
 	return front;
 }
 
-const glm::vec3 m2Transform::getRight()
+glm::vec3 m2Transform::getRight()
 {
 	glm::vec3 right = m_localTransformation[0];
 	right.x /= getScaleX();
 	return right;
 }
 
-const glm::vec3 m2Transform::getAbove()
+glm::vec3 m2Transform::getAbove()
 {
 	glm::vec3 above = m_localTransformation[1];
 	above.y /= getScaleY();
 	return above;
 }
 
-void m2Transform::setFront(const glm::vec3 front)
+void m2Transform::setFront(glm::vec3 front)
 {
 	glm::vec3 right(glm::cross(s_up, front));
 	glm::vec3 above(glm::cross(front, right));
 	_setDirections(front, right, above);
 }
 
-void m2Transform::setRight(const glm::vec3 right)
+void m2Transform::setRight(glm::vec3 right)
 {
 	glm::vec3 front(glm::cross(right, s_up));
 	glm::vec3 above(glm::cross(front, right));
 	_setDirections(front, right, above);
 }
 
-void m2Transform::setAbove(const glm::vec3 above)
+void m2Transform::setAbove(glm::vec3 above)
 {
 	glm::vec3 right(glm::cross(s_up, above));
 	glm::vec3 front(glm::cross(right, above));
 	_setDirections(front, right, above);
 }
 
-void m2Transform::setTranslation(const glm::vec3 translation)
+void m2Transform::setTranslation(glm::vec3 translation)
 {
 	m_localTransformation[3].xyz = translation;
 }
 
-void m2Transform::setRotation(const glm::vec3 rotation)
+void m2Transform::setTranslation(float x, float y, float z)
+{
+	m_localTransformation[3].x = x;
+	m_localTransformation[3].y = y;
+	m_localTransformation[3].z = z;
+}
+
+void m2Transform::setRotation(glm::vec3 rotation)
 {
 	glm::vec3 translation = getLocalTranslation();
+	rotation = glm::radians(rotation);
 	glm::vec3 scale = getScale();	//Sqrt x3 due to per-column extract rotation.
 	//Might have to add extra logic to preserve the orientation ie get the difference between current orientation, and desired orientation, then
 	//apply that to the current orientation.
 	m_localTransformation = glm::eulerAngleXYZ(rotation.x, rotation.y, rotation.z);
 	_scaleUnsafe(scale);			//Safe in this case because there is currently a uniform scale of 1.
 	setTranslation(translation);
+}
+
+void m2Transform::setRotation(float x, float y, float z)
+{
+	setRotation(glm::vec3(x, y, z));
 }
 
 void m2Transform::setRotationX(float x)
@@ -184,32 +196,45 @@ void m2Transform::setRotationZ(float z)
 	setRotation(rotation);
 }
 
-void m2Transform::setDeltaTranslation(const glm::vec3 translation)
+void m2Transform::setDeltaTranslation(glm::vec3 translation)
 {
 	m_localTransformation[3].xyz += translation;
 }
 
-void m2Transform::setDeltaRotation(const glm::vec3 rotation)
+void m2Transform::setDeltaTranslation(float x, float y, float z)
 {
+	m_localTransformation[3].x += x;
+	m_localTransformation[3].y += y;
+	m_localTransformation[3].z += z;
+}
+
+void m2Transform::setDeltaRotation(glm::vec3 rotation)
+{
+	rotation = glm::radians(rotation);
 	m_localTransformation *= glm::eulerAngleXYZ(rotation.x, rotation.y, rotation.z);;
+}
+
+void m2Transform::setDeltaRotation(float x, float y, float z)
+{
+	setDeltaRotation(glm::vec3(x, y, z));
 }
 
 void m2Transform::setDeltaRotationX(float x)
 {
-	m_localTransformation *= glm::eulerAngleX(x);
+	m_localTransformation *= glm::eulerAngleX(glm::radians(x));
 }
 
 void m2Transform::setDeltaRotationY(float y)
 {
-	m_localTransformation *= glm::eulerAngleY(y);
+	m_localTransformation *= glm::eulerAngleY(glm::radians(y));
 }
 
 void m2Transform::setDeltaRotationZ(float z)
 {
-	m_localTransformation *= glm::eulerAngleZ(z);
+	m_localTransformation *= glm::eulerAngleZ(glm::radians(z));
 }
 
-void m2Transform::setScale(const glm::vec3 scale)
+void m2Transform::setScale(glm::vec3 scale)
 {
 	_scaleSafe(scale);
 }
@@ -234,7 +259,7 @@ void m2Transform::setScaleZ(float sz)
 	m_localTransformation[2][2] = sz * _extractRotation22(m_localTransformation);
 }
 
-inline void m2Transform::_scaleSafe(const glm::vec3 scale)
+inline void m2Transform::_scaleSafe(glm::vec3 scale)
 {
 	glm::vec3 rotation = _extractRotations(m_localTransformation);
 	m_localTransformation[0][0] = scale.x * rotation.x;
@@ -242,7 +267,7 @@ inline void m2Transform::_scaleSafe(const glm::vec3 scale)
 	m_localTransformation[2][2] = scale.z * rotation.z;
 }
 
-inline void m2Transform::_scaleUnsafe(const glm::vec3 scale)
+inline void m2Transform::_scaleUnsafe(glm::vec3 scale)
 {
 	m_localTransformation[0][0] *= scale.x;
 	m_localTransformation[1][1] *= scale.y;
