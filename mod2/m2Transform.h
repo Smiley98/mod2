@@ -76,6 +76,8 @@ private:
 	inline void _scaleUnsafe(glm::vec3);
 
 	inline glm::vec3 _extractRotations(const glm::mat4&);
+	//inline glm::vec3 _removeRotations(glm::mat4&);
+	//inline glm::vec3 _removeScale(glm::mat4&);
 	inline float _extractRotation00(const glm::mat4&);
 	inline float _extractRotation11(const glm::mat4&);
 	inline float _extractRotation22(const glm::mat4&);
