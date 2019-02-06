@@ -61,27 +61,13 @@ glm::vec3 m2Transform::getLocalTranslation()
 
 glm::vec3 m2Transform::getLocalRotation()
 {
-	glm::vec3 rotation;
 	glm::vec3 scale = getScale();
-
-	//printf("Matrix before scale division:\n");
-	//m2Utils::printMatrix(m_localTransformation);
-
-	//printf("Scale before division:\n");
-	//m2Utils::printVector(scale);
 	m_localTransformation[0][0] /= scale.x;
 	m_localTransformation[1][1] /= scale.y;
 	m_localTransformation[2][2] /= scale.z;
-
-	//printf("After divide by scale (should be only rotation):\n");
-	//m2Utils::printMatrix(m_localTransformation);
+	glm::vec3 rotation;
 	glm::extractEulerAngleXYZ(m_localTransformation, rotation.x, rotation.y, rotation.z);
-	//m2Utils::printVector(rotation);
-
-	m_localTransformation[0][0] *= scale.x;
-	m_localTransformation[1][1] *= scale.y;
-	m_localTransformation[2][2] *= scale.z;
-
+	_scaleUnsafe(scale);
 	return glm::degrees(rotation);
 }
 
@@ -186,20 +172,10 @@ void m2Transform::setRotation(glm::vec3 rotation)
 	glm::vec3 translation = getLocalTranslation();
 	rotation = glm::radians(rotation);
 	glm::vec3 scale = getScale();
-	printf("Scale before:\n");
-	m2Utils::printVector(scale);
 
 	m_localTransformation = glm::eulerAngleXYZ(rotation.x, rotation.y, rotation.z);
-	printf("After eulerAngleXYZ:\n");
-	m2Utils::printMatrix(m_localTransformation);
-
-	/*m_localTransformation[0][0] *= scale.x;
-	m_localTransformation[1][1] *= scale.y;
-	m_localTransformation[2][2] *= scale.z;
-	setTranslation(translation);*/
-
-	printf("Scale after:\n");
-	m2Utils::printVector(getScale());
+	_scaleUnsafe(scale);
+	setTranslation(translation);
 }
 
 void m2Transform::setRotation(float x, float y, float z)
@@ -323,17 +299,17 @@ inline glm::vec3 m2Transform::_removeScale(glm::mat4& matrix)
 
 inline float m2Transform::_extractRotation00(const glm::mat4& matrix)
 {
-	return 1.0f - glm::sqrt(matrix[0][1] * matrix[0][1] + matrix[0][2] * matrix[0][2]);
+	return glm::sqrt(1.0f - matrix[0][1] * matrix[0][1] - matrix[0][2] * matrix[0][2]);
 }
 
 inline float m2Transform::_extractRotation11(const glm::mat4& matrix)
 {
-	return 1.0f - glm::sqrt(matrix[1][0] * matrix[1][0] + matrix[1][2] * matrix[1][2]);
+	return glm::sqrt(1.0f - matrix[1][0] * matrix[1][0] - matrix[1][2] * matrix[1][2]);
 }
 
 inline float m2Transform::_extractRotation22(const glm::mat4& matrix)
 {
-	return 1.0f - glm::sqrt(matrix[2][0] * matrix[2][0] + matrix[2][1] * matrix[2][1]);
+	return glm::sqrt(1.0f - matrix[2][0] * matrix[2][0] - matrix[2][1] * matrix[2][1]);
 }
 
 inline void m2Transform::_setDirections(glm::vec3 front, glm::vec3 right, glm::vec3 up)

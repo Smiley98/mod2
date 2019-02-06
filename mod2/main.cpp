@@ -18,20 +18,6 @@ int main() {
 	makeTest(*tester);
 
 	m2TransformComponent& transform = tester->getComponent<m2TransformComponent>();
-	const glm::mat4& matrix = transform.getLocalTransformation();
-	transform.setRotation(45.0f, 30.0f, 60.0f);
-
-	/*transform.setScaleX(1.0f);
-	m2Utils::printMatrix(matrix);
-
-	transform.setScaleY(2.0f);
-	m2Utils::printMatrix(matrix);
-
-	transform.setScaleZ(3.0f);
-	m2Utils::printMatrix(matrix);
-
-	transform.setScale(5.0f);
-	m2Utils::printMatrix(matrix);*/
 
 	while (true) {
 		if (GetAsyncKeyState(VK_ESCAPE)) break;
