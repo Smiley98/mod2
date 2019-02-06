@@ -82,5 +82,8 @@ private:
 	inline float _extractRotation11(const glm::mat4&);
 	inline float _extractRotation22(const glm::mat4&);
 	inline void _setDirections(glm::vec3 front, glm::vec3 right, glm::vec3 up);
+
+	inline const m2Transform& getParent();
+	inline void setParent(const m2Transform&);
 };
 

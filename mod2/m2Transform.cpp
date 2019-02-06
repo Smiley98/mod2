@@ -320,3 +320,12 @@ inline void m2Transform::_setDirections(glm::vec3 front, glm::vec3 right, glm::v
 	m_localTransformation[2].xyz = front;
 	_scaleUnsafe(scale);//Safe in this case because there is currently a uniform scale of 1.
 }
+
+inline const m2Transform & m2Transform::getParent()
+{
+
+}
+
+inline void m2Transform::setParent(const m2Transform &)
+{
+}
