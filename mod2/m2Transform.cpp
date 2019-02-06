@@ -1,6 +1,8 @@
 #include "m2Transform.h"
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/euler_angles.hpp>
+
+#include "m2Utilities.h"
 #include <cstdio>
 
 glm::mat4 m2Transform::s_mIdentity = glm::mat4(1.0f);
@@ -61,11 +63,25 @@ glm::vec3 m2Transform::getLocalRotation()
 {
 	glm::vec3 rotation;
 	glm::vec3 scale = getScale();
+
+	//printf("Matrix before scale division:\n");
+	//m2Utils::printMatrix(m_localTransformation);
+
+	//printf("Scale before division:\n");
+	//m2Utils::printVector(scale);
 	m_localTransformation[0][0] /= scale.x;
 	m_localTransformation[1][1] /= scale.y;
 	m_localTransformation[2][2] /= scale.z;
+
+	//printf("After divide by scale (should be only rotation):\n");
+	//m2Utils::printMatrix(m_localTransformation);
 	glm::extractEulerAngleXYZ(m_localTransformation, rotation.x, rotation.y, rotation.z);
-	_scaleUnsafe(scale);
+	//m2Utils::printVector(rotation);
+
+	m_localTransformation[0][0] *= scale.x;
+	m_localTransformation[1][1] *= scale.y;
+	m_localTransformation[2][2] *= scale.z;
+
 	return glm::degrees(rotation);
 }
 
@@ -169,11 +185,21 @@ void m2Transform::setRotation(glm::vec3 rotation)
 {
 	glm::vec3 translation = getLocalTranslation();
 	rotation = glm::radians(rotation);
-	glm::vec3 scale = getScale();	//Sqrt x3 due to per-column extract rotation.
-	//Might have to add extra logic to preserve the orientation ie get the difference between current orientation, and desired orientation, then apply that to the current orientation.
+	glm::vec3 scale = getScale();
+	printf("Scale before:\n");
+	m2Utils::printVector(scale);
+
 	m_localTransformation = glm::eulerAngleXYZ(rotation.x, rotation.y, rotation.z);
-	_scaleUnsafe(scale);			//Safe in this case because there is currently a uniform scale of 1.
-	setTranslation(translation);
+	printf("After eulerAngleXYZ:\n");
+	m2Utils::printMatrix(m_localTransformation);
+
+	/*m_localTransformation[0][0] *= scale.x;
+	m_localTransformation[1][1] *= scale.y;
+	m_localTransformation[2][2] *= scale.z;
+	setTranslation(translation);*/
+
+	printf("Scale after:\n");
+	m2Utils::printVector(getScale());
 }
 
 void m2Transform::setRotation(float x, float y, float z)

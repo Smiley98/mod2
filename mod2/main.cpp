@@ -14,16 +14,12 @@
 
 int main() {
 	m2ComponentManager::allocateMaxContainers();
-
 	m2GameObject* tester = new m2GameObject;
 	makeTest(*tester);
+
 	m2TransformComponent& transform = tester->getComponent<m2TransformComponent>();
 	const glm::mat4& matrix = transform.getLocalTransformation();
 	transform.setRotation(45.0f, 30.0f, 60.0f);
-	//transform.setScale(5.0f);
-	m2Utils::printMatrix(matrix);
-	glm::vec3 rotation = transform.getLocalRotation();
-	m2Utils::printVector(rotation);
 
 	/*transform.setScaleX(1.0f);
 	m2Utils::printMatrix(matrix);

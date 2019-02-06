@@ -99,7 +99,7 @@ public:
 	}
 
 private:
-	static T* m_memory;		//Generic array.
+	static T* m_memory;			//Generic array.
 	static size_t m_bytesPerElement;
 	static u_int m_index;		//Next open slot.
 	static u_int m_capacity;	//Size of the array.
