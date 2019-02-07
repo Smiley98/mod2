@@ -1,6 +1,0 @@
-1. Rotation setter may not take scale into account.
-2. Rotation setter doesn't work in deltas.
-3. Directions may not work (do I cross front with right or right with front).
-4. Not really a problem, but square roots will drive my framerate into the dirt.
-5. Parenting can fail due to Object A -> Object B -> Object C -> Object A.
-6. Pointer encoding doesn't complicate the model matrix, but it means I either have to kill pointer externally, or add more complexity to my getters.

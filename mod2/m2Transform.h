@@ -26,11 +26,9 @@ public:
 	float getScaleY();
 	float getScaleZ();
 
-	//mat[2][2] / scale_Z
+	glm::mat3 getDirections();
 	glm::vec3 getFront();
-	//mat[0][0] / scale_X
 	glm::vec3 getRight();
-	//mat[1][1] / scale_Y
 	glm::vec3 getAbove();
 
 	//Right and above will correct automatically.
@@ -63,24 +61,17 @@ public:
 	void setScaleZ(float);
 
 private:
-	glm::mat4 m_localTransformation;
+	glm::mat4 m_transformation;
+	glm::quat m_orientation;
+	glm::vec3 m_scale;
 	m2Transform* m_parent;
+	//Encode the pointer across xy and the dirty flag in z! 
 
-	static glm::mat4 s_mIdentity;
-	static glm::vec4 s_vIdentity;
-	static glm::vec3 s_up;
+	static const glm::mat4 s_mIdentity;
+	static const glm::vec4 s_vIdentity;
+	static const glm::vec3 s_up;
 
-	//Extracts rotation (overhead of 3 square roots), then multiplies by desired scale. Necessary cause we don't want to "delta-scale".
-	inline void _scaleSafe(glm::vec3);
-	//Applies the desired scale. No square root overhead, but there must be a uniform scale must be 1 for this to work correctly.
-	inline void _scaleUnsafe(glm::vec3);
-
-	inline glm::vec3 _extractRotations(const glm::mat4&);
-	//inline glm::vec3 _removeRotations(glm::mat4&);
-	//inline glm::vec3 _removeScale(glm::mat4&);
-	inline float _extractRotation00(const glm::mat4&);
-	inline float _extractRotation11(const glm::mat4&);
-	inline float _extractRotation22(const glm::mat4&);
+	inline glm::quat _getWorldOrientation();
 	inline void _setDirections(glm::vec3 front, glm::vec3 right, glm::vec3 up);
 
 	inline const m2Transform& getParent();

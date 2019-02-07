@@ -1,17 +1,17 @@
 #include "m2Transform.h"
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/euler_angles.hpp>
+#include <glm/gtx/quaternion.hpp>
 
 #include "m2Utilities.h"
 #include <cstdio>
 
-glm::mat4 m2Transform::s_mIdentity = glm::mat4(1.0f);
-glm::vec4 m2Transform::s_vIdentity = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
-glm::vec3 m2Transform::s_up = glm::vec3(0.0f, 1.0f, 0.0f);
+const glm::mat4 m2Transform::s_mIdentity = glm::mat4(1.0f);
+const glm::vec4 m2Transform::s_vIdentity = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
+const glm::vec3 m2Transform::s_up = glm::vec3(0.0f, 1.0f, 0.0f);
 
-m2Transform::m2Transform() : m_localTransformation(s_mIdentity), m_parent(nullptr)
+m2Transform::m2Transform() : m_transformation(s_mIdentity), m_parent(nullptr)
 {
-	s_mIdentity * s_mIdentity;
 }
 
 m2Transform::~m2Transform()
@@ -19,119 +19,122 @@ m2Transform::~m2Transform()
 }
 
 glm::mat4 m2Transform::getWorldTransformation()
-{
+{	//Recursively combine transformations.
 	if (m_parent)
-		return m_parent->getWorldTransformation() * m_localTransformation;
-	return m_localTransformation;
+		return m_parent->getWorldTransformation() * m_transformation;
+	return m_transformation;
 }
 
 glm::vec3 m2Transform::getWorldPosition()
-{	//Chances are no math is actually being done with the position ie not gonna multiply by an external matrix, probably just gonna compare.
-	//Although technically incorrect, its not that hard to 
+{
 	return getWorldTransformation() * s_vIdentity;
 }
 
 glm::vec3 m2Transform::getWorldTranslation()
-{
-	return getWorldTransformation()[3];
+{	//Recursively combine translations.
+	if (m_parent)
+		return m_parent->getWorldTranslation() + m_transformation[3].xyz;
+	return m_transformation[3];
 }
 
 glm::vec3 m2Transform::getWorldRotation()
-{
-	glm::vec3 result;
-	glm::mat4 worldTransformation = getWorldTransformation();
-	glm::extractEulerAngleXYZ(worldTransformation, result.x, result.y, result.z);
-	return glm::degrees(result);
+{	//Recursively combine orientations.
+	return glm::degrees(glm::eulerAngles(_getWorldOrientation()));
 }
 
 const glm::mat4 & m2Transform::getLocalTransformation()
 {
-	return m_localTransformation;
+	return m_transformation;
 }
 
 glm::vec3 m2Transform::getLocalPosition()
-{
-	return m_localTransformation * s_vIdentity;
+{	//Add update check here for most up to date info and to remove dirty flag from [0][3].
+	return m_transformation * s_vIdentity;
 }
 
 glm::vec3 m2Transform::getLocalTranslation()
 {
-	return m_localTransformation[3];
+	return m_transformation[3];
 }
 
 glm::vec3 m2Transform::getLocalRotation()
 {
-	glm::vec3 scale = getScale();
-	m_localTransformation[0][0] /= scale.x;
-	m_localTransformation[1][1] /= scale.y;
-	m_localTransformation[2][2] /= scale.z;
-	glm::vec3 rotation;
-	glm::extractEulerAngleXYZ(m_localTransformation, rotation.x, rotation.y, rotation.z);
-	_scaleUnsafe(scale);
-	return glm::degrees(rotation);
+	return glm::degrees(glm::eulerAngles(m_orientation));
 }
 
 float m2Transform::getLocalRotationX()
-{	//X component of extractEulerAnglesXYZ().
-	float scaleZ = getScaleZ();
-	return glm::degrees(-glm::atan2<float, glm::defaultp>(m_localTransformation[2][1], m_localTransformation[2][2] / scaleZ));
+{
+	return glm::degrees(glm::pitch(m_orientation));
 }
 
 float m2Transform::getLocalRotationY()
-{	//Y component of extractEulerAnglesXYZ(). Returns the negated angle 
-	float scaleX = getScaleX();
-	float magnitude = glm::sqrt((m_localTransformation[0][0] / scaleX) * (m_localTransformation[0][0] / scaleX) + m_localTransformation[1][0] * m_localTransformation[1][0]);
-	return glm::degrees(-glm::atan2<float, glm::defaultp>(-m_localTransformation[2][0], magnitude));
+{
+	return glm::degrees(glm::yaw(m_orientation));
 }
 
 float m2Transform::getLocalRotationZ()
-{	//Z component of extractEulerAnglesXYZ().
-	float scaleY = getScaleY();
-	float xRotation = getLocalRotationX();
-	float xSin = sin(xRotation);
-	float xCos = cos(xRotation);
-	return glm::degrees(-glm::atan2<float, glm::defaultp>(xSin * m_localTransformation[0][2] - xCos * m_localTransformation[0][1], xCos * (m_localTransformation[1][1] / scaleY) - xSin * m_localTransformation[1][2]));
+{
+	return glm::degrees(glm::roll(m_orientation));
 }
 
 glm::vec3 m2Transform::getScale()
 {
-	return glm::vec3(getScaleX(), getScaleY(), getScaleZ());
+	return m_scale;
 }
 
 float m2Transform::getScaleX()
 {
-	return m_localTransformation[0][0] / _extractRotation00(m_localTransformation);
+	return m_scale.x;
 }
 
 float m2Transform::getScaleY()
 {
-	return m_localTransformation[1][1] / _extractRotation11(m_localTransformation);
+	return m_scale.y;
 }
 
 float m2Transform::getScaleZ()
 {
-	return m_localTransformation[2][2] / _extractRotation22(m_localTransformation);
+	return m_scale.z;
 }
 
-glm::vec3 m2Transform::getFront()
+glm::mat3 m2Transform::getDirections()
 {
-	glm::vec3 front = m_localTransformation[2];
-	front.z /= getScaleZ();
-	return front;
+	return glm::mat3_cast(m_orientation);
+}
+/*
+		T qxx(q.x * q.x);
+		T qyy(q.y * q.y);
+		T qzz(q.z * q.z);
+		T qxz(q.x * q.z);
+		T qxy(q.x * q.y);
+		T qyz(q.y * q.z);
+		T qwx(q.w * q.x);
+		T qwy(q.w * q.y);
+		T qwz(q.w * q.z);
+*/
+
+glm::vec3 m2Transform::getFront()
+{	//Figure out how to extract front from an orientation quaternion.
+	return glm::mat3_cast(m_orientation)[2];
+	//Result[2][0] = T(2) * (qxz + qwy);
+	//Result[2][1] = T(2) * (qyz - qwx);
+	//Result[2][2] = T(1) - T(2) * (qxx + qyy);
 }
 
 glm::vec3 m2Transform::getRight()
-{
-	glm::vec3 right = m_localTransformation[0];
-	right.x /= getScaleX();
-	return right;
+{	//Figure out how to extract right from an orientation quaternion.
+	return glm::mat3_cast(m_orientation)[0];
+	//Result[0][0] = T(1) - T(2) * (qyy + qzz);
+	//Result[0][1] = T(2) * (qxy + qwz);
+	//Result[0][2] = T(2) * (qxz - qwy);
 }
 
 glm::vec3 m2Transform::getAbove()
-{
-	glm::vec3 above = m_localTransformation[1];
-	above.y /= getScaleY();
-	return above;
+{	//Figure out how to extract above from an orientation quaternion.
+	return glm::mat3_cast(m_orientation)[1];
+	//Result[1][0] = T(2) * (qxy - qwz);
+	//Result[1][1] = T(1) - T(2) * (qxx + qzz);
+	//Result[1][2] = T(2) * (qyz + qwx);
 }
 
 void m2Transform::setFront(glm::vec3 front)
@@ -157,173 +160,118 @@ void m2Transform::setAbove(glm::vec3 above)
 
 void m2Transform::setTranslation(glm::vec3 translation)
 {
-	m_localTransformation[3].xyz = translation;
+	m_transformation[3].xyz = translation;
 }
 
 void m2Transform::setTranslation(float x, float y, float z)
 {
-	m_localTransformation[3].x = x;
-	m_localTransformation[3].y = y;
-	m_localTransformation[3].z = z;
+	m_transformation[3].x = x;
+	m_transformation[3].y = y;
+	m_transformation[3].z = z;
 }
 
 void m2Transform::setRotation(glm::vec3 rotation)
-{
-	glm::vec3 translation = getLocalTranslation();
-	rotation = glm::radians(rotation);
-	glm::vec3 scale = getScale();
-
-	m_localTransformation = glm::eulerAngleXYZ(rotation.x, rotation.y, rotation.z);
-	_scaleUnsafe(scale);
-	setTranslation(translation);
+{	//Might want to compute deltas rather than a straight-up assignment.
+	m_orientation = glm::quat(glm::radians(rotation));
 }
 
 void m2Transform::setRotation(float x, float y, float z)
 {
-	setRotation(glm::vec3(x, y, z));
+	setRotation(glm::radians(glm::vec3(x, y, z)));
 }
 
 void m2Transform::setRotationX(float x)
-{
-	glm::vec3 rotation = getLocalRotation();
-	rotation.x = x;
-	setRotation(rotation);
+{	//Can be optimized to only affect x rather than xyzw.
+	m_orientation = glm::quat(glm::radians(glm::vec3(x, 0.0f, 0.0f)));
 }
 
 void m2Transform::setRotationY(float y)
-{
-	glm::vec3 rotation = getLocalRotation();
-	rotation.y = y;
-	setRotation(rotation);
+{	//FCan be optimized to only affect y rather than xyzw.
+	m_orientation = glm::quat(glm::radians(glm::vec3(0.0f, y, 0.0f)));
 }
 
 void m2Transform::setRotationZ(float z)
-{
-	glm::vec3 rotation = getLocalRotation();
-	rotation.z = z;
-	setRotation(rotation);
+{	//Can be optimized to only affect z rather than xyzw.
+	m_orientation = glm::quat(glm::radians(glm::vec3(0.0f, 0.0f, z)));
 }
 
 void m2Transform::setDeltaTranslation(glm::vec3 translation)
 {
-	m_localTransformation[3].xyz += translation;
+	m_transformation[3].xyz += translation;
 }
 
 void m2Transform::setDeltaTranslation(float x, float y, float z)
 {
-	m_localTransformation[3].x += x;
-	m_localTransformation[3].y += y;
-	m_localTransformation[3].z += z;
+	m_transformation[3].x += x;
+	m_transformation[3].y += y;
+	m_transformation[3].z += z;
 }
 
 void m2Transform::setDeltaRotation(glm::vec3 rotation)
-{	//I think its okay to multiply despite a scaling may have occured.
-	rotation = glm::radians(rotation);
-	m_localTransformation *= glm::eulerAngleXYZ(rotation.x, rotation.y, rotation.z);;
+{	//Verify that its new = current * delta rather than delta * current.
+	m_orientation *= glm::quat(glm::radians(rotation));
 }
 
 void m2Transform::setDeltaRotation(float x, float y, float z)
-{
-	setDeltaRotation(glm::vec3(x, y, z));
+{	//I hereby declare that this version shall have NO function tunnelling!
+	m_orientation *= glm::quat(glm::radians(glm::vec3(x, y, z)));
 }
 
 void m2Transform::setDeltaRotationX(float x)
-{
-	m_localTransformation *= glm::eulerAngleX(glm::radians(x));
+{	//Can be optimized to only affect x rather than xyzw.
+	m_orientation *= glm::quat(glm::radians(glm::vec3(x, 0.0f, 0.0f)));
 }
 
 void m2Transform::setDeltaRotationY(float y)
-{
-	m_localTransformation *= glm::eulerAngleY(glm::radians(y));
+{	//Can be optimized to only affect y rather than xyzw.
+	m_orientation *= glm::quat(glm::radians(glm::vec3(0.0f, y, 0.0f)));
 }
 
 void m2Transform::setDeltaRotationZ(float z)
-{
-	m_localTransformation *= glm::eulerAngleZ(glm::radians(z));
+{	//Can be optimized to only affect z rather than xyzw.
+	m_orientation *= glm::quat(glm::radians(glm::vec3(0.0f, 0.0f, z)));
 }
 
 void m2Transform::setScale(glm::vec3 scale)
 {
-	_scaleSafe(scale);
+	m_scale = scale;
 }
 
 void m2Transform::setScale(float scale)
 {
-	_scaleSafe(glm::vec3(scale));
+	m_scale = glm::vec3(scale);
 }
 
-void m2Transform::setScaleX(float sx)
+void m2Transform::setScaleX(float x)
 {
-	m_localTransformation[0][0] = sx * _extractRotation00(m_localTransformation);
+	m_scale.x = x;
 }
 
-void m2Transform::setScaleY(float sy)
+void m2Transform::setScaleY(float y)
 {
-	m_localTransformation[1][1] = sy * _extractRotation11(m_localTransformation);
+	m_scale.y = y;
 }
 
-void m2Transform::setScaleZ(float sz)
+void m2Transform::setScaleZ(float z)
 {
-	m_localTransformation[2][2] = sz * _extractRotation22(m_localTransformation);
+	m_scale.z = z;
 }
 
-inline void m2Transform::_scaleSafe(glm::vec3 scale)
-{
-	glm::vec3 identities(_extractRotation00(m_localTransformation), _extractRotation11(m_localTransformation), _extractRotation22(m_localTransformation));
-	m_localTransformation[0][0] = scale.x * identities.x;
-	m_localTransformation[1][1] = scale.y * identities.y;
-	m_localTransformation[2][2] = scale.z * identities.z;
-}
-
-inline void m2Transform::_scaleUnsafe(glm::vec3 scale)
-{
-	m_localTransformation[0][0] *= scale.x;
-	m_localTransformation[1][1] *= scale.y;
-	m_localTransformation[2][2] *= scale.z;
-}
-
-inline glm::vec3 m2Transform::_extractRotations(const glm::mat4& matrix)
-{
-	return glm::vec3(_extractRotation00(matrix), _extractRotation11(matrix), _extractRotation22(matrix));
-}
-
-/*inline glm::vec3 m2Transform::_removeRotations(glm::mat4& matrix)
-{
-
-}
-
-inline glm::vec3 m2Transform::_removeScale(glm::mat4& matrix)
-{
-
-}*/
-
-inline float m2Transform::_extractRotation00(const glm::mat4& matrix)
-{
-	return glm::sqrt(1.0f - matrix[0][1] * matrix[0][1] - matrix[0][2] * matrix[0][2]);
-}
-
-inline float m2Transform::_extractRotation11(const glm::mat4& matrix)
-{
-	return glm::sqrt(1.0f - matrix[1][0] * matrix[1][0] - matrix[1][2] * matrix[1][2]);
-}
-
-inline float m2Transform::_extractRotation22(const glm::mat4& matrix)
-{
-	return glm::sqrt(1.0f - matrix[2][0] * matrix[2][0] - matrix[2][1] * matrix[2][1]);
+inline glm::quat m2Transform::_getWorldOrientation()
+{	//Order is root * A * B * C * etc. Despite being called from a potential leaf node, the multiplications don't start till root.
+	if (m_parent)
+		return m_parent->_getWorldOrientation() * m_orientation;
+	return m_orientation;
 }
 
 inline void m2Transform::_setDirections(glm::vec3 front, glm::vec3 right, glm::vec3 up)
-{
-	glm::vec3 scale = getScale();
-	m_localTransformation[0].xyz = right;
-	m_localTransformation[1].xyz = up;
-	m_localTransformation[2].xyz = front;
-	_scaleUnsafe(scale);//Safe in this case because there is currently a uniform scale of 1.
+{	//Make a rotation matrix, then turn it into a quaternion. The matrix construction overhead is worth what glm is doing cause quat_cast() is difficult!
+	m_orientation = glm::quat_cast(glm::mat3(right, up, front));
 }
 
 inline const m2Transform & m2Transform::getParent()
 {
-
+	
 }
 
 inline void m2Transform::setParent(const m2Transform &)
