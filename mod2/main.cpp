@@ -21,10 +21,10 @@ int main() {
 
 	m2TransformComponent& transform = tester->getComponent<m2TransformComponent>();
 
-	transform.setRotation(45.0f, 60.0f, 75.0f);
-	transform.setDeltaRotationX(5.0f);
-	transform.setDeltaRotationY(20.0f);
+	//transform.setRotation(45.0f, 60.0f, 75.0f);
 	transform.setDeltaRotationZ(10.0f);
+	transform.setDeltaRotationY(20.0f);
+	transform.setDeltaRotationX(5.0f);
 	m2Utils::printVector(transform.getLocalRotation());
 
 	while (true) {

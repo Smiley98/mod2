@@ -195,32 +195,28 @@ void m2Transform::setDeltaTranslation(float x, float y, float z)
 }
 
 void m2Transform::setDeltaRotation(glm::vec3 rotation)
-{	//Verify that its new = current * delta rather than delta * current.
+{
 	m_orientation = glm::quat(glm::radians(rotation)) * m_orientation;
 }
 
 void m2Transform::setDeltaRotation(float x, float y, float z)
-{	//I hereby declare that this version shall have NO function tunnelling!
+{
 	m_orientation = glm::quat(glm::radians(glm::vec3(x, y, z))) * m_orientation;
 }
 
 void m2Transform::setDeltaRotationX(float x)
-{	//Correct way fails, but incorrect way works!?!?
+{
 	//m_orientation = glm::quat(glm::radians(glm::vec3(x, 0.0f, 0.0f))) * m_orientation;
-	m_orientation *= glm::quat(glm::radians(glm::vec3(x, 0.0f, 0.0f)));
 }
 
 void m2Transform::setDeltaRotationY(float y)
-{	//Correct way fails, as does incorrect way!?!?
+{
 	//m_orientation = glm::quat(glm::radians(glm::vec3(0.0f, y, 0.0f))) * m_orientation;
-	//m_orientation *= glm::quat(glm::radians(glm::vec3(0.0f, y, 0.0f)));
-	printf("Not so linear algabra...\n");
 }
 
 void m2Transform::setDeltaRotationZ(float z)
-{	//Incorrect way fails (that is a good thing)!
-	//m_orientation *= glm::quat(glm::radians(glm::vec3(0.0f, 0.0f, z)));
-	m_orientation = glm::quat(glm::radians(glm::vec3(0.0f, 0.0f, z))) * m_orientation;
+{
+	//m_orientation = glm::quat(glm::radians(glm::vec3(0.0f, 0.0f, z))) * m_orientation;
 }
 
 void m2Transform::setScale(glm::vec3 scale)

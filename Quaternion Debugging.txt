@@ -1,0 +1,13 @@
+Initially it doesn't seem to matter whether you do a * b or b * a.
+X and Z make Y negative. That might play an interesting roll down the line.
+
+Delta xyz works!
+WAIT!!!
+If I do anything but xyz, shit hits the fan!!
+Moreover, if I do reverse order (*= instead of additional * original) for zyx, it also works which makes sense.
+
+Gonna keep it as xyz cause that helps my understanding.
+Internally it is return l *= r, which makes sense because outside it is original = additional * original, which can be substituted as original = additional *= original. (Which is reverse of original *= additional).
+
+**This affects design**
+Cannot rely on / constrain the programmer with a specific order. Can just call get then set to ensure correct order. Slightly less efficient cause get involves an unnecessary degress() and radians() call, plus inverse trig. Worth the memory to store euler angles. Moreover, might be easier to just use euler angles...
