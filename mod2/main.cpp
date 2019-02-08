@@ -22,11 +22,10 @@ int main() {
 	m2TransformComponent& transform = tester->getComponent<m2TransformComponent>();
 
 	transform.setRotation(45.0f, 60.0f, 75.0f);
-	transform.setRotationX(85.0f);
-	transform.setRotationY(20.0f);
-	transform.setRotationZ(10.0f);
+	transform.setDeltaRotationX(5.0f);
+	transform.setDeltaRotationY(20.0f);
+	transform.setDeltaRotationZ(10.0f);
 	m2Utils::printVector(transform.getLocalRotation());
-	m2Utils::printVector(glm::vec3(transform.getLocalRotationX(), transform.getLocalRotationY(), transform.getLocalRotationZ()));
 
 	while (true) {
 		if (GetAsyncKeyState(VK_ESCAPE)) break;
