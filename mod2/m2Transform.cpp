@@ -8,7 +8,7 @@ const glm::mat4 m2Transform::s_mIdentity = glm::mat4(1.0f);
 const glm::vec4 m2Transform::s_vIdentity = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
 const glm::vec3 m2Transform::s_up = glm::vec3(0.0f, 1.0f, 0.0f);
 
-m2Transform::m2Transform() : m_transformation(s_mIdentity), m_parent(nullptr)
+m2Transform::m2Transform() : m_transformation(s_mIdentity), m_orientation(glm::quat()), m_scale(glm::vec3(1.0f)), m_parent(nullptr)
 {
 }
 
