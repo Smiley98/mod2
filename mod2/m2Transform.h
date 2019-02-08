@@ -1,6 +1,7 @@
 #pragma once
 #define GLM_FORCE_SWIZZLE
 #include <glm/glm.hpp>
+#include <glm/gtc/quaternion.hpp>
 
 class m2Transform
 {
@@ -72,7 +73,7 @@ private:
 	static const glm::vec3 s_up;
 
 	inline glm::quat _getWorldOrientation();
-	inline void _setDirections(glm::vec3 front, glm::vec3 right, glm::vec3 up);
+	inline void _setDirections(glm::vec3 front, glm::vec3 right, glm::vec3 above);
 
 	inline const m2Transform& getParent();
 	inline void setParent(const m2Transform&);

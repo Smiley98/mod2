@@ -1,7 +1,5 @@
 #include "m2Transform.h"
 #include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtx/euler_angles.hpp>
-#include <glm/gtx/quaternion.hpp>
 
 #include "m2Utilities.h"
 #include <cstdio>
@@ -101,61 +99,44 @@ glm::mat3 m2Transform::getDirections()
 {
 	return glm::mat3_cast(m_orientation);
 }
-/*
-		T qxx(q.x * q.x);
-		T qyy(q.y * q.y);
-		T qzz(q.z * q.z);
-		T qxz(q.x * q.z);
-		T qxy(q.x * q.y);
-		T qyz(q.y * q.z);
-		T qwx(q.w * q.x);
-		T qwy(q.w * q.y);
-		T qwz(q.w * q.z);
-*/
 
 glm::vec3 m2Transform::getFront()
-{	//Figure out how to extract front from an orientation quaternion.
-	return glm::mat3_cast(m_orientation)[2];
-	//Result[2][0] = T(2) * (qxz + qwy);
-	//Result[2][1] = T(2) * (qyz - qwx);
-	//Result[2][2] = T(1) - T(2) * (qxx + qyy);
+{	//See glm::mat3_cast(q);
+	const glm::quat& q = m_orientation;
+	return glm::vec3(2.0f * (q.x * q.z + q.w * q.y), 2.0f * (q.y * q.z  - q.w * q.x), 1.0f - 2.0f * (q.x * q.x + q.y * q.y));
 }
 
 glm::vec3 m2Transform::getRight()
-{	//Figure out how to extract right from an orientation quaternion.
-	return glm::mat3_cast(m_orientation)[0];
-	//Result[0][0] = T(1) - T(2) * (qyy + qzz);
-	//Result[0][1] = T(2) * (qxy + qwz);
-	//Result[0][2] = T(2) * (qxz - qwy);
+{	//See glm::mat3_cast(q);
+	const glm::quat& q = m_orientation;
+	return glm::vec3(1.0f - 2.0f * (q.y * q.y + q.z * q.z), 2.0f * (q.x * q.y + q.w * q.z), 2.0f * (q.x * q.z - q.w * q.y));
 }
 
 glm::vec3 m2Transform::getAbove()
-{	//Figure out how to extract above from an orientation quaternion.
-	return glm::mat3_cast(m_orientation)[1];
-	//Result[1][0] = T(2) * (qxy - qwz);
-	//Result[1][1] = T(1) - T(2) * (qxx + qzz);
-	//Result[1][2] = T(2) * (qyz + qwx);
+{	//See glm::mat3_cast(q);
+	const glm::quat& q = m_orientation;
+	return glm::vec3(2.0f * (q.x * q.y - q.w * q.z), 1.0f - 2.0f * (q.x * q.x + q.z * q.z), 2.0f * (q.y * q.z + q.x * q.x));
 }
 
 void m2Transform::setFront(glm::vec3 front)
 {
 	glm::vec3 right(glm::cross(s_up, front));
 	glm::vec3 above(glm::cross(front, right));
-	_setDirections(front, right, above);
+	_setDirections(front, right, above);//Converts to radians.
 }
 
 void m2Transform::setRight(glm::vec3 right)
 {
 	glm::vec3 front(glm::cross(right, s_up));
 	glm::vec3 above(glm::cross(front, right));
-	_setDirections(front, right, above);
+	_setDirections(front, right, above);//Converts to radians.
 }
 
 void m2Transform::setAbove(glm::vec3 above)
 {
 	glm::vec3 right(glm::cross(s_up, above));
 	glm::vec3 front(glm::cross(right, above));
-	_setDirections(front, right, above);
+	_setDirections(front, right, above);//Converts to radians.
 }
 
 void m2Transform::setTranslation(glm::vec3 translation)
@@ -171,28 +152,34 @@ void m2Transform::setTranslation(float x, float y, float z)
 }
 
 void m2Transform::setRotation(glm::vec3 rotation)
-{	//Might want to compute deltas rather than a straight-up assignment.
+{	//Might want to compute deltas rather than a straight-up assignment. Internal rotation order + gl coordinate system + model orientation should suffice though.
 	m_orientation = glm::quat(glm::radians(rotation));
 }
 
 void m2Transform::setRotation(float x, float y, float z)
-{
-	setRotation(glm::radians(glm::vec3(x, y, z)));
+{	//No function tunneling this time!!
+	m_orientation = glm::quat(glm::radians(glm::vec3(x, y, z)));
 }
 
 void m2Transform::setRotationX(float x)
-{	//Can be optimized to only affect x rather than xyzw.
-	m_orientation = glm::quat(glm::radians(glm::vec3(x, 0.0f, 0.0f)));
+{
+	glm::vec3 angles(glm::eulerAngles(m_orientation));
+	angles.x = glm::radians(x);
+	m_orientation = glm::quat(angles);
 }
 
 void m2Transform::setRotationY(float y)
-{	//FCan be optimized to only affect y rather than xyzw.
-	m_orientation = glm::quat(glm::radians(glm::vec3(0.0f, y, 0.0f)));
+{
+	glm::vec3 angles(glm::eulerAngles(m_orientation));
+	angles.y = glm::radians(y);
+	m_orientation = glm::quat(angles);
 }
 
 void m2Transform::setRotationZ(float z)
-{	//Can be optimized to only affect z rather than xyzw.
-	m_orientation = glm::quat(glm::radians(glm::vec3(0.0f, 0.0f, z)));
+{
+	glm::vec3 angles(glm::eulerAngles(m_orientation));
+	angles.z = glm::radians(z);
+	m_orientation = glm::quat(angles);
 }
 
 void m2Transform::setDeltaTranslation(glm::vec3 translation)
@@ -209,27 +196,27 @@ void m2Transform::setDeltaTranslation(float x, float y, float z)
 
 void m2Transform::setDeltaRotation(glm::vec3 rotation)
 {	//Verify that its new = current * delta rather than delta * current.
-	m_orientation *= glm::quat(glm::radians(rotation));
+	m_orientation = glm::quat(glm::radians(rotation)) * m_orientation;
 }
 
 void m2Transform::setDeltaRotation(float x, float y, float z)
 {	//I hereby declare that this version shall have NO function tunnelling!
-	m_orientation *= glm::quat(glm::radians(glm::vec3(x, y, z)));
+	m_orientation = glm::quat(glm::radians(glm::vec3(x, y, z))) * m_orientation;
 }
 
 void m2Transform::setDeltaRotationX(float x)
-{	//Can be optimized to only affect x rather than xyzw.
-	m_orientation *= glm::quat(glm::radians(glm::vec3(x, 0.0f, 0.0f)));
+{
+	m_orientation = glm::quat(glm::radians(glm::vec3(x, 0.0f, 0.0f))) * m_orientation;
 }
 
 void m2Transform::setDeltaRotationY(float y)
-{	//Can be optimized to only affect y rather than xyzw.
-	m_orientation *= glm::quat(glm::radians(glm::vec3(0.0f, y, 0.0f)));
+{
+	m_orientation = glm::quat(glm::radians(glm::vec3(0.0f, y, 0.0f))) * m_orientation;
 }
 
 void m2Transform::setDeltaRotationZ(float z)
-{	//Can be optimized to only affect z rather than xyzw.
-	m_orientation *= glm::quat(glm::radians(glm::vec3(0.0f, 0.0f, z)));
+{
+	m_orientation = glm::quat(glm::radians(glm::vec3(0.0f, 0.0f, z))) * m_orientation;
 }
 
 void m2Transform::setScale(glm::vec3 scale)
@@ -258,15 +245,15 @@ void m2Transform::setScaleZ(float z)
 }
 
 inline glm::quat m2Transform::_getWorldOrientation()
-{	//Order is root * A * B * C * etc. Despite being called from a potential leaf node, the multiplications don't start till root.
+{	//Order is root * A * B * C * etc. Despite being called from a potential leaf node, the multiplications doesn't start till root.
 	if (m_parent)
 		return m_parent->_getWorldOrientation() * m_orientation;
 	return m_orientation;
 }
 
-inline void m2Transform::_setDirections(glm::vec3 front, glm::vec3 right, glm::vec3 up)
+inline void m2Transform::_setDirections(glm::vec3 front, glm::vec3 right, glm::vec3 above)
 {	//Make a rotation matrix, then turn it into a quaternion. The matrix construction overhead is worth what glm is doing cause quat_cast() is difficult!
-	m_orientation = glm::quat_cast(glm::mat3(right, up, front));
+	m_orientation = glm::quat_cast(glm::mat3(glm::radians(right), glm::radians(above), glm::radians(front)));
 }
 
 inline const m2Transform & m2Transform::getParent()

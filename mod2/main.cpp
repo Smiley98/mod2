@@ -9,6 +9,8 @@
 #include <chrono>
 #include <cstdio>
 
+#include <glm/gtc/quaternion.hpp>
+
 #define FRAMES_PER_SECOND 60.0
 #define MILLISECONDS_PER_FRAME 1.0 / FRAMES_PER_SECOND
 
