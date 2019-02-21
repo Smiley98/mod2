@@ -206,17 +206,17 @@ void m2Transform::setDeltaRotation(float x, float y, float z)
 
 void m2Transform::setDeltaRotationX(float x)
 {
-	//m_orientation = glm::quat(glm::radians(glm::vec3(x, 0.0f, 0.0f))) * m_orientation;
+	m_orientation = glm::quat(glm::radians(glm::vec3(x, 0.0f, 0.0f))) * m_orientation;
 }
 
 void m2Transform::setDeltaRotationY(float y)
 {
-	//m_orientation = glm::quat(glm::radians(glm::vec3(0.0f, y, 0.0f))) * m_orientation;
+	m_orientation = glm::quat(glm::radians(glm::vec3(0.0f, y, 0.0f))) * m_orientation;
 }
 
 void m2Transform::setDeltaRotationZ(float z)
 {
-	//m_orientation = glm::quat(glm::radians(glm::vec3(0.0f, 0.0f, z))) * m_orientation;
+	m_orientation = glm::quat(glm::radians(glm::vec3(0.0f, 0.0f, z))) * m_orientation;
 }
 
 void m2Transform::setScale(glm::vec3 scale)

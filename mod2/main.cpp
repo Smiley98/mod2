@@ -9,7 +9,9 @@
 #include <chrono>
 #include <cstdio>
 
-#include <glm/gtc/quaternion.hpp>
+#include <glm/gtx/euler_angles.hpp>
+
+#include "m2Window.h"
 
 #define FRAMES_PER_SECOND 60.0
 #define MILLISECONDS_PER_FRAME 1.0 / FRAMES_PER_SECOND
@@ -19,15 +21,22 @@ int main() {
 	m2GameObject* tester = new m2GameObject;
 	makeTest(*tester);
 
+	/*float a, b, c;
 	m2TransformComponent& transform = tester->getComponent<m2TransformComponent>();
-
-	//transform.setRotation(45.0f, 60.0f, 75.0f);
-	transform.setDeltaRotationZ(10.0f);
-	transform.setDeltaRotationY(20.0f);
+	glm::eulerAngleXYZ(1.0f, 2.0f, 3.0f);			//Pre-computed xyz matrix (thing full of sin's and cos').
+	glm::extractEulerAngleXYZ(glm::mat4(), a, b, c);//Atan2 all around!
+	
+	//Stuff fails after 90+ degrees.
+	m2Utils::printVector(glm::degrees(glm::eulerAngles(glm::quat(glm::radians(glm::vec3(89.0f))))));
 	transform.setDeltaRotationX(5.0f);
-	m2Utils::printVector(transform.getLocalRotation());
+	transform.setDeltaRotationY(80.0f);
+	transform.setDeltaRotationZ(10.0f);
+	m2Utils::printVector(transform.getLocalRotation());*/
 
-	while (true) {
+	m2Window& window = m2Window::instance();
+	window.update();
+
+	/*while (true) {
 		if (GetAsyncKeyState(VK_ESCAPE)) break;
 		using namespace std::chrono;
 		high_resolution_clock::time_point start = high_resolution_clock::now();
@@ -43,13 +52,13 @@ int main() {
 			//Render over and over? Buffer stuff for next frame?
 			frameTime = duration_cast<duration<double>>(high_resolution_clock::now() - start).count();
 		}
-	}
+	}*/
 
 	delete tester;
-	printf("Loop exited!\n");
 	m2ComponentManager::deallocateContainers();
+	window.~m2Window();
 
-	//printf("Press enter to terminate the program.\n");
-	//getchar();
+	printf("Press enter to terminate the program.\n");
+	getchar();
 	return 0;
 }

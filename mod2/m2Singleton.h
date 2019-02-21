@@ -3,16 +3,31 @@ template<class T>
 class m2Singleton
 {
 public:
-	//Delete the move constructor and all that crap if you're anal.
-	~m2Singleton() {}
+	m2Singleton(T&&) = delete;
+	m2Singleton(const T&) = delete;
+	m2Singleton& operator=(T&&) = delete;
+	m2Singleton& operator=(const T&) = delete;
 
-	static T& instance() {
-		static T inst;
-		return inst;
-	}
+	static T& instance();
 
 protected:
-	//Protected so base class can call constructor.
-	m2Singleton() {}
+	m2Singleton();
+	virtual ~m2Singleton();
 };
 
+template<class T>
+inline T& m2Singleton<T>::instance()
+{
+	static T inst;
+	return inst;
+}
+
+template<class T>
+inline m2Singleton<T>::~m2Singleton()
+{
+}
+
+template<class T>
+inline m2Singleton<T>::m2Singleton()
+{
+}

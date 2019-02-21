@@ -50,7 +50,7 @@ private:
 
 template<typename T, typename... Args>
 inline T& m2GameObject::addComponent(Args&&... args)
-{	//Write some sort of assertion to verify that T is of type m2Component.
+{
 	T* component = new (m2MemoryManager<T>::add()) T(args...);
 
 	u_char index = T::getType();

@@ -31,6 +31,12 @@
     <Filter Include="Utilities">
       <UniqueIdentifier>{145d5380-ab82-4fed-a2fd-63ffa9ef14bf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Globals">
+      <UniqueIdentifier>{c279d3f9-1ac5-4a79-a892-508bb40f2ccb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Glad">
+      <UniqueIdentifier>{f8a3ff28-691c-46a5-9182-ba6b33af2295}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="m2Component.h">
@@ -63,11 +69,14 @@
     <ClInclude Include="m2Transform.h">
       <Filter>Math</Filter>
     </ClInclude>
-    <ClInclude Include="m2Singleton.h">
-      <Filter>Systems</Filter>
-    </ClInclude>
     <ClInclude Include="m2Utilities.h">
       <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="m2Singleton.h">
+      <Filter>Globals</Filter>
+    </ClInclude>
+    <ClInclude Include="m2Window.h">
+      <Filter>Globals</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -91,6 +100,12 @@
     </ClCompile>
     <ClCompile Include="m2Utilities.cpp">
       <Filter>Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="m2Window.cpp">
+      <Filter>Globals</Filter>
+    </ClCompile>
+    <ClCompile Include="glad.c">
+      <Filter>Glad</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
