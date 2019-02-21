@@ -31,6 +31,8 @@ public:
 
 	//This can work as long as we don't include the transform m_components. Probably better this way cause we're saving space.
 	//m2TransformComponent& transform;
+	//Actually, just make this a member.
+	//m2Transform transform;
 
 private:
 	//Pointer to parent, pointer cause references suck.

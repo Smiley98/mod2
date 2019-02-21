@@ -43,18 +43,17 @@ m2Window::~m2Window()
 	glfwTerminate();
 }
 
+bool m2Window::isOpen()
+{
+	return !glfwWindowShouldClose(m_window);
+}
+
 void m2Window::close()
 {
 	glfwSetWindowShouldClose(m_window, 1);
-	//glfwDestroyWindow(m_window);
 }
 
-void m2Window::update()
+void m2Window::swapBuffers()
 {
-	glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT);//| GL_DEPTH_BUFFER_BIT
-	while (!glfwWindowShouldClose(m_window)) {
-		glfwPollEvents();
-		glfwSwapBuffers(m_window);
-	}
+	glfwSwapBuffers(m_window);
 }

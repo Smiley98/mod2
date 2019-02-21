@@ -8,12 +8,17 @@ class m2Window :
 	friend class m2Singleton<m2Window>;
 public:
 	~m2Window();
+
+	bool isOpen();
+
+	//Sends a close event. Does not force-close. Force-closing won't be a thing.
 	void close();
 
-	void update();
+	//Polls events and swaps buffers.
+	void swapBuffers();
 
-	m2Window();
 private:
+	m2Window();
 	GLFWwindow* m_window;
 };
 

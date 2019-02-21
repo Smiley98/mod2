@@ -3,9 +3,9 @@
 #include "m2TransformComponent.h"
 #include <algorithm>
 							//Works as long as we don't include it in m_components. This way, we don't have to worry about allocating memory before the transform.
+							//Moreover, transforms shouldn't even be components! Access will be sparatic so better cache coherence to have as members.
 m2GameObject::m2GameObject()// : transform(addComponent<m2TransformComponent>())
 {
-	//m_components.resize(m2ComponentType::NUM_COMPONENTS);
 }
 
 //*Have to delete before deallocateComponentContainers() is called otherwise MM will call memmove() on garbage.
