@@ -58,7 +58,5 @@ int main() {
 	m2ComponentManager::deallocateContainers();
 	window.~m2Window();
 
-	printf("Press enter to terminate the program.\n");
-	getchar();
 	return 0;
 }
