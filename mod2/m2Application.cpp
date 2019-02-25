@@ -16,6 +16,8 @@
 #include "m2TransformComponent.h"
 #include "m2Utilities.h"
 
+#include "m2Shader.h"
+
 #define FRAMES_PER_SECOND 60.0
 #define MILLISECONDS_PER_FRAME 1.0 / FRAMES_PER_SECOND
 #define LIMIT_FPS true
@@ -36,6 +38,10 @@ m2Application::m2Application() :
 	m_timing(m2Timing::instance())
 {
 	m2ComponentManager::allocateMinContainers();//allocateMaxContainers();
+
+	m2ShaderProgram sp;
+	glm::mat3 m(glm::vec3(1.0f, 2.0f, 3.0f), glm::vec3(4.0f, 5.0f, 6.0f), glm::vec3(7.0f, 8.0f, 9.0f));
+	sp.setMat3("meme", m);
 }
 
 m2Application::~m2Application()

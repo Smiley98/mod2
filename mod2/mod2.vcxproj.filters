@@ -40,6 +40,9 @@
     <Filter Include="Entry Point">
       <UniqueIdentifier>{8352c631-70f2-48fa-aea1-cc24251a5ba1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Rendering">
+      <UniqueIdentifier>{e215f2d0-7056-4699-baca-c7c5cd7cb083}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="m2Component.h">
@@ -87,6 +90,9 @@
     <ClInclude Include="m2Application.h">
       <Filter>Entry Point</Filter>
     </ClInclude>
+    <ClInclude Include="m2Shader.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="m2EntityFactory.cpp">
@@ -121,6 +127,9 @@
     </ClCompile>
     <ClCompile Include="m2Application.cpp">
       <Filter>Entry Point</Filter>
+    </ClCompile>
+    <ClCompile Include="m2Shader.cpp">
+      <Filter>Rendering</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
