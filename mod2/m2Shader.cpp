@@ -255,6 +255,18 @@ m2ShaderProgram & m2ShaderProgram::getProgram(Shaders shader)
 	return s_programs[shader];
 }
 
+void m2ShaderProgram::drawLine()
+{	//Must bind a random vao cause you're not allowed to render if the null vao is bound.
+	static GLuint vao;
+	glGenVertexArrays(1, &vao);
+	glBindVertexArray(vao);
+	m2ShaderProgram& sp = getProgram(Shaders::LINE);
+	sp.bind();
+	sp.setVec3("u_colour", glm::vec3(1.0f));
+
+	glDrawArrays(GL_POINTS, 0, 1);
+}
+
 /*GLint m2ShaderProgram::getAttribLocation(std::string attribName) {
 	if (m_attributes.find(attribName) == m_attributes.end())
 		m_attributes[attribName] = glGetAttribLocation(m_programHandle, attribName.c_str());

@@ -8,10 +8,12 @@ uniform vec3 u_p1;
 uniform vec3 u_p2;
 
 void main(){
-	gl_Position = u_mvp * vec4(u_p1, 1.0);
+	//gl_Position = u_mvp * vec4(u_p1, 1.0);
+	gl_Position = vec4(-0.5f, -0.75f, 0.0f, 1.0f);
 	EmitVertex();
 	
-	gl_Position = u_mvp * vec4(u_p2, 1.0);
+	//gl_Position = u_mvp * vec4(u_p2, 1.0);
+	gl_Position = vec4(-0.5f, 0.75f, 0.0f, 1.0f);
 	EmitVertex();
 	
 	EndPrimitive();

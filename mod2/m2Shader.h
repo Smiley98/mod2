@@ -79,6 +79,7 @@ public:
 
 	static void init();
 	static m2ShaderProgram& getProgram(Shaders);
+	static void drawLine();
 
 private:
 	//Cache uniform locations.
