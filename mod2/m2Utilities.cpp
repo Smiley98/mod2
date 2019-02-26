@@ -11,7 +11,12 @@ void m2Utils::printMatrix(const glm::mat4 & matrix)
 std::string m2Utils::loadTextFile(const std::string& path) {
 	std::ifstream file(path);
 	return std::string(
-		std::istreambuf_iterator<char>(file),
+		(std::istreambuf_iterator<char>(file)),
 		std::istreambuf_iterator<char>()
 	);
+}
+
+float m2Utils::cross(const glm::vec2& a, const glm::vec2& b)
+{	//(_x * point2._y) - (_y * point2._x)
+	return a.x * b.y - a.y * b.x;
 }

@@ -38,10 +38,7 @@ m2Application::m2Application() :
 	m_timing(m2Timing::instance())
 {
 	m2ComponentManager::allocateMinContainers();//allocateMaxContainers();
-
-	m2ShaderProgram sp;
-	glm::mat3 m(glm::vec3(1.0f, 2.0f, 3.0f), glm::vec3(4.0f, 5.0f, 6.0f), glm::vec3(7.0f, 8.0f, 9.0f));
-	sp.setMat3("meme", m);
+	m2ShaderProgram::init();
 }
 
 m2Application::~m2Application()

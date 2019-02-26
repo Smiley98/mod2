@@ -5,12 +5,24 @@
 #include <vector>
 #include <unordered_map>
 
+enum Shaders : unsigned int {
+	LINE,
+	RAY,
+	NUM_SHADERS
+};
+
 class m2ShaderProgram;
 class m2Shader {
 	friend m2ShaderProgram;
 
 public:
-	m2Shader(GLenum, const std::string&);
+	enum Types : GLenum {
+		VERTEX = GL_VERTEX_SHADER,
+		GEOMETRY = GL_GEOMETRY_SHADER,
+		FRAGMENT = GL_FRAGMENT_SHADER
+	};
+
+	m2Shader(Types, const std::string&);
 	~m2Shader();
 
 private:
@@ -65,12 +77,19 @@ public:
 	//It might be worth while to do this for each shader so that we're guarenteed we're reading/writing what we expec to.
 	//ie ensure we're not pointing to normals when we think we're pointing to uvs.
 
+	static void init();
+	static m2ShaderProgram& getProgram(Shaders);
+
 private:
 	//Cache uniform locations.
 	std::unordered_map<std::string, GLuint> m_uniforms;
 	//Must store shaders in order to detatch them. More efficient than using glGetProgramiv to retrieve shader objects.
 	std::vector<m2Shader> m_shaders;
 	GLuint m_programHandle;
+
+	//This is a good one! I can't have any static variables that require OpenGL to be initialized. 
+	//static m2ShaderProgram s_programs[Shaders::NUM_SHADERS];
+	static m2ShaderProgram* s_programs;
 
 	inline GLint getUniformHandle(const std::string&);
 };

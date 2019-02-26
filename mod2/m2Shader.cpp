@@ -1,13 +1,19 @@
 #include "m2Shader.h"
 #include "m2Utilities.h"
 
-m2Shader::m2Shader(GLenum m2ShaderType, const std::string& path)
+//Again, can't have static members that require gl to be initialized.
+//m2ShaderProgram m2ShaderProgram::s_programs[Shaders::NUM_SHADERS];
+m2ShaderProgram* m2ShaderProgram::s_programs = nullptr;
+
+m2Shader::m2Shader(m2Shader::Types ShaderType, const std::string& path)
 {	//Create m2Shader.
-	m_shaderHandle = glCreateShader(m2ShaderType);
+	m_shaderHandle = glCreateShader(ShaderType);
 	//Store m2Shader source as an l-value c-string (gl needs a string double pointer).
-	const GLchar* const sourceCstr = m2Utils::loadTextFile(path).c_str();
+	std::string source = m2Utils::loadTextFile(path);
+	const GLchar* const sourceCstr = source.c_str();
+
 	//Add source to m2Shader.
-	glShaderSource(m_shaderHandle, 1, &sourceCstr, 0);
+	glShaderSource(m_shaderHandle, 1, &sourceCstr, nullptr);
 
 	//Compile m2Shader, log error if compilation error.
 	glCompileShader(m_shaderHandle);
@@ -19,22 +25,26 @@ m2Shader::m2Shader(GLenum m2ShaderType, const std::string& path)
 		std::vector<GLchar> errorLog(maxLength);
 		glGetShaderInfoLog(m_shaderHandle, maxLength, &maxLength, errorLog.data());
 		glDeleteShader(m_shaderHandle);
-		fprintf(stderr, "m2Shader compilation error: %s\n", errorLog.data());
+		fprintf(stderr, "Shader compilation error: %s\n", errorLog.data());
 	}
+	printf("Shader life.\n");
 }
 
 m2Shader::~m2Shader()
 {
+	printf("Shader death.\n");
 	glDeleteShader(m_shaderHandle);
 }
 
 m2ShaderProgram::m2ShaderProgram()
 {
+	printf("Shader program life.\n");
 	m_programHandle = glCreateProgram();
 }
 
 m2ShaderProgram::~m2ShaderProgram()
 {
+	printf("Shader program death.\n");
 	glDeleteProgram(m_programHandle);
 }
 
@@ -55,7 +65,7 @@ m2ShaderProgram& m2ShaderProgram::link() {
 		std::vector<GLchar> errorLog(maxLength);
 		glGetProgramInfoLog(m_programHandle, maxLength, &maxLength, &errorLog[0]);
 		glDeleteProgram(m_programHandle);
-		std::printf("ERROR: %s\n", &(errorLog[0]));
+		std::printf("Shader linker error: %s\n", errorLog.data());
 	}
 	//Can release shader objects (shader pointers) after [successful] link.
 	for (m2Shader& m2Shader : m_shaders)
@@ -208,6 +218,41 @@ m2ShaderProgram& m2ShaderProgram::setMat4(const std::string& index, unsigned int
 {
 	glUniformMatrix4fv(getUniformHandle(index), amount, GL_FALSE, &values[0][0].x);
 	return *this;
+}
+
+void m2ShaderProgram::init()
+{
+	s_programs = new m2ShaderProgram[NUM_SHADERS];
+	std::string sdir = "Shaders/";
+//Vertex Shaders:
+	m2Shader v_passThrough(m2Shader::VERTEX, sdir + "PassThrough.vert");
+	m2Shader v_ray(m2Shader::VERTEX, sdir + "Ray.vert");
+
+//Geometry Shaders:
+	m2Shader g_ray(m2Shader::GEOMETRY, sdir + "Ray.geom");
+	m2Shader g_line(m2Shader::GEOMETRY, sdir + "Line.geom");
+
+//Fragment Shaders:
+	m2Shader f_ray(m2Shader::FRAGMENT, sdir + "Ray.frag");
+	m2Shader f_colour(m2Shader::FRAGMENT, sdir + "Colour.frag");
+
+//Programs:
+	s_programs[LINE].add(v_passThrough);
+	s_programs[LINE].add(g_line);
+	s_programs[LINE].add(f_colour);
+	s_programs[LINE].link();
+
+	//Instances rays in view space (
+	//Grows them (vertically) from x, height / 2 based off a height factor.
+	s_programs[RAY].add(v_ray);
+	s_programs[RAY].add(g_ray);
+	s_programs[RAY].add(f_ray);
+	s_programs[RAY].link();
+}
+
+m2ShaderProgram & m2ShaderProgram::getProgram(Shaders shader)
+{
+	return s_programs[shader];
 }
 
 /*GLint m2ShaderProgram::getAttribLocation(std::string attribName) {

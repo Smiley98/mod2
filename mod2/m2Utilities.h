@@ -5,6 +5,9 @@
 
 namespace m2Utils {
 	std::string loadTextFile(const std::string& path);
+
+	float cross(const glm::vec2&, const glm::vec2&);
+
 	void printMatrix(const glm::mat4& matrix);
 
 	template<typename T = glm::vec3>

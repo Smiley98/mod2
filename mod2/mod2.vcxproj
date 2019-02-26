@@ -127,10 +127,13 @@
     <ClInclude Include="m2ComponentDef.h" />
     <ClInclude Include="m2ComponentManager.h" />
     <ClInclude Include="m2EntityFactory.h" />
+    <ClInclude Include="m2Line2.h" />
+    <ClInclude Include="m2Line3.h" />
     <ClInclude Include="m2MemDef.h" />
     <ClInclude Include="m2GameObject.h" />
     <ClInclude Include="m2MemoryManager.h" />
     <ClInclude Include="m2Shader.h" />
+    <ClInclude Include="m2ShaderStore.h" />
     <ClInclude Include="m2Timing.h" />
     <ClInclude Include="m2Transform.h" />
     <ClInclude Include="m2TransformComponent.h" />
@@ -145,7 +148,10 @@
     <ClCompile Include="m2ComponentManager.cpp" />
     <ClCompile Include="m2EntityFactory.cpp" />
     <ClCompile Include="m2GameObject.cpp" />
+    <ClCompile Include="m2Line2.cpp" />
+    <ClCompile Include="m2Line3.cpp" />
     <ClCompile Include="m2Shader.cpp" />
+    <ClCompile Include="m2ShaderStore.cpp" />
     <ClCompile Include="m2Timing.cpp" />
     <ClCompile Include="m2Transform.cpp" />
     <ClCompile Include="m2TransformComponent.cpp" />
