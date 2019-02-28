@@ -18,6 +18,8 @@
 
 #include "m2Shader.h"
 
+#include "m2LineRenderer.h"
+
 #define FRAMES_PER_SECOND 60.0
 #define MILLISECONDS_PER_FRAME 1.0 / FRAMES_PER_SECOND
 #define LIMIT_FPS true
@@ -73,7 +75,10 @@ inline void m2Application::render()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	//m_scene->render();//Scenes should internally switch renderers if I implement such capabilities.
 
-	m2ShaderProgram::drawLine();
+	//m2ShaderProgram::drawLine();
+
+	static m2LineRenderer lineRenderer;
+	lineRenderer.render();
 }
 
 inline void m2Application::tick(float frameTime)

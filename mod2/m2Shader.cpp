@@ -5,10 +5,10 @@
 //m2ShaderProgram m2ShaderProgram::s_programs[Shaders::NUM_SHADERS];
 m2ShaderProgram* m2ShaderProgram::s_programs = nullptr;
 
-m2Shader::m2Shader(m2Shader::Types ShaderType, const std::string& path)
-{	//Create m2Shader.
+m2Shader::m2Shader(m2Shaders ShaderType, const std::string& path)
+{	//Create shader.
 	m_shaderHandle = glCreateShader(ShaderType);
-	//Store m2Shader source as an l-value c-string (gl needs a string double pointer).
+	//Store shader source as an l-value c-string (gl needs a string double pointer).
 	std::string source = m2Utils::loadTextFile(path);
 	const GLchar* const sourceCstr = source.c_str();
 
@@ -225,16 +225,16 @@ void m2ShaderProgram::init()
 	s_programs = new m2ShaderProgram[NUM_SHADERS];
 	std::string sdir = "Shaders/";
 //Vertex Shaders:
-	m2Shader v_passThrough(m2Shader::VERTEX, sdir + "PassThrough.vert");
-	m2Shader v_ray(m2Shader::VERTEX, sdir + "Ray.vert");
+	m2Shader v_passThrough(VERTEX, sdir + "PassThrough.vert");
+	m2Shader v_ray(VERTEX, sdir + "Ray.vert");
 
 //Geometry Shaders:
-	m2Shader g_ray(m2Shader::GEOMETRY, sdir + "Ray.geom");
-	m2Shader g_line(m2Shader::GEOMETRY, sdir + "Line.geom");
+	m2Shader g_ray(GEOMETRY, sdir + "Ray.geom");
+	m2Shader g_line(GEOMETRY, sdir + "Line.geom");
 
 //Fragment Shaders:
-	m2Shader f_ray(m2Shader::FRAGMENT, sdir + "Ray.frag");
-	m2Shader f_colour(m2Shader::FRAGMENT, sdir + "Colour.frag");
+	m2Shader f_ray(FRAGMENT, sdir + "Ray.frag");
+	m2Shader f_colour(FRAGMENT, sdir + "Colour.frag");
 
 //Programs:
 	s_programs[LINE].add(v_passThrough);
@@ -250,7 +250,7 @@ void m2ShaderProgram::init()
 	s_programs[RAY].link();
 }
 
-m2ShaderProgram & m2ShaderProgram::getProgram(Shaders shader)
+m2ShaderProgram& m2ShaderProgram::getProgram(m2ShaderPrograms shader)
 {
 	return s_programs[shader];
 }
@@ -258,12 +258,17 @@ m2ShaderProgram & m2ShaderProgram::getProgram(Shaders shader)
 void m2ShaderProgram::drawLine()
 {	//Must bind a random vao cause you're not allowed to render if the null vao is bound.
 	static GLuint vao;
-	glGenVertexArrays(1, &vao);
-	glBindVertexArray(vao);
-	m2ShaderProgram& sp = getProgram(Shaders::LINE);
+	static bool generated = false;
+	if (!generated) {
+		glGenVertexArrays(1, &vao);
+		generated = true;
+	}
+
+	m2ShaderProgram& sp = getProgram(LINE);
 	sp.bind();
 	sp.setVec3("u_colour", glm::vec3(1.0f));
 
+	glBindVertexArray(vao);
 	glDrawArrays(GL_POINTS, 0, 1);
 }
 

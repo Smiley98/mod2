@@ -129,18 +129,22 @@
     <ClInclude Include="m2EntityFactory.h" />
     <ClInclude Include="m2Line2.h" />
     <ClInclude Include="m2Line3.h" />
+    <ClInclude Include="m2LineRenderer.h" />
     <ClInclude Include="m2MemDef.h" />
     <ClInclude Include="m2GameObject.h" />
     <ClInclude Include="m2MemoryManager.h" />
+    <ClInclude Include="m2RayEngine.h" />
+    <ClInclude Include="m2Renderer.h" />
     <ClInclude Include="m2Shader.h" />
-    <ClInclude Include="m2ShaderStore.h" />
     <ClInclude Include="m2Timing.h" />
     <ClInclude Include="m2Transform.h" />
     <ClInclude Include="m2TransformComponent.h" />
     <ClInclude Include="m2TypeDef.h" />
     <ClInclude Include="m2Singleton.h" />
     <ClInclude Include="m2Utilities.h" />
+    <ClInclude Include="m2VertexBuffer.h" />
     <ClInclude Include="m2Window.h" />
+    <ClInclude Include="TestRenderer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="m2Application.cpp" />
@@ -150,14 +154,17 @@
     <ClCompile Include="m2GameObject.cpp" />
     <ClCompile Include="m2Line2.cpp" />
     <ClCompile Include="m2Line3.cpp" />
+    <ClCompile Include="m2LineRenderer.cpp" />
+    <ClCompile Include="m2RayEngine.cpp" />
     <ClCompile Include="m2Shader.cpp" />
-    <ClCompile Include="m2ShaderStore.cpp" />
     <ClCompile Include="m2Timing.cpp" />
     <ClCompile Include="m2Transform.cpp" />
     <ClCompile Include="m2TransformComponent.cpp" />
+    <ClCompile Include="m2VertexBuffer.cpp" />
     <ClCompile Include="m2Window.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="m2Utilities.cpp" />
+    <ClCompile Include="TestRenderer.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

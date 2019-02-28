@@ -5,10 +5,16 @@
 #include <vector>
 #include <unordered_map>
 
-enum Shaders : unsigned int {
+enum m2ShaderPrograms : GLenum {
 	LINE,
 	RAY,
 	NUM_SHADERS
+};
+
+enum m2Shaders : GLenum {
+	VERTEX = GL_VERTEX_SHADER,
+	GEOMETRY = GL_GEOMETRY_SHADER,
+	FRAGMENT = GL_FRAGMENT_SHADER
 };
 
 class m2ShaderProgram;
@@ -16,13 +22,8 @@ class m2Shader {
 	friend m2ShaderProgram;
 
 public:
-	enum Types : GLenum {
-		VERTEX = GL_VERTEX_SHADER,
-		GEOMETRY = GL_GEOMETRY_SHADER,
-		FRAGMENT = GL_FRAGMENT_SHADER
-	};
 
-	m2Shader(Types, const std::string&);
+	m2Shader(m2Shaders, const std::string&);
 	~m2Shader();
 
 private:
@@ -78,7 +79,7 @@ public:
 	//ie ensure we're not pointing to normals when we think we're pointing to uvs.
 
 	static void init();
-	static m2ShaderProgram& getProgram(Shaders);
+	static m2ShaderProgram& getProgram(m2ShaderPrograms);
 	static void drawLine();
 
 private:

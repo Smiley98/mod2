@@ -9,9 +9,8 @@ out Ray {
 	float x;
 } ray;
 
-//Working in NDC would be nice for x cause step is from -1.0f to 1.0f, but screen space is necessary for y plus 0 to 1920 is still very nice for x.
-//(Plus instance_id or whatever is most likely an int that scales with primitives so it may even be the best!)
-float x_position = 0.0f;
+//Working in screen space then converting to NDC is the way to do 2d line rendering! No reason to work in world space.
+float x_position = 0.0f;//Let's hope this resets each draw call.
 void main()
 {	//Do += u_step instead if I want more control.
 	ray.x = x_position;

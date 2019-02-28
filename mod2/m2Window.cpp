@@ -28,6 +28,7 @@ m2Window::m2Window() : m_window(nullptr)
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 4);
 	m_window = glfwCreateWindow(800, 800, "Window", nullptr, nullptr);
 	glfwMakeContextCurrent(m_window);
+	glfwSetWindowPos(m_window, 0, 0);
 	
 	gladLoadGL();
 
