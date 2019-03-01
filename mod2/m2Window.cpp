@@ -26,7 +26,7 @@ m2Window::m2Window() : m_window(nullptr)
 	glfwSetErrorCallback(error_callback);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 4);
-	m_window = glfwCreateWindow(800, 800, "Window", nullptr, nullptr);
+	m_window = glfwCreateWindow(m_width, m_height, "Window", nullptr, nullptr);
 	glfwMakeContextCurrent(m_window);
 	glfwSetWindowPos(m_window, 0, 0);
 	
@@ -57,4 +57,24 @@ void m2Window::close()
 void m2Window::swapBuffers()
 {
 	glfwSwapBuffers(m_window);
+}
+
+int m2Window::getX()
+{
+	return m_x;
+}
+
+int m2Window::getY()
+{
+	return m_y;
+}
+
+int m2Window::getWidth()
+{
+	return m_width;
+}
+
+int m2Window::getHeight()
+{
+	return m_height;
 }

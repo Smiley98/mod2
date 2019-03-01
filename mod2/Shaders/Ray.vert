@@ -9,14 +9,16 @@ out Ray {
 	float x;
 } ray;
 
-//Working in screen space then converting to NDC is the way to do 2d line rendering! No reason to work in world space.
-float x_position = 0.0f;//Let's hope this resets each draw call.
+out float pos;
+
+
+const float c_start = -1.0f;
+const float c_step = 2.0f / 800.0f;//Replace with u_xRes.
+
 void main()
-{	//Do += u_step instead if I want more control.
-	ray.x = x_position;
-	x_position += 1.0f;
-	//Map from screen space to NDC:
-	//I should've wrote these comments inside the geometry shader. All I can do here is pass on attributes.
+{
 	ray.colour = a_colour;
 	ray.height = a_height;
+	ray.x = c_start + c_step * float(gl_VertexID);
+	pos = ray.x;
 }

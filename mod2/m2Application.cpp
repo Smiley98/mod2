@@ -19,6 +19,7 @@
 #include "m2Shader.h"
 
 #include "m2LineRenderer.h"
+#include "TestRenderer.h"
 
 #define FRAMES_PER_SECOND 60.0
 #define MILLISECONDS_PER_FRAME 1.0 / FRAMES_PER_SECOND
@@ -78,7 +79,9 @@ inline void m2Application::render()
 	//m2ShaderProgram::drawLine();
 
 	static m2LineRenderer lineRenderer;
-	lineRenderer.render();
+	//lineRenderer.render();
+	static TestRenderer testRenderer;
+	testRenderer.render();
 }
 
 inline void m2Application::tick(float frameTime)

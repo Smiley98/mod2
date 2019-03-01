@@ -10,26 +10,38 @@ in Ray {
 } rayIn[];
 
 out fData {
-	//Could have a 2nd colour for wacky visuals via rasterizer interpolation.
 	vec4 colour;
 } rayOut;
 
-//I don't even need this assuming I want to start at 0 and cast 1 ray per horizontal pixel! (Could add start x and y if I really wanted extensibility).
-//uniform int u_screenWidth;
-uniform int u_screenHeight;
+in float pos[];
+
+uniform float u_halfScreenHeight;
+//Faster to multiply than divide :D
+//uniform float u_halfScreenHeightInverse;
 
 void main()
 {	//Screen space to NDC = divide by half resolution, then subtract 1.
-	//Ray ray = rayIn[0];
-	float halfRayHeight = rayIn[0].height * 0.5f;
-	float halfScreenHeight = float(u_screenHeight) * 0.5f;
-	gl_Position = vec4(/*float(gl_InstanceID)*/rayIn[0].x, (halfScreenHeight + halfRayHeight) / halfScreenHeight - 1.0f, 0.0, 1.0);
+	/*float halfRayHeight = rayIn[0].height * 0.5f;
+	
+	gl_Position = vec4(rayIn[0].x, (u_halfScreenHeight + halfRayHeight) / u_halfScreenHeight - 1.0f, 0.0, 1.0);
+	//gl_Position = vec4(rayIn[0].x, (u_halfScreenHeight + halfRayHeight) * u_halfScreenHeightInverse - 1.0f, 0.0, 1.0);
 	rayOut.colour = rayIn[0].colour;
 	EmitVertex();
-
-	gl_Position = vec4(/*float(gl_InstanceID)*/rayIn[0].x, (halfScreenHeight - halfRayHeight) / halfScreenHeight - 1.0f, 0.0, 1.0);
-	rayOut.colour = rayIn[0].colour;
+	
+	gl_Position = vec4(rayIn[0].x, (u_halfScreenHeight - halfRayHeight) / u_halfScreenHeight - 1.0f, 0.0, 1.0);
+	//gl_Position = vec4(rayIn[0].x, (u_halfScreenHeight + halfRayHeight) * u_halfScreenHeightInverse - 1.0f, 0.0, 1.0);
+	rayOut.colour = vec4(1.0f) - rayIn[0].colour;
 	EmitVertex();
-
+	
+	EndPrimitive();*/
+	
+	gl_Position = vec4(pos[0], -0.75f, 0.0f, 1.0f);
+	rayOut.colour = vec4(1.0f, 0.0f, 0.0f, 1.0f);
+	EmitVertex();
+	
+	gl_Position = vec4(pos[0], 0.75f, 0.0f, 1.0f);
+	rayOut.colour = vec4(0.0f, 0.0f, 1.0f, 1.0f);
+	EmitVertex();
+	
 	EndPrimitive();
 }

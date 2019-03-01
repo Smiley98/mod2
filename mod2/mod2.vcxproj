@@ -133,6 +133,7 @@
     <ClInclude Include="m2MemDef.h" />
     <ClInclude Include="m2GameObject.h" />
     <ClInclude Include="m2MemoryManager.h" />
+    <ClInclude Include="m2RayCaster.h" />
     <ClInclude Include="m2RayEngine.h" />
     <ClInclude Include="m2Renderer.h" />
     <ClInclude Include="m2Shader.h" />
@@ -155,6 +156,7 @@
     <ClCompile Include="m2Line2.cpp" />
     <ClCompile Include="m2Line3.cpp" />
     <ClCompile Include="m2LineRenderer.cpp" />
+    <ClCompile Include="m2RayCaster.cpp" />
     <ClCompile Include="m2RayEngine.cpp" />
     <ClCompile Include="m2Shader.cpp" />
     <ClCompile Include="m2Timing.cpp" />

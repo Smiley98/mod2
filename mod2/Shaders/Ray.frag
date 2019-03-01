@@ -6,6 +6,7 @@ in fData {
 
 out vec4 outColour;
 
-void main(){
+void main()
+{
 	outColour = fIn.colour;
 }

@@ -8,6 +8,7 @@
 enum m2ShaderPrograms : GLenum {
 	LINE,
 	RAY,
+	MULTILINE_TEST,
 	NUM_SHADERS
 };
 

@@ -17,8 +17,18 @@ public:
 	//Polls events and swaps buffers.
 	void swapBuffers();
 
+	int getX();
+	int getY();
+	int getWidth();
+	int getHeight();
+
 private:
 	m2Window();
 	GLFWwindow* m_window;
+	//Import the box class that as a union between xMax, yMax / width, height.
+	int m_x			= 0;
+	int m_y			= 0;
+	int m_width		= 800;
+	int m_height	= 800;
 };
 

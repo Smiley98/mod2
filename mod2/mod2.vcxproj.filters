@@ -126,6 +126,9 @@
     <ClInclude Include="m2VertexBuffer.h">
       <Filter>OpenGL Object Wrappers</Filter>
     </ClInclude>
+    <ClInclude Include="m2RayCaster.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="m2EntityFactory.cpp">
@@ -181,6 +184,9 @@
     </ClCompile>
     <ClCompile Include="m2VertexBuffer.cpp">
       <Filter>OpenGL Object Wrappers</Filter>
+    </ClCompile>
+    <ClCompile Include="m2RayCaster.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
