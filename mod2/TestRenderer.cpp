@@ -21,14 +21,14 @@ TestRenderer::TestRenderer() : m_halfScreenHeight(m2Window::instance().getHeight
 	m_colours.resize(m_numRays);
 	for(glm::vec4& colour : m_colours)
 		colour = glm::linearRand(glm::vec4(0.0f), glm::vec4(1.0f));
-	glBufferData(GL_ARRAY_BUFFER, m_colours.size() * sizeof(glm::vec4), m_colours.data(), GL_STATIC_DRAW);//GL_STREAM_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, m_colours.size() * sizeof(glm::vec4), m_colours.data(), GL_STATIC_DRAW);
 	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(glm::vec4), nullptr);
 
 	glBindBuffer(GL_ARRAY_BUFFER, m_hbo);
 	m_heights.resize(m_numRays);
 	for (float& height : m_heights)
 		height = glm::linearRand(75.0f, 100.0f);
-	glBufferData(GL_ARRAY_BUFFER, m_heights.size() * sizeof(float), m_heights.data(), GL_STATIC_DRAW);//GL_STREAM_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, m_heights.size() * sizeof(float), m_heights.data(), GL_STATIC_DRAW);
 	glVertexAttribPointer(0, 1, GL_FLOAT, GL_FALSE, sizeof(float), nullptr);
 
 	glBindVertexArray(GL_NONE);
@@ -60,7 +60,7 @@ void TestRenderer::render()
 	auto& rayShader = m2ShaderProgram::getProgram(RAY);
 	rayShader.bind();
 
-	rayShader.setFloat("u_halfScreenHeight", m_halfScreenHeight);
+	//rayShader.setFloat("u_halfScreenHeight", m_halfScreenHeight);
 
 	glBindVertexArray(m_vao);
 	glDrawArrays(GL_POINTS, 0, m_numRays);

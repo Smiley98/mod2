@@ -29,7 +29,7 @@ m2Window::m2Window() : m_window(nullptr)
 	m_window = glfwCreateWindow(m_width, m_height, "Window", nullptr, nullptr);
 	glfwMakeContextCurrent(m_window);
 	glfwSetWindowPos(m_window, 0, 0);
-	
+
 	gladLoadGL();
 
 	glfwSetKeyCallback(m_window, key_callback);

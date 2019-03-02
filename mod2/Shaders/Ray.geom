@@ -34,13 +34,15 @@ void main()
 	EmitVertex();
 	
 	EndPrimitive();*/
-	
-	gl_Position = vec4(pos[0], -0.75f, 0.0f, 1.0f);
-	rayOut.colour = vec4(1.0f, 0.0f, 0.0f, 1.0f);
+	float halfHeight = (rayIn[0].height / 50.0f - 1.0f) * 0.5f;
+	gl_Position = vec4(pos[0], -halfHeight, 0.0f, 1.0f);
+	rayOut.colour = rayIn[0].colour;
+	//rayOut.colour = vec4(1.0f, 0.0f, 0.0f, 1.0f);
 	EmitVertex();
 	
-	gl_Position = vec4(pos[0], 0.75f, 0.0f, 1.0f);
-	rayOut.colour = vec4(0.0f, 0.0f, 1.0f, 1.0f);
+	gl_Position = vec4(pos[0], halfHeight, 0.0f, 1.0f);
+	rayOut.colour = vec4(1.0f) - rayIn[0].colour;
+	//rayOut.colour = vec4(0.0f, 0.0f, 1.0f, 1.0f);
 	EmitVertex();
 	
 	EndPrimitive();
