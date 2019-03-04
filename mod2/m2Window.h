@@ -58,6 +58,6 @@ private:
 
 	int m_clientX = 0;
 	int m_clientY = 0;
-	int m_clientWidth = 800;
-	int m_clientHeight = 800;
+	int m_clientWidth = 1920;
+	int m_clientHeight = 1080;
 };

@@ -25,21 +25,16 @@ TestRenderer::TestRenderer(float xMin, float xMax, unsigned int thickness) :
 
 	glBindBuffer(GL_ARRAY_BUFFER, m_cbo);
 	m_colours.resize(m_count);
-	for (unsigned int i = 0; i < m_count; i++) {
-		//if(i < 400)
-		//	m_colours[i] = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
-		//else
-		//	m_colours[i] = glm::vec4(0.0f, 1.0f, 0.0f, 1.0f);
+	for (unsigned int i = 0; i < m_count; i++)
 		m_colours[i] = glm::linearRand(glm::vec4(0.0f), glm::vec4(1.0f));
-	}
 	glBufferData(GL_ARRAY_BUFFER, m_count * sizeof(glm::vec4), m_colours.data(), GL_STATIC_DRAW);
 	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(glm::vec4), nullptr);
 
 	glBindBuffer(GL_ARRAY_BUFFER, m_hbo);
 	m_heights.resize(m_count);
 	for (unsigned int i = 0; i < m_count; i++)
-		//m_heights[i] = 80.0f;
-		m_heights[i] = glm::linearRand(0.0f, 800.0f);
+		//Height approaches the minimum as it approaches getClientHeight() / 2 from both sides. Approaches a maximum as it approaches 0 or getClientHeight().
+		m_heights[i] = glm::linearRand(0.0f, (float)window.getClientHeight() / 2.0f);
 	glBufferData(GL_ARRAY_BUFFER, m_count * sizeof(float), m_heights.data(), GL_STATIC_DRAW);
 	glVertexAttribPointer(1, 1, GL_FLOAT, GL_FALSE, sizeof(float), nullptr);
 
@@ -52,29 +47,25 @@ TestRenderer::~TestRenderer()
 
 void TestRenderer::render()
 {
-	/*glBindBuffer(GL_ARRAY_BUFFER, m_cbo);
+	glBindBuffer(GL_ARRAY_BUFFER, m_cbo);
 	for(unsigned int i = 0; i < m_count; i++)
 		m_colours[i] = glm::linearRand(glm::vec4(0.0f), glm::vec4(1.0f));
-	glBufferSubData(GL_ARRAY_BUFFER, 0, m_colours.size() * sizeof(glm::vec3), m_colours.data());
+	glBufferSubData(GL_ARRAY_BUFFER, 0, m_count * sizeof(glm::vec4), m_colours.data());
 
 	glBindBuffer(GL_ARRAY_BUFFER, m_hbo);
 	for (unsigned int i = 0; i < m_count; i++)
-		m_heights[i] = glm::linearRand(75.0f, 100.0f);
-	glBufferSubData(GL_ARRAY_BUFFER, 0, m_heights.size() * sizeof(float), m_heights.data());*/
+		m_heights[i] = glm::linearRand(0.0f, 675.0f);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, m_heights.size() * sizeof(float), m_heights.data());
 
 	///*
 	m2ShaderProgram& rayShader = m2ShaderProgram::getProgram(RAY);
 	rayShader.bind();
 
-	rayShader.setFloat("u_start", m2Utils::screenToNdcX(m_xMin));//
+	rayShader.setFloat("u_start", m2Utils::screenToNdcX(m_xMin));
 	rayShader.setFloat("u_step", m_step);
-	//Vertical viewport offset.
+	rayShader.setFloat("u_rayOrigin", (float)window.getClientHeight() / 2.0f);
 	rayShader.setFloat("u_clientY", (float)window.getClientY());
-	//rayShader.setFloat("u_clientHeight", (float)window.getClientHeight());
-	//Realistically, all we need to do is send the vertical resolution in order to convert heights to ndc but I wanted to optimize for fun.
-	//I send it up regardless cause of fragment shader which is way more expensive anyways so any optimizations I do in the vertex shader are outweighed by fs runs
-	//Plus the reduction in 1 uniform is probably more of a performance improvement than saving a division and multiplication per-vertex, although ubos would eliminate sending overhead.
-	rayShader.setFloat("u_halfClientHeightInverse", 2.0f / (float)window.getClientHeight());
+	rayShader.setFloat("u_clientHeight", (float)window.getClientHeight());
 
 	glBindVertexArray(m_vao);
 	glDrawArrays(GL_POINTS, 0, m_count);

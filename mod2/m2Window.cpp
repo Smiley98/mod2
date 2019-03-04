@@ -35,10 +35,10 @@ m2Window::m2Window() : m_window(nullptr)
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 4);
 	
-	//GLFWmonitor& monitor = *glfwGetPrimaryMonitor();
-	//const GLFWvidmode& vm = *glfwGetVideoMode(&monitor);
-	//m_window = glfwCreateWindow(vm.width, vm.height, "PRIMEOPS 2", &monitor, nullptr);
-	m_window = glfwCreateWindow(800, 800, "PRIMEOPS 2", nullptr, nullptr);
+	GLFWmonitor& monitor = *glfwGetPrimaryMonitor();
+	const GLFWvidmode& vm = *glfwGetVideoMode(&monitor);
+	m_window = glfwCreateWindow(vm.width, vm.height, "PRIMEOPS 2", &monitor, nullptr);
+	//m_window = glfwCreateWindow(800, 800, "PRIMEOPS 2", nullptr, nullptr);
 	//int wwidth, wheight;
 	//glfwGetWindowSize(m_window, &wwidth, &wheight);
 	//printf("Window size: %ix%i.\n", wwidth, wheight);
@@ -58,8 +58,8 @@ m2Window::m2Window() : m_window(nullptr)
 	//printf("Framebuffer size: %ix%i.\n", fwidth, fheight);
 
 	//4. *IMPORTANT* Set the visible area to match the client rather than the window. The client is essentially the "canvas" whereas the window contains stuff we don't want like boarders and scroll bars! 
-	//glfwGetFramebufferSize(m_window, &m_clientWidth, &m_clientHeight);
-	//glViewport(0, 0, m_clientWidth, m_clientHeight);
+	glfwGetFramebufferSize(m_window, &m_clientWidth, &m_clientHeight);
+	glViewport(0, 0, m_clientWidth, m_clientHeight);
 
 	//5. Set the interval at which the buffers swap. Double buffer by default, but at an interval of 0 (which leads to screen tear).
 	glfwSwapInterval(1);

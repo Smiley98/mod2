@@ -31,12 +31,12 @@ float m2Utils::unbias(float value)
 
 float m2Utils::screenToNdcX(float value)
 {
-	return (value - window.getClientX()) / (float)window.getClientWidth() * 0.5f - 1.0f;
+	return (value - window.getClientX()) / ((float)window.getClientWidth() * 0.5f) - 1.0f;
 }
 
 float m2Utils::screenToNdcY(float value)
 {
-	return (value - window.getClientY()) / (float)window.getClientHeight() * 0.5f - 1.0f;
+	return (value - window.getClientY()) / ((float)window.getClientHeight() * 0.5f) - 1.0f;
 }
 
 float m2Utils::ndcToScreenX(float value)
