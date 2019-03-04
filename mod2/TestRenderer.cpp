@@ -26,15 +26,14 @@ TestRenderer::TestRenderer(float xMin, float xMax, unsigned int thickness) :
 	glBindBuffer(GL_ARRAY_BUFFER, m_cbo);
 	m_colours.resize(m_count);
 	for (unsigned int i = 0; i < m_count; i++)
-		m_colours[i] = glm::linearRand(glm::vec4(0.0f), glm::vec4(1.0f));
+		m_colours[i] = glm::linearRand(glm::vec4(0.9f), glm::vec4(1.0f));
 	glBufferData(GL_ARRAY_BUFFER, m_count * sizeof(glm::vec4), m_colours.data(), GL_STATIC_DRAW);
 	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(glm::vec4), nullptr);
 
 	glBindBuffer(GL_ARRAY_BUFFER, m_hbo);
 	m_heights.resize(m_count);
 	for (unsigned int i = 0; i < m_count; i++)
-		//Height approaches the minimum as it approaches getClientHeight() / 2 from both sides. Approaches a maximum as it approaches 0 or getClientHeight().
-		m_heights[i] = glm::linearRand(0.0f, (float)window.getClientHeight() / 2.0f);
+		m_heights[i] = glm::linearRand(500.0f, (float)window.getClientHeight() / 2.0f);
 	glBufferData(GL_ARRAY_BUFFER, m_count * sizeof(float), m_heights.data(), GL_STATIC_DRAW);
 	glVertexAttribPointer(1, 1, GL_FLOAT, GL_FALSE, sizeof(float), nullptr);
 
@@ -47,14 +46,14 @@ TestRenderer::~TestRenderer()
 
 void TestRenderer::render()
 {
-	glBindBuffer(GL_ARRAY_BUFFER, m_cbo);
+	/*glBindBuffer(GL_ARRAY_BUFFER, m_cbo);
 	for(unsigned int i = 0; i < m_count; i++)
 		m_colours[i] = glm::linearRand(glm::vec4(0.0f), glm::vec4(1.0f));
-	glBufferSubData(GL_ARRAY_BUFFER, 0, m_count * sizeof(glm::vec4), m_colours.data());
+	glBufferSubData(GL_ARRAY_BUFFER, 0, m_count * sizeof(glm::vec4), m_colours.data());*/
 
 	glBindBuffer(GL_ARRAY_BUFFER, m_hbo);
 	for (unsigned int i = 0; i < m_count; i++)
-		m_heights[i] = glm::linearRand(0.0f, 675.0f);
+		m_heights[i] = glm::linearRand(0.0f, (float)window.getClientHeight() / 2.0f);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, m_heights.size() * sizeof(float), m_heights.data());
 
 	///*
