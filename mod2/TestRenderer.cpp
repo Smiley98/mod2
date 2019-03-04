@@ -26,7 +26,7 @@ TestRenderer::TestRenderer(float xMin, float xMax, unsigned int thickness) :
 	glBindBuffer(GL_ARRAY_BUFFER, m_cbo);
 	m_colours.resize(m_count);
 	for (unsigned int i = 0; i < m_count; i++)
-		m_colours[i] = glm::linearRand(glm::vec4(0.9f), glm::vec4(1.0f));
+		m_colours[i] = glm::linearRand(glm::vec4(0.0f), glm::vec4(1.0f));
 	glBufferData(GL_ARRAY_BUFFER, m_count * sizeof(glm::vec4), m_colours.data(), GL_STATIC_DRAW);
 	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(glm::vec4), nullptr);
 
@@ -51,10 +51,10 @@ void TestRenderer::render()
 		m_colours[i] = glm::linearRand(glm::vec4(0.0f), glm::vec4(1.0f));
 	glBufferSubData(GL_ARRAY_BUFFER, 0, m_count * sizeof(glm::vec4), m_colours.data());*/
 
-	glBindBuffer(GL_ARRAY_BUFFER, m_hbo);
+	/*glBindBuffer(GL_ARRAY_BUFFER, m_hbo);
 	for (unsigned int i = 0; i < m_count; i++)
 		m_heights[i] = glm::linearRand(0.0f, (float)window.getClientHeight() / 2.0f);
-	glBufferSubData(GL_ARRAY_BUFFER, 0, m_heights.size() * sizeof(float), m_heights.data());
+	glBufferSubData(GL_ARRAY_BUFFER, 0, m_heights.size() * sizeof(float), m_heights.data());*/
 
 	///*
 	m2ShaderProgram& rayShader = m2ShaderProgram::getProgram(RAY);

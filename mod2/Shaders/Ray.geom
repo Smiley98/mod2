@@ -11,6 +11,7 @@ in Ray {
 
 out fData {
 	vec4 colour;
+	vec4 colourInverse;
 } rayOut;
 
 uniform float u_rayOrigin;
@@ -28,7 +29,7 @@ void main()
 	EmitVertex();
 	
 	gl_Position = vec4(rayIn[0].x, screenToNdcY(u_rayOrigin - rayIn[0].height), 0.0f, 1.0f);
-	rayOut.colour = vec4(1.0f) - rayIn[0].colour;
+	rayOut.colourInverse = vec4(1.0f) - rayIn[0].colour;
 	EmitVertex();
 	
 	EndPrimitive();
