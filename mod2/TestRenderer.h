@@ -2,12 +2,14 @@
 #include "m2Renderer.h"
 #include <vector>
 
-//Testing grounds where I can write borderline throwaway code that's concerned with the result rather than software design. (No "m2" prefix).
+//The values of m2RayCaster are immutable. Must instantiate another instance if you want different values.
+//Reason being is making setters means I'll have to come up with logic for buffer redefinition, which is verbose.
+//Moreover, changing these values shouldn't happen frequently so making that functionality isn't a good use of time.
 class TestRenderer :
 	public m2Renderer
 {
 public:
-	TestRenderer();
+	TestRenderer(float xMin, float xMax, unsigned int thickness = 1);
 	virtual ~TestRenderer();
 
 	void render() override;
@@ -15,13 +17,14 @@ public:
 private:
 	std::vector<glm::vec4> m_colours;
 	std::vector<float> m_heights;
-	float m_halfScreenHeight;
-	//Hardcode this for now. Can eventually do something like num_rays = screen_resolution.x / ray_thickness, or specify a range ie half res for vertical splitscreen.
-	const unsigned int m_numRays = 800;
-	//I think this works cause initialization depends on order so since numRays is above this is allowed?
-	const float m_step = 1.0f / (float)m_numRays;
-	GLuint m_hbo;	//Height buffer object.
+
+	const float m_xMin, m_xMax;
+	const unsigned int m_thickness;
+	const unsigned int m_count;
+	const float m_step;
+	const float m_halfScreenHeight;
+
 	GLuint m_cbo;	//Colour buffer object.
-	//unsigned int m_icbo;//Inverse colour buffer object.
+	GLuint m_hbo;	//Height buffer object.
 };
 

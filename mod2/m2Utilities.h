@@ -6,6 +6,20 @@
 namespace m2Utils {
 	std::string loadTextFile(const std::string& path);
 
+	//Converts from (-1.0, 1.0) to (0.0, 1.0);
+	float bias(float);
+	//Converts from (0.0, 1.0) to (-1.0, 1.0);
+	float unbias(float);
+
+	float screenToNdcX(float value);
+	float screenToNdcY(float value);
+	float ndcToScreenX(float value);
+	float ndcToScreenY(float value);
+	//float screenToNdc(float value, float range, float offset = 0.0f);
+	//float ndcToScreen(float value, float range, float offset = 0.0f);
+	glm::vec2 screenToNdc(const glm::vec2&);
+	glm::vec2 ndcToScreen(const glm::vec2&);
+
 	float cross(const glm::vec2&, const glm::vec2&);
 
 	void printMatrix(const glm::mat4& matrix);

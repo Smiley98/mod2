@@ -72,7 +72,7 @@ inline void m2Application::update()
 
 inline void m2Application::render()
 {
-	glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	//m_scene->render();//Scenes should internally switch renderers if I implement such capabilities.
 
@@ -80,7 +80,7 @@ inline void m2Application::render()
 
 	static m2LineRenderer lineRenderer;
 	//lineRenderer.render();
-	static TestRenderer testRenderer;
+	static TestRenderer testRenderer(0, m_window.getClientWidth(), 1);
 	testRenderer.render();
 }
 

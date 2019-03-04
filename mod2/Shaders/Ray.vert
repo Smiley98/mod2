@@ -9,16 +9,15 @@ out Ray {
 	float x;
 } ray;
 
-out float pos;
-
-
-const float c_start = -1.0f;
-const float c_step = 2.0f / 800.0f;//Replace with u_xRes.
+//const float c_start = -1.0f;
+//const float c_step = 2.0f / 800.0f;//Replace with u_xRes.
+uniform float u_start;
+uniform float u_step;
 
 void main()
 {
 	ray.colour = a_colour;
 	ray.height = a_height;
-	ray.x = c_start + c_step * float(gl_VertexID);
-	pos = ray.x;
+	ray.x = u_start + u_step * float(gl_VertexID);
+	//ray.x = c_start + c_step * float(gl_VertexID);
 }

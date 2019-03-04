@@ -55,6 +55,18 @@
     <Filter Include="OpenGL Object Wrappers">
       <UniqueIdentifier>{c4f08457-7c88-4e1a-af83-15bfdf9cd352}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Math\Geometry\Lines">
+      <UniqueIdentifier>{506b9da7-2285-4128-a51d-6a661bb6da4b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Math\Geometry\Boxes">
+      <UniqueIdentifier>{75d93e63-a92d-40ce-a172-b8a3140120d6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Math\Geometry\Boxes\Axis-Aligned">
+      <UniqueIdentifier>{25b316e2-82ae-4b74-81da-6e5d09fcb0b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Math\Geometry\Boxes\Object-Oriented">
+      <UniqueIdentifier>{15f71dc5-8d00-4882-ba99-126d39c78544}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="m2Component.h">
@@ -105,12 +117,6 @@
     <ClInclude Include="m2Shader.h">
       <Filter>Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="m2Line2.h">
-      <Filter>Math\Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="m2Line3.h">
-      <Filter>Math\Geometry</Filter>
-    </ClInclude>
     <ClInclude Include="m2Renderer.h">
       <Filter>Rendering</Filter>
     </ClInclude>
@@ -126,8 +132,23 @@
     <ClInclude Include="m2VertexBuffer.h">
       <Filter>OpenGL Object Wrappers</Filter>
     </ClInclude>
-    <ClInclude Include="m2RayCaster.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="m2Line3.h">
+      <Filter>Math\Geometry\Lines</Filter>
+    </ClInclude>
+    <ClInclude Include="m2Line2.h">
+      <Filter>Math\Geometry\Lines</Filter>
+    </ClInclude>
+    <ClInclude Include="m2AABB2.h">
+      <Filter>Math\Geometry\Boxes\Axis-Aligned</Filter>
+    </ClInclude>
+    <ClInclude Include="m2AABB3.h">
+      <Filter>Math\Geometry\Boxes\Axis-Aligned</Filter>
+    </ClInclude>
+    <ClInclude Include="m2OOBB3.h">
+      <Filter>Math\Geometry\Boxes\Object-Oriented</Filter>
+    </ClInclude>
+    <ClInclude Include="m2OOBB2.h">
+      <Filter>Math\Geometry\Boxes\Object-Oriented</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -167,12 +188,6 @@
     <ClCompile Include="m2Shader.cpp">
       <Filter>Rendering</Filter>
     </ClCompile>
-    <ClCompile Include="m2Line2.cpp">
-      <Filter>Math\Geometry</Filter>
-    </ClCompile>
-    <ClCompile Include="m2Line3.cpp">
-      <Filter>Math\Geometry</Filter>
-    </ClCompile>
     <ClCompile Include="m2RayEngine.cpp">
       <Filter>Rendering\Ray Casting</Filter>
     </ClCompile>
@@ -185,8 +200,11 @@
     <ClCompile Include="m2VertexBuffer.cpp">
       <Filter>OpenGL Object Wrappers</Filter>
     </ClCompile>
-    <ClCompile Include="m2RayCaster.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="m2Line2.cpp">
+      <Filter>Math\Geometry\Lines</Filter>
+    </ClCompile>
+    <ClCompile Include="m2Line3.cpp">
+      <Filter>Math\Geometry\Lines</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
