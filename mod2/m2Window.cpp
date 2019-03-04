@@ -42,7 +42,7 @@ m2Window::m2Window() : m_window(nullptr)
 	//int wwidth, wheight;
 	//glfwGetWindowSize(m_window, &wwidth, &wheight);
 	//printf("Window size: %ix%i.\n", wwidth, wheight);
-	//glfwSetWindowPos(m_window, 0, 0);
+	glfwSetWindowPos(m_window, 0, 0);
 
 	//2. Obtain modern gl.
 	glfwMakeContextCurrent(m_window);
