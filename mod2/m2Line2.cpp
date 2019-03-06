@@ -19,7 +19,7 @@ bool m2Line2::intersect(const m2Line2& a, const m2Line2& b, glm::vec2 & poi)
 	//r and s 
 	glm::vec2 r(a.p2.x - a.p1.x, a.p2.y - a.p2.y);
 	glm::vec2 s(b.p2.x - b.p1.x, b.p2.y - b.p2.y);
-
+	
 	float d = cross(r, s);
 
 	//u and t are scalar values of parameterics

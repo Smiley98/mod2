@@ -244,6 +244,7 @@ void m2ShaderProgram::init()
 	s_programs[RAY].add(v_ray);
 	s_programs[RAY].add(g_ray);
 	s_programs[RAY].add(f_ray);
+	//s_programs[RAY].add(f_randomColour);
 	s_programs[RAY].link();
 
 	s_programs[MULTILINE_TEST].add(v_multilineTest);

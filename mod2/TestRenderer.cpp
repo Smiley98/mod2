@@ -49,9 +49,9 @@ void TestRenderer::render()
 	/*glBindBuffer(GL_ARRAY_BUFFER, m_cbo);
 	for(unsigned int i = 0; i < m_count; i++)
 		m_colours[i] = glm::linearRand(glm::vec4(0.0f), glm::vec4(1.0f));
-	glBufferSubData(GL_ARRAY_BUFFER, 0, m_count * sizeof(glm::vec4), m_colours.data());*/
+	glBufferSubData(GL_ARRAY_BUFFER, 0, m_count * sizeof(glm::vec4), m_colours.data());
 
-	/*glBindBuffer(GL_ARRAY_BUFFER, m_hbo);
+	glBindBuffer(GL_ARRAY_BUFFER, m_hbo);
 	for (unsigned int i = 0; i < m_count; i++)
 		m_heights[i] = glm::linearRand(0.0f, (float)window.getClientHeight() / 2.0f);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, m_heights.size() * sizeof(float), m_heights.data());*/
