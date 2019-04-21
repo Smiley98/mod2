@@ -10,7 +10,8 @@ in VertexData
 out vec4 outColour;
 
 void main() {
-	vec2 coords = gl_FragCoord.xy;
-	vec2 coords2 = vIn.texCoord.xy;
-    outColour = vec4(coords2, 0.0, 1.0);
+    //Fragment coordinates are in screen space so they must be divided by the screen resultion in order to be used the same way as texture coordinates.
+	//vec2 fragmentCoordinates = gl_FragCoord.xy;
+	vec2 textureCoordinates = vIn.texCoord.xy;
+    outColour = vec4(textureCoordinates.xy, 0.0, 1.0);
 }

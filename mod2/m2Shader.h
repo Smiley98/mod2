@@ -9,7 +9,7 @@ enum m2ShaderPrograms : GLenum {
 	LINE,
 	RAY,
 	QUAD_TEST,
-	RAYMARCH_TEST,
+	RAYMARCH_SANDBOX,
 	NUM_SHADERS
 };
 

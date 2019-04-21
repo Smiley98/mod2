@@ -63,9 +63,9 @@ m2ShaderProgram& m2ShaderProgram::link() {
 		glDeleteProgram(m_programHandle);
 		std::printf("Shader linker error: %s\n", errorLog.data());
 	}
-	//Can release shader objects (shader pointers) after [successful] link.
-	for (m2Shader& m2Shader : m_shaders)
-		glDetachShader(m_programHandle, m2Shader.m_shaderHandle);
+	//Don't do this. The destructor deletes them which implicitly detatches them(I think). Must leave attached in order to share.
+	//for (m2Shader& m2Shader : m_shaders)
+	//	glDetachShader(m_programHandle, m2Shader.m_shaderHandle);
 	return *this;
 }
 
@@ -234,6 +234,7 @@ void m2ShaderProgram::init()
 	m2Shader f_ray(FRAGMENT, sdir + "Ray.frag");
 	m2Shader f_randomColour(FRAGMENT, sdir + "RandomColour.frag");
 	m2Shader f_screenQuadTest(FRAGMENT, sdir + "ScreenQuadTest.frag");
+	m2Shader f_raymarchingSandbox(FRAGMENT, sdir + "RaymarchingSandbox.frag");
 
 //Programs:
 	s_programs[LINE].add(v_passThrough);
@@ -250,6 +251,10 @@ void m2ShaderProgram::init()
 	s_programs[QUAD_TEST].add(v_screenQuad);
 	s_programs[QUAD_TEST].add(f_screenQuadTest);
 	s_programs[QUAD_TEST].link();
+
+	s_programs[RAYMARCH_SANDBOX].add(v_screenQuad);
+	s_programs[RAYMARCH_SANDBOX].add(f_raymarchingSandbox);
+	s_programs[RAYMARCH_SANDBOX].link();
 }
 
 void m2ShaderProgram::shutdown()
