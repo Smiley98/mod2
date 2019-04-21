@@ -16,5 +16,4 @@ void main()
 	vec4 c1 = normalize(fIn.colour);
 	vec4 c1i = vec4(1.0f) - c1;
 	outColour = mix(c1, c1i, gl_FragCoord.y / u_clientHeight);//*/
-
 }

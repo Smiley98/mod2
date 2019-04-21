@@ -3,7 +3,7 @@
 layout(points) in;
 layout(line_strip, max_vertices = 2) out;
 
-//uniform mat4 u_mvp;
+//uniform mat4 u_vp;
 //uniform vec3 u_p1;
 //uniform vec3 u_p2;
 

@@ -5,12 +5,12 @@
 //The values of m2RayCaster are immutable. Must instantiate another instance if you want different values.
 //Reason being is making setters means I'll have to come up with logic for buffer redefinition, which is verbose.
 //Moreover, changing these values shouldn't happen frequently so making that functionality isn't a good use of time.
-class TestRenderer :
+class m2RayRenderer :
 	public m2Renderer
 {
 public:
-	TestRenderer(float xMin, float xMax, unsigned int thickness = 1);
-	virtual ~TestRenderer();
+	m2RayRenderer(float xMin, float xMax, unsigned int thickness = 1);
+	virtual ~m2RayRenderer();
 
 	void render() override;
 

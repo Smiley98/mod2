@@ -223,17 +223,17 @@ void m2ShaderProgram::init()
 //Vertex Shaders:
 	m2Shader v_passThrough(VERTEX, sdir + "PassThrough.vert");
 	m2Shader v_ray(VERTEX, sdir + "Ray.vert");
-	m2Shader v_multilineTest(VERTEX, sdir + "MultilineTest.vert");
+	m2Shader v_screenQuad(VERTEX, sdir + "ScreenQuad.vert");
 
 //Geometry Shaders:
 	m2Shader g_line(GEOMETRY, sdir + "Line.geom");
 	m2Shader g_ray(GEOMETRY, sdir + "Ray.geom");
-	m2Shader g_multilineTest(GEOMETRY, sdir + "MultilineTest.geom");
 
 //Fragment Shaders:
 	m2Shader f_uniformColour(FRAGMENT, sdir + "UniformColour.frag");
 	m2Shader f_ray(FRAGMENT, sdir + "Ray.frag");
 	m2Shader f_randomColour(FRAGMENT, sdir + "RandomColour.frag");
+	m2Shader f_screenQuadTest(FRAGMENT, sdir + "ScreenQuadTest.frag");
 
 //Programs:
 	s_programs[LINE].add(v_passThrough);
@@ -247,10 +247,14 @@ void m2ShaderProgram::init()
 	//s_programs[RAY].add(f_randomColour);
 	s_programs[RAY].link();
 
-	s_programs[MULTILINE_TEST].add(v_multilineTest);
-	s_programs[MULTILINE_TEST].add(g_multilineTest);
-	s_programs[MULTILINE_TEST].add(f_randomColour);
-	s_programs[MULTILINE_TEST].link();
+	s_programs[QUAD_TEST].add(v_screenQuad);
+	s_programs[QUAD_TEST].add(f_screenQuadTest);
+	s_programs[QUAD_TEST].link();
+}
+
+void m2ShaderProgram::shutdown()
+{
+	delete[] s_programs;
 }
 
 m2ShaderProgram& m2ShaderProgram::getProgram(m2ShaderPrograms shader)

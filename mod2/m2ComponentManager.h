@@ -2,10 +2,12 @@
 #include "m2Component.h"
 class m2ComponentManager {
 public:
+	//Decided on an resource management naming convension so this simply wraps whichever public initialization function I'm using at the moment.
+	static void init();
 	static void allocateContainers(u_int);
 	static void allocateMinContainers();
 	static void allocateMaxContainers();
-	static void deallocateContainers();
+	static void shutdown();
 	//We don't want a destroyContainers() method because Component<T> destruction should be soley the responsibility of GameObject.
 
 	template<typename T>

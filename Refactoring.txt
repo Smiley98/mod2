@@ -1,0 +1,1 @@
+Make a vector of vector of void pointers. The outter vector is NUM_COMPONENTS in size, and the inner vector is storage for all components of each unique type. We'll need the inner container to be a vector rather than an array cause stuff like Component::active() requires us to perform operations that vector has built in.

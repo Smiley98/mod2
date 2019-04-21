@@ -52,8 +52,8 @@ private:
 
 template<typename T, typename... Args>
 inline T& m2GameObject::addComponent(Args&&... args)
-{
-	T* component = new (m2MemoryManager<T>::add()) T(args...);
+{	//In addition to weak pointers, we can use the index to choose which array of components (ie colliders vs renderers) to choose from. Just cast internally.
+	T* component = new (m2MemoryManager<T>::add()) T(args...);//Instead of mm.add(), vector.push_back. More safe and more legible.
 
 	u_char index = T::getType();
 	checkAdd(index);
@@ -69,6 +69,7 @@ inline T& m2GameObject::getComponent()
 {	//printf("Internal address: %p.\n", m_components[index]);
 	u_char index = T::getType();
 	checkGet(index);
+	//m_components are the weak pointers. addComponent<T>() and removeComponent<T>() are what the revamp is concerned with.
 	return *reinterpret_cast<T*>(m_components[index]);
 }
 

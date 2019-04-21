@@ -8,7 +8,8 @@
 enum m2ShaderPrograms : GLenum {
 	LINE,
 	RAY,
-	MULTILINE_TEST,
+	QUAD_TEST,
+	RAYMARCH_TEST,
 	NUM_SHADERS
 };
 
@@ -80,6 +81,8 @@ public:
 	//ie ensure we're not pointing to normals when we think we're pointing to uvs.
 
 	static void init();
+	static void shutdown();
+
 	static m2ShaderProgram& getProgram(m2ShaderPrograms);
 	static void drawLine();
 
@@ -97,8 +100,8 @@ private:
 	inline GLint getUniformHandle(const std::string&);
 };
 
-//I overload functions rather than pass default parameters for sending 1 element vs multiple elements because it is faster to call 1f when possible rather than 1fv
-//when possible. Moreover, only floats are sent. unsigned ints, doubles, and weird matrices (m * n where m != n and non-float matrices) aren't included because supporting
+//I overload functions rather than pass default parameters for sending 1 element vs multiple elements because it is faster to call 1f when possible rather than 1fv all the time.
+//Moreover, only floats are sent. unsigned ints, doubles, and weird matrices (m * n where m != n and non-float matrices) aren't included because supporting
 //those additional types seems unnecessary. *Still not a good idea to template cause gl needs to differentiate between float and double. At the same time, we could hack
 //together something that makse a gl call based on the memory size of the data to send rather than the actual type. But like most hacks, we run into errors like treating
 //a as b ie floats as ints when we shouldn't be. Thus, of all the areas to get stupid, this isn't one of them (just like loading images or making a math library).

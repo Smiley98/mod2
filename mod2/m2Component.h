@@ -31,6 +31,7 @@ u_int m2Component<T>::s_activeCount;
 template<class T>
 inline bool m2Component<T>::active()
 {
+	//Active if the address is before the active count (everything is contiguous and all active are at the front).
 	return this < &m2MemoryManager<T>::at(s_activeCount);
 }
 

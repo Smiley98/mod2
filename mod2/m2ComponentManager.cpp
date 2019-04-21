@@ -3,6 +3,11 @@
 
 bool m2ComponentManager::s_allocated = false;
 
+void m2ComponentManager::init()
+{
+	allocateMinContainers();
+}
+
 void m2ComponentManager::allocateContainers(u_int capacity)
 {
 	assert(!s_allocated);
@@ -30,7 +35,7 @@ void m2ComponentManager::allocateMaxContainers()
 	s_allocated = true;
 }
 
-void m2ComponentManager::deallocateContainers()
+void m2ComponentManager::shutdown()
 {
 	assert(s_allocated);
 	m2MemoryManager<m2TransformComponent>::deallocate();

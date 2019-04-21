@@ -17,9 +17,9 @@
 #include "m2Utilities.h"
 
 #include "m2Shader.h"
-
-#include "m2LineRenderer.h"
-#include "TestRenderer.h"
+#include "m2Effects.h"
+#include "m2RayRenderer.h"
+#include "m2RayMarcher.h"
 
 #define FRAMES_PER_SECOND 60.0
 #define MILLISECONDS_PER_FRAME 1.0 / FRAMES_PER_SECOND
@@ -40,13 +40,16 @@ m2Application::m2Application() :
 	m_window(m2Window::instance()),
 	m_timing(m2Timing::instance())
 {
-	m2ComponentManager::allocateMinContainers();//allocateMaxContainers();
+	m2ComponentManager::init();
 	m2ShaderProgram::init();
+	m2Effects::init();
 }
 
 m2Application::~m2Application()
 {
-	m2ComponentManager::deallocateContainers();
+	m2ComponentManager::shutdown();
+	m2ShaderProgram::shutdown();
+	m2Effects::shutdown();
 }
 
 void m2Application::run()
@@ -76,12 +79,12 @@ inline void m2Application::render()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	//m_scene->render();//Scenes should internally switch renderers if I implement such capabilities.
 
+	//Draws a single line. Not yet flexible (doesn't take point arguments).
 	//m2ShaderProgram::drawLine();
 
-	static m2LineRenderer lineRenderer;
-	//lineRenderer.render();
-	static TestRenderer testRenderer(0, m_window.getClientWidth(), 1);
-	testRenderer.render();
+	static m2RayRenderer rayRenderer(0, m_window.getClientWidth(), 1);
+	//rayRenderer.render();
+	m2RayMarcher::marchCircle();
 }
 
 inline void m2Application::tick(float frameTime)
