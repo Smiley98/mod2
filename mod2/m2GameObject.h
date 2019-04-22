@@ -107,7 +107,5 @@ inline void m2GameObject::checkGet(u_char i)
 
 inline bool m2GameObject::componentExists(u_char i)
 {
-	if (m_components[i] == nullptr)
-		return false;
-	return true;
+	return m_components[i] != nullptr;
 }

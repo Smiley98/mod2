@@ -118,7 +118,7 @@ void main() {
     vec3 point = eye + dist * dir;
 
     vec3 diffuse = vec3(0.7, 0.2, 0.2);
-    vec3 specular = vec3(1.0);
+    vec3 specular = vec3(0.2);
     float specularStrength = 16.0;
 
     vec3 colour = phongIllumination(diffuse, specular, specularStrength, point, eye);
