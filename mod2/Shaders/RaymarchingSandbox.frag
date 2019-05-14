@@ -24,17 +24,35 @@ uniform vec2 u_resolution;
 uniform float u_time;
 
 //Signed distance function for a sphere centered at the origin with an arbitrary radius.
-float sphereSDF(vec3 position, float radius) {
-    return length(position) - radius;
+float sphereSDF(vec3 point, float radius) {
+    return length(point) - radius;
+}
+
+//Signed distance function for a cube centered at the origin with sidelengths of 2.
+float cubeSDF(vec3 point, float sideLength) {
+    //If all components of d are negative, then the point is inside the unit cube.
+    vec3 d = abs(point) - vec3(sideLength);
+    
+    // Assuming p is inside the cube, how far is it from the surface?
+    // Result will be negative or zero.
+    float insideDistance = min(max(d.x, max(d.y, d.z)), 0.0);
+    
+    // Assuming p is outside the cube, how far is it from the surface?
+    // Result will be positive or zero.
+    float outsideDistance = length(max(d, 0.0));
+    
+    return insideDistance + outsideDistance;
 }
 
 //Function describing all the scene geometry (currently just one circle with a radius of one about the origin).
 float sceneSDF(vec3 point) {
-    return sphereSDF(point, 1.0);
+    float yAsX = u_resolution.x / u_resolution.y;
+    float uniformTranslation = 0.25f;
+    return cubeSDF(point - vec3(uniformTranslation, uniformTranslation * yAsX, 0.0), 0.75);// + sphereSDF(point, 1.0);
 }
 
 //Distance between the ray and surface geometry.
-float shortestDistanceToSurface(vec3 eye, vec3 marchingDirection, float start, float end) {
+float marchScene(vec3 eye, vec3 marchingDirection, float start, float end) {
     float depth = start;
     for (int i = 0; i < MAX_MARCHING_STEPS; i++) {
         float dist = sceneSDF(eye + depth * marchingDirection);
@@ -54,7 +72,7 @@ vec3 rayDirection(float fieldOfView, vec2 size, vec2 fragCoord) {
 	//Formula = screen half width * tan half fov.
     vec2 xy = fragCoord - size * 0.5;
 	//We're using y rather than x because we want to ensure we bound our scene based on the smaller of the two (the vertical; y).
-    float z = size.y / tan(radians(fieldOfView) * 0.5);
+    float z = size.y / tan(radians(fieldOfView) * 0.5);//Could pre-compute this because the field of view and size (screen resolution) don't change per-fragment.
     return normalize(vec3(xy, -z));
 }
 
@@ -67,7 +85,7 @@ vec3 estimateNormal(vec3 point) {
     ));
 }
 
-vec3 phongContribForLight(vec3 diffuse, vec3 specular, float alpha, vec3 point, vec3 eye, vec3 lightPos) {
+vec3 phongPointLight(vec3 diffuse, vec3 specular, float alpha, vec3 point, vec3 eye, vec3 lightPos) {
     //Gradient instead of surface normals!
     vec3 N = estimateNormal(point);
 	//Light vector (vector from fragment to light).
@@ -96,20 +114,34 @@ vec3 phongIllumination(vec3 diffuse, vec3 specular, float alpha, vec3 point, vec
     vec3 colour = ambient;
     
     vec3 light1Pos = vec3(4.0 * sin(u_time), 2.0, 4.0 * cos(u_time));
-    colour += phongContribForLight(diffuse, specular, alpha, point, eye, light1Pos);
+    colour += phongPointLight(diffuse, specular, alpha, point, eye, light1Pos);
     
     vec3 light2Pos = vec3(2.0 * sin(0.33 * u_time), 2.0 * cos(0.33 * u_time), 2.0);
-    colour += phongContribForLight(diffuse, specular, alpha, point, eye, light2Pos);
+    colour += phongPointLight(diffuse, specular, alpha, point, eye, light2Pos);
 
     return colour;
+}
+
+//Grahm-Schmidt technique to use the cross product to solve for right, forward, and above given the look direction and up vector.
+mat4 viewMatrix(vec3 eye, vec3 center, vec3 up) {
+    vec3 f = normalize(center - eye);
+    vec3 s = normalize(cross(f, up));
+    vec3 u = cross(s, f);
+    return mat4(
+        vec4(s, 0.0),
+        vec4(u, 0.0),
+        vec4(-f, 0.0),
+        vec4(0.0, 0.0, 0.0, 1)
+    );
 }
 
 void main() {
 	vec3 dir = rayDirection(45.0, u_resolution, gl_FragCoord.xy);
     vec3 eye = vec3(0.0, 0.0, 5.0);
-    float dist = shortestDistanceToSurface(eye, dir, MIN_DIST, MAX_DIST);
+    float dist = marchScene(eye, dir, MIN_DIST, MAX_DIST);
 
 	if (dist > MAX_DIST - EPSILON) {
+        //Make this equivalent to glClearColor() eventually via uniform vector.
         outColour = vec4(0.0, 0.0, 0.0, 1.0);
 		return;
     }
