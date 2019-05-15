@@ -44,17 +44,31 @@ float cubeSDF(vec3 point, float sideLength) {
     return insideDistance + outsideDistance;
 }
 
-//Function describing all the scene geometry (currently just one circle with a radius of one about the origin).
+mat4 viewMatrix(vec3 eye, vec3 center, vec3 up);
+
+//Function describing all the scene geometry (currently just one circle with a radius of one about the orgin).
 float sceneSDF(vec3 point) {
-    float yAsX = u_resolution.x / u_resolution.y;
+    /*float yAsX = u_resolution.x / u_resolution.y;
     float uniformTranslation = 0.25f;
-    return cubeSDF(point - vec3(uniformTranslation, uniformTranslation * yAsX, 0.0), 0.75);// + sphereSDF(point, 1.0);
+    return cubeSDF(point - vec3(uniformTranslation, uniformTranslation * yAsX, 0.0), 0.75);*/
+
+    //xD Nothing happened. Probably need to affect the sample point passed to phone, cause all this does is measure distance (which is combined with ray direction and ray orgin to pass to phone).
+    /*vec3 eye = vec3(0.0, 0.0, 5.0);
+    vec3 center = vec3(0.0);
+    vec3 up = vec3(0.0, 1.0, 0.0);
+    vec3 viewPoint = (viewMatrix(eye, center, up) * vec4(point, 1.0)).xyz;*/
+
+    return sphereSDF(point, 1.0);
+    // return sphereSDF(viewPoint, 1.0);
 }
 
 //Distance between the ray and surface geometry.
 float marchScene(vec3 eye, vec3 marchingDirection, float start, float end) {
-    float depth = start;
+    float depth = start;//Start == 0, End = 100.
     for (int i = 0; i < MAX_MARCHING_STEPS; i++) {
+        //1. Depth is 0, so we will always go from the camera to (0, 0, 0) / the "projection plane".
+        //2. We repetitively evaluate the SDF and factor in a direciton. It will hit the limit if the object is behind the camera cause we will never be within the threshold.
+        //Outside of this function, we combine the direction and the eye (ray origin) with the measured distance to use as input for lighting. (I really don't know how to factor in the view matrix).
         float dist = sceneSDF(eye + depth * marchingDirection);
         if (dist < EPSILON) {
 			return depth;
@@ -68,11 +82,13 @@ float marchScene(vec3 eye, vec3 marchingDirection, float start, float end) {
 }
 
 //Normalized ray direction based on the pinhole camera.
-vec3 rayDirection(float fieldOfView, vec2 size, vec2 fragCoord) {
-	//Formula = screen half width * tan half fov.
-    vec2 xy = fragCoord - size * 0.5;
+vec3 rayDirection(float fieldOfView, vec2 screenSize, vec2 fragCoord) {
+	//Formula = screen half width * tan half fov. Used to triangulate z of viewing/projection plane.
+    vec2 xy = fragCoord - screenSize * 0.5;
 	//We're using y rather than x because we want to ensure we bound our scene based on the smaller of the two (the vertical; y).
-    float z = size.y / tan(radians(fieldOfView) * 0.5);//Could pre-compute this because the field of view and size (screen resolution) don't change per-fragment.
+    //I'm not sure why we're not using half-screen-height. I don't think trig ratios work that way...
+    //All this did was cut things in half. I'll keep it though cause it violates my understanding otherwise. I should look up projection matrices and raytracing as a whole.
+    float z = (screenSize.y * 0.5) / tan(radians(fieldOfView) * 0.5);//Could pre-compute this because the field of view and size (screen resolution) don't change per-fragment.
     return normalize(vec3(xy, -z));
 }
 
@@ -136,6 +152,7 @@ mat4 viewMatrix(vec3 eye, vec3 center, vec3 up) {
 }
 
 void main() {
+    //Shoot a ray in the direction of the fragment.
 	vec3 dir = rayDirection(45.0, u_resolution, gl_FragCoord.xy);
     vec3 eye = vec3(0.0, 0.0, 5.0);
     float dist = marchScene(eye, dir, MIN_DIST, MAX_DIST);
