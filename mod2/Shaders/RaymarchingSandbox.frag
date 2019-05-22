@@ -44,8 +44,6 @@ float cubeSDF(vec3 point, float sideLength) {
     return insideDistance + outsideDistance;
 }
 
-mat4 viewMatrix(vec3 eye, vec3 center, vec3 up);
-
 //Function describing all the scene geometry (currently just one circle with a radius of one about the orgin).
 float sceneSDF(vec3 point) {
     /*float yAsX = u_resolution.x / u_resolution.y;
@@ -77,12 +75,12 @@ float marchScene(vec3 eye, vec3 marchingDirection, float start, float end) {
 
 //Normalized ray direction based on the pinhole camera.
 vec3 rayDirection(float fieldOfView, vec2 screenSize, vec2 fragCoord) {
-	//Formula = screen half width * tan half fov. Used to triangulate z of viewing/projection plane.
+    //All we're doing is normalizing in the end.
+    //Perhaps this is more efficient but it would be less ambiguous if we mapped to NDC initially. 
     vec2 xy = fragCoord - screenSize * 0.5;
-	//We're using y rather than x because we want to ensure we bound our scene based on the smaller of the two (the vertical; y).
-    //I'm not sure why we're not using half-screen-height. I don't think trig ratios work that way...
-    //All this did was cut things in half. I'll keep it though cause it violates my understanding otherwise. I should look up projection matrices and raytracing as a whole.
-    float z = (screenSize.y * 0.5) / tan(radians(fieldOfView) * 0.5);//Could pre-compute this because the field of view and size (screen resolution) don't change per-fragment.
+    //TODO: fragCoord / screenResolution combined with * 0.5 + 1.0 or whatever.
+    //Replace with u_projectionDistance.
+    float z = (min(screenSize.x, screenSize.y) * 0.5) / tan(radians(fieldOfView) * 0.5);
     return normalize(vec3(xy, -z));
 }
 
@@ -147,13 +145,13 @@ mat4 viewMatrix(vec3 eye, vec3 center, vec3 up) {
 
 void main() {
     //Shoot a ray in the direction of the fragment.
-	vec3 dir = rayDirection(45.0, u_resolution, gl_FragCoord.xy);
-    vec3 eye = vec3(8.0, 5.0, 7.0);//vec3(0.0, 0.0, 5.0);
+	vec3 viewDirection = rayDirection(45.0, u_resolution, gl_FragCoord.xy);
+    vec3 eye = vec3(8.0, 5.0, 7.0);
 
     mat4 viewToWorld = viewMatrix(eye, vec3(0.0, 0.0, 0.0), vec3(0.0, 1.0, 0.0));
-    vec3 camDir = vec3((viewToWorld * vec4(dir, 1.0)).xyz);
+    vec3 worldDirection = vec3((viewToWorld * vec4(viewDirection, 0.0)).xyz);
 
-    float dist = marchScene(eye, camDir/* * dir*/, MIN_DIST, MAX_DIST);
+    float dist = marchScene(eye, worldDirection, MIN_DIST, MAX_DIST);
 
 	if (dist > MAX_DIST - EPSILON) {
         //Make this equivalent to glClearColor() eventually via uniform vector.
@@ -162,7 +160,7 @@ void main() {
     }
 
     //The closest point on the surface to the eyepoint along the view ray.
-    vec3 point = eye + dist * dir;
+    vec3 point = eye + dist *worldDirection;
 
     vec3 diffuse = vec3(0.7, 0.2, 0.2);
     vec3 specular = vec3(0.2);
