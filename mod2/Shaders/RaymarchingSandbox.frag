@@ -21,6 +21,7 @@ const float MAX_DIST = 100.0;
 const float EPSILON = 0.0001;
 
 uniform vec2 u_resolution;
+uniform float u_projectionDistance;
 uniform float u_time;
 
 //Signed distance function for a sphere centered at the origin with an arbitrary radius.
@@ -75,11 +76,7 @@ float marchScene(vec3 eye, vec3 marchingDirection, float start, float end) {
 
 //Normalized ray direction based on the pinhole camera.
 vec3 rayDirection(float fieldOfView, vec2 screenSize, vec2 fragCoord) {
-    //All we're doing is normalizing in the end.
-    //Perhaps this is more efficient but it would be less ambiguous if we mapped to NDC initially. 
     vec2 xy = fragCoord - screenSize * 0.5;
-    //TODO: fragCoord / screenResolution combined with * 0.5 + 1.0 or whatever.
-    //Replace with u_projectionDistance.
     float z = (min(screenSize.x, screenSize.y) * 0.5) / tan(radians(fieldOfView) * 0.5);
     return normalize(vec3(xy, -z));
 }
@@ -145,9 +142,11 @@ mat4 viewMatrix(vec3 eye, vec3 center, vec3 up) {
 
 void main() {
     //Shoot a ray in the direction of the fragment.
-	vec3 viewDirection = rayDirection(45.0, u_resolution, gl_FragCoord.xy);
+    vec3 viewDirection = vec3(vec2((gl_FragCoord.xy / u_resolution) * 2.0 - 1.0), u_projectionDistance);
+	//vec3 viewDirection = rayDirection(45.0, u_resolution, gl_FragCoord.xy);
     vec3 eye = vec3(8.0, 5.0, 7.0);
 
+    //Can compute this on the CPU too.
     mat4 viewToWorld = viewMatrix(eye, vec3(0.0, 0.0, 0.0), vec3(0.0, 1.0, 0.0));
     vec3 worldDirection = vec3((viewToWorld * vec4(viewDirection, 0.0)).xyz);
 
