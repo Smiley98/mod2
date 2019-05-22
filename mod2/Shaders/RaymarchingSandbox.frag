@@ -52,14 +52,8 @@ float sceneSDF(vec3 point) {
     float uniformTranslation = 0.25f;
     return cubeSDF(point - vec3(uniformTranslation, uniformTranslation * yAsX, 0.0), 0.75);*/
 
-    //xD Nothing happened. Probably need to affect the sample point passed to phone, cause all this does is measure distance (which is combined with ray direction and ray orgin to pass to phone).
-    /*vec3 eye = vec3(0.0, 0.0, 5.0);
-    vec3 center = vec3(0.0);
-    vec3 up = vec3(0.0, 1.0, 0.0);
-    vec3 viewPoint = (viewMatrix(eye, center, up) * vec4(point, 1.0)).xyz;*/
-
-    return sphereSDF(point, 1.0);
-    // return sphereSDF(viewPoint, 1.0);
+    //return sphereSDF(point, 1.0);
+    return cubeSDF(point, 1.0);
 }
 
 //Distance between the ray and surface geometry.
@@ -154,8 +148,12 @@ mat4 viewMatrix(vec3 eye, vec3 center, vec3 up) {
 void main() {
     //Shoot a ray in the direction of the fragment.
 	vec3 dir = rayDirection(45.0, u_resolution, gl_FragCoord.xy);
-    vec3 eye = vec3(0.0, 0.0, 5.0);
-    float dist = marchScene(eye, dir, MIN_DIST, MAX_DIST);
+    vec3 eye = vec3(8.0, 5.0, 7.0);//vec3(0.0, 0.0, 5.0);
+
+    mat4 viewToWorld = viewMatrix(eye, vec3(0.0, 0.0, 0.0), vec3(0.0, 1.0, 0.0));
+    vec3 camDir = vec3((viewToWorld * vec4(dir, 1.0)).xyz);
+
+    float dist = marchScene(eye, camDir/* * dir*/, MIN_DIST, MAX_DIST);
 
 	if (dist > MAX_DIST - EPSILON) {
         //Make this equivalent to glClearColor() eventually via uniform vector.
