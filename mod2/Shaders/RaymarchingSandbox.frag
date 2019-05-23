@@ -20,9 +20,17 @@ const float MAX_DIST = 100.0;
 //Small number to account for floating point error.
 const float EPSILON = 0.0001;
 
+//Pre-computed view transform.
+uniform mat4 u_viewMatrix;
+
 uniform vec2 u_resolution;
-uniform float u_projectionDistance;
 uniform float u_time;
+//We can still pre-compute this on the CPU!
+uniform float u_projectionDistance;
+
+//min(screen.x, screen.y).
+//uniform float u_lesserScreenDimension;
+//uniform float u_tanHalfFov;
 
 //Signed distance function for a sphere centered at the origin with an arbitrary radius.
 float sphereSDF(vec3 point, float radius) {
@@ -74,11 +82,11 @@ float marchScene(vec3 eye, vec3 marchingDirection, float start, float end) {
     return end;
 }
 
-//Normalized ray direction based on the pinhole camera.
-vec3 rayDirection(float fieldOfView, vec2 screenSize, vec2 fragCoord) {
+//Returns a (ray) direction based on the proportionality between the fragment and projection plane.
+//(Normalized vector from triangulated centre of the screen to fragment).
+vec3 rayDirection(vec2 screenSize, vec2 fragCoord) {
     vec2 xy = fragCoord - screenSize * 0.5;
-    float z = (min(screenSize.x, screenSize.y) * 0.5) / tan(radians(fieldOfView) * 0.5);
-    return normalize(vec3(xy, -z));
+    return normalize(vec3(xy, u_projectionDistance));
 }
 
 //Samples surrounding fragments to approximate the gradient which produces the steepest direction (normal).
@@ -127,45 +135,29 @@ vec3 phongIllumination(vec3 diffuse, vec3 specular, float alpha, vec3 point, vec
     return colour;
 }
 
-//Grahm-Schmidt technique to use the cross product to solve for right, forward, and above given the look direction and up vector.
-mat4 viewMatrix(vec3 eye, vec3 center, vec3 up) {
-    vec3 f = normalize(center - eye);
-    vec3 s = normalize(cross(f, up));
-    vec3 u = cross(s, f);
-    return mat4(
-        vec4(s, 0.0),
-        vec4(u, 0.0),
-        vec4(-f, 0.0),
-        vec4(0.0, 0.0, 0.0, 1)
-    );
-}
-
 void main() {
-    //Shoot a ray in the direction of the fragment.
-    vec3 viewDirection = vec3(vec2((gl_FragCoord.xy / u_resolution) * 2.0 - 1.0), u_projectionDistance);
-	//vec3 viewDirection = rayDirection(45.0, u_resolution, gl_FragCoord.xy);
+    //Shoot a ray in the direction of the fragment (relative to the world).
+	vec3 rayWorldSpace = rayDirection(u_resolution, gl_FragCoord.xy);
+    vec3 rayViewSpace = vec3((u_viewMatrix * vec4(rayWorldSpace, 1.0)).xyz);
+
+    //Ray origin (camera position).
     vec3 eye = vec3(8.0, 5.0, 7.0);
+    float intersectionDistance = marchScene(eye, rayViewSpace, MIN_DIST, MAX_DIST);
 
-    //Can compute this on the CPU too.
-    mat4 viewToWorld = viewMatrix(eye, vec3(0.0, 0.0, 0.0), vec3(0.0, 1.0, 0.0));
-    vec3 worldDirection = vec3((viewToWorld * vec4(viewDirection, 0.0)).xyz);
-
-    float dist = marchScene(eye, worldDirection, MIN_DIST, MAX_DIST);
-
-	if (dist > MAX_DIST - EPSILON) {
+	if (intersectionDistance > MAX_DIST - EPSILON) {
         //Make this equivalent to glClearColor() eventually via uniform vector.
         outColour = vec4(0.0, 0.0, 0.0, 1.0);
 		return;
     }
 
     //The closest point on the surface to the eyepoint along the view ray.
-    vec3 point = eye + dist *worldDirection;
+    vec3 poi = eye + intersectionDistance * rayViewSpace;
 
     vec3 diffuse = vec3(0.7, 0.2, 0.2);
     vec3 specular = vec3(0.2);
     float specularStrength = 16.0;
 
-    vec3 colour = phongIllumination(diffuse, specular, specularStrength, point, eye);
+    vec3 colour = phongIllumination(diffuse, specular, specularStrength, poi, eye);
     
     outColour = vec4(colour, 1.0);
 }
