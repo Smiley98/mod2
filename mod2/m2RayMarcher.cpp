@@ -61,28 +61,23 @@ void m2RayMarcher::marchCircle()
 	glm::vec2 resolution(window.getClientWidth(), window.getClientHeight());
 	//The distance to the projection plane is the screen resolution * the tangent of half the field of view.
 	static const float fieldOfView = glm::radians(120.0f);
-	float projectionDistance = -(min(resolution.x, resolution.y) * 0.5f * (tanf(fieldOfView * 0.5f)));
+	static const float projectionDistance = -(min(resolution.x, resolution.y) * 0.5f * (tanf(fieldOfView * 0.5f)));
 	static const glm::vec3 eye(8.0f, 5.0f, 7.0f);
 	static const glm::vec3 centre(0.0f);
 	static const glm::vec3 up(0.0f, 1.0f, 0.0f);
-	static bool run = true;
 	
-	glm::mat4 view = getView(eye, centre, up);
-	glm::mat4 glmView = glm::lookAt(eye, centre, up);
+	//Will probably need this later on if we want to transform our models.
+	//glm::mat4 view = getView(eye, centre, up);
 	glm::mat3 view3 = getView3(eye, centre, up);
 
+	static bool run = true;
 	if (run) {
 		run = false;
-		//Inverse of right translation = left, inverse of right rotation = left (simply put, inverse == negate if nothing too crazy is going on).
-		m2Utils::printMatrix(view);
-		m2Utils::printMatrix(glmView);
-		m2Utils::printMatrix(glm::transpose(view));
-		m2Utils::printMatrix(glm::mat4(view3));
 	}
 
 	m2ShaderProgram& program = m2ShaderProgram::getProgram(RAYMARCH_SANDBOX);
 	program.bind();
-	program.setMat4("u_view", view);
+	//program.setMat4("u_view", view);
 	program.setMat3("u_cameraRotation", view3);
 	program.setVec2("u_resolution", resolution);
 	program.setFloat("u_projectionDistance", projectionDistance);
