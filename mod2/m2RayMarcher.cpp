@@ -4,6 +4,7 @@
 #include "m2Timing.h"
 #include "m2Utilities.h"
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/euler_angles.hpp>
 
 //I can't believe I can't figure this out on my own...
 #ifndef min
@@ -43,6 +44,18 @@ inline glm::mat4 getView(const glm::vec3& eye, const glm::vec3& centre, const gl
 	);
 }
 
+glm::mat3 getView3(const glm::vec3& eye, const glm::vec3& centre, const glm::vec3& up) {
+	glm::vec3 front = glm::normalize(centre - eye);
+	glm::vec3 right = glm::normalize(glm::cross(front, up));
+	glm::vec3 above = glm::cross(right, front);
+
+	return glm::mat3(
+		glm::vec3(right),
+		glm::vec3(above),
+		glm::vec3(-front)
+	);
+}
+
 void m2RayMarcher::marchCircle()
 {
 	glm::vec2 resolution(window.getClientWidth(), window.getClientHeight());
@@ -52,17 +65,25 @@ void m2RayMarcher::marchCircle()
 	static const glm::vec3 eye(8.0f, 5.0f, 7.0f);
 	static const glm::vec3 centre(0.0f);
 	static const glm::vec3 up(0.0f, 1.0f, 0.0f);
+	static bool run = true;
+	
 	glm::mat4 view = getView(eye, centre, up);
-	//glm::mat4 translation = glm::translate(glm::mat4(1.0f), glm::vec3(3.0f, 4.0f, 5.0f));
-	//m2Utils::printMatrix(translation);
-	//m2Utils::printMatrix(glm::inverse(translation));
-	//glm::mat4 look = glm::lookAt(eye, centre, up);
-	//getchar();
-	//m2Utils::printMatrix(view);
-	//m2Utils::printMatrix(look);
+	glm::mat4 glmView = glm::lookAt(eye, centre, up);
+	glm::mat3 view3 = getView3(eye, centre, up);
+
+	if (run) {
+		run = false;
+		//Inverse of right translation = left, inverse of right rotation = left (simply put, inverse == negate if nothing too crazy is going on).
+		m2Utils::printMatrix(view);
+		m2Utils::printMatrix(glmView);
+		m2Utils::printMatrix(glm::transpose(view));
+		m2Utils::printMatrix(glm::mat4(view3));
+	}
+
 	m2ShaderProgram& program = m2ShaderProgram::getProgram(RAYMARCH_SANDBOX);
 	program.bind();
-	program.setMat4("u_viewMatrix", view);
+	program.setMat4("u_view", view);
+	program.setMat3("u_cameraRotation", view3);
 	program.setVec2("u_resolution", resolution);
 	program.setFloat("u_projectionDistance", projectionDistance);
 	program.setFloat("u_time", m2Timing::instance().elapsedTime());

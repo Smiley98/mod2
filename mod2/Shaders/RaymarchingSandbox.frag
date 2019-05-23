@@ -21,7 +21,8 @@ const float MAX_DIST = 100.0;
 const float EPSILON = 0.0001;
 
 //Pre-computed view transform.
-uniform mat4 u_viewMatrix;
+uniform mat4 u_view;
+uniform mat3 u_cameraRotation;
 
 uniform vec2 u_resolution;
 uniform float u_time;
@@ -83,7 +84,7 @@ float marchScene(vec3 eye, vec3 marchingDirection, float start, float end) {
 }
 
 //Returns a (ray) direction based on the proportionality between the fragment and projection plane.
-//(Normalized vector from triangulated centre of the screen to fragment).
+//(Normalized vector from triangulated centre of the screen to fragment [from ray origin to image plane]).
 vec3 rayDirection(vec2 screenSize, vec2 fragCoord) {
     vec2 xy = fragCoord - screenSize * 0.5;
     return normalize(vec3(xy, u_projectionDistance));
@@ -138,7 +139,7 @@ vec3 phongIllumination(vec3 diffuse, vec3 specular, float alpha, vec3 point, vec
 void main() {
     //Shoot a ray in the direction of the fragment (relative to the world).
 	vec3 rayWorldSpace = rayDirection(u_resolution, gl_FragCoord.xy);
-    vec3 rayViewSpace = vec3((u_viewMatrix * vec4(rayWorldSpace, 1.0)).xyz);
+    vec3 rayViewSpace = vec3((u_view * vec4(rayWorldSpace, 1.0)).xyz);
 
     //Ray origin (camera position).
     vec3 eye = vec3(8.0, 5.0, 7.0);
@@ -149,7 +150,6 @@ void main() {
         outColour = vec4(0.0, 0.0, 0.0, 1.0);
 		return;
     }
-
     //The closest point on the surface to the eyepoint along the view ray.
     vec3 poi = eye + intersectionDistance * rayViewSpace;
 
