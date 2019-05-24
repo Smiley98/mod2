@@ -1,6 +1,6 @@
 #version 440
 
-//Interface block.
+//Interface block (not applicable what so ever to raymarching).
 in VertexData
 {
 	vec3 normal;
@@ -11,27 +11,24 @@ in VertexData
 //Output colour.
 out vec4 outColour;
 
-//Raymarching constants:
+//Limit load from raymarching.
 const int MAX_MARCHING_STEPS = 255;
-//Near plane.
-const float MIN_DIST = 0.0;
-//Far plane.
-const float MAX_DIST = 100.0;
-//Small number to account for floating point error.
+
+//Extremely small value to ensure our comparisons work the way we want due to floating point precision.
 const float EPSILON = 0.0001;
 
-//Camera rotation (NOT view transformation) matrix.
-//uniform mat4 u_view;//will need to change back into a mat4 if we wanna transform our objects.
+//Camera transform (NOT view [inverse camera] transform) spread between rotation and translation. 
 uniform mat3 u_cameraRotation;
+uniform vec3 u_cameraTranslation;
 
+//Projection uniforms.
 uniform vec2 u_resolution;
-uniform float u_time;
-//We can still pre-compute this on the CPU!
 uniform float u_projectionDistance;
+uniform float u_nearPlane;
+uniform float u_farPlane;
 
-//min(screen.x, screen.y).
-//uniform float u_lesserScreenDimension;
-//uniform float u_tanHalfFov;
+//Utility uniforms.
+uniform float u_time;
 
 //Signed distance function for a sphere centered at the origin with an arbitrary radius.
 float sphereSDF(vec3 point, float radius) {
@@ -64,23 +61,24 @@ float sceneSDF(vec3 point) {
     return cubeSDF(point, 1.0);
 }
 
-//Distance between the ray and surface geometry.
-float marchScene(vec3 eye, vec3 marchingDirection, float start, float end) {
-    float depth = start;//Start == 0, End = 100.
+//Distance between the ray and surface geometry. Very fundamental.
+float marchScene(vec3 eye, vec3 rayDirection, float near, float far) {
+    float depth = near;
     for (int i = 0; i < MAX_MARCHING_STEPS; i++) {
-        //1. Depth is 0, so we will always go from the camera to (0, 0, 0) / the "projection plane".
-        //2. We repetitively evaluate the SDF and factor in a direciton. It will hit the limit if the object is behind the camera cause we will never be within the threshold.
-        //Outside of this function, we combine the direction and the eye (ray origin) with the measured distance to use as input for lighting. (I really don't know how to factor in the view matrix).
-        float dist = sceneSDF(eye + depth * marchingDirection);
-        if (dist < EPSILON) {
-			return depth;
+        //The first iteration always takes us from the eye to the image plane because depth is initially 0. This 0 value is multiplied by the ray direction, effectively removing it for the iteration.
+        float rayStep = sceneSDF(eye + depth * rayDirection);
+        //Return the cumulative distance if the ray intersects with geometry (SDF evalutates to a negative number [distance less than epsilon]).
+        if (rayStep < EPSILON) {//(Change this to 0 for a dissolve effect [not sure why this happens])!
+			return depth - near;
         }
-        depth += dist;
-        if (depth >= end) {
-            return end;
+        depth += rayStep;
+        //Return if the ray exceeds the far clipping plane. (Start is the near plane. Works the way you'd think. If 50, would discard geometry less than 50 units away from camera by always starting 50 units ahead).
+        if (depth >= far) {
+            return far;
         }
     }
-    return end;
+    //Return how far the ray travelled if it didn't intersect with geometry or exceed the far plane before capping out on steps.
+    return far;
 }
 
 //Returns a (ray) direction based on the proportionality between the fragment and projection plane.
@@ -137,28 +135,28 @@ vec3 phongIllumination(vec3 diffuse, vec3 specular, float alpha, vec3 point, vec
 }
 
 void main() {
-    //Shoot a ray in the direction of the fragment (relative to the world).
+    //Shoot a ray from world origin - distance to projection plane towards the current fragment.
 	vec3 rayWorldSpace = rayDirection(u_resolution, gl_FragCoord.xy);
-    //vec3 rayViewSpace = vec3((u_view * vec4(rayWorldSpace, 1.0)).xyz);
-    vec3 rayViewSpace = vec3(u_cameraRotation * rayWorldSpace);
+    //Apply the camera's rotation to the ray.
+    //(We're modelling how the camera functions in the world. No need to transform everything relative to the camera in this pipeline).
+    vec3 rayCameraSpace = vec3(u_cameraRotation * rayWorldSpace);
 
-    //Ray origin (camera position).
-    vec3 eye = vec3(8.0, 5.0, 7.0);
-    float intersectionDistance = marchScene(eye, rayViewSpace, MIN_DIST, MAX_DIST);
+    float intersectionDistance = marchScene(u_cameraTranslation, rayCameraSpace, u_nearPlane, u_farPlane);
 
-	if (intersectionDistance > MAX_DIST - EPSILON) {
-        //Make this equivalent to glClearColor() eventually via uniform vector.
+    //Colour background and discard if the ray intersection test failed (either exceeded the far plane or number of steps).
+	if (intersectionDistance > u_farPlane - EPSILON) {//(Remove EPSILON to get a grey background. I think it ends up being on the far plan so we get a subtle influence from lighting).
         outColour = vec4(0.0, 0.0, 0.0, 1.0);
 		return;
     }
+
     //The closest point on the surface to the eyepoint along the view ray.
-    vec3 poi = eye + intersectionDistance * rayViewSpace;
+    vec3 poi = u_cameraTranslation + intersectionDistance * rayCameraSpace;
 
     vec3 diffuse = vec3(0.7, 0.2, 0.2);
     vec3 specular = vec3(0.2);
     float specularStrength = 16.0;
 
-    vec3 colour = phongIllumination(diffuse, specular, specularStrength, poi, eye);
+    vec3 colour = phongIllumination(diffuse, specular, specularStrength, poi, u_cameraTranslation);
     
     outColour = vec4(colour, 1.0);
 }
