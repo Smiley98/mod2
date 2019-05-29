@@ -18,7 +18,7 @@ const int MAX_MARCHING_STEPS = 255;
 const float EPSILON = 0.0001;
 
 //Model transforms.
-mat3 u_cubeTransform3;
+uniform mat4 u_modelTransform;
 
 //Camera transform (NOT view [inverse camera] transform) spread between rotation and translation. 
 uniform mat3 u_cameraRotation;
@@ -32,6 +32,7 @@ uniform float u_farPlane;
 
 //Utility uniforms.
 uniform float u_time;
+uniform float u_period;
 
 float intersectSDF(float a, float b) {
     return max(a, b);
@@ -77,22 +78,13 @@ mat3 rotateY(float theta) {
     );
 }
 
-//float sphere = sphereSDF(point, 1.0);
-//float cube = cubeSDF(point * 1.2, 1.0);
-//return intersectSDF(sphere, cube);
-
-uniform mat4 u_cubeTransform;
-//uniform mat3 u_rotation;
 //Function describing all the scene geometry (currently just one circle with a radius of one about the orgin).
 float sceneSDF(vec3 point) {
-    //Apply transformations to the sample point in order to transform geometry.
-    //vec3 rotatedPoint = vec3(u_rotation * point);
-    //float cube = cubeSDF(rotatedPoint, 1.0);
-    vec4 transformedPoint = u_cubeTransform * vec4(point, 1.0);
-    float cube = cubeSDF(transformedPoint.xyz * 0.6, 1.0) / 0.6;
-    return cube;
+    vec4 transformedPoint = u_modelTransform * vec4(point, 1.0);
+    float cube = cubeSDF(transformedPoint.xyz / u_period, 1.0) * u_period;
+    float sphere = sphereSDF(transformedPoint.xyz, 1.0);
+    return intersectSDF(sphere, cube);
 }
-
 
 //Distance between the ray and surface geometry. Very fundamental.
 float marchScene(vec3 eye, vec3 rayDirection, float near, float far) {

@@ -52,20 +52,21 @@ void m2RayMarcher::marchCircle()
 	static const glm::mat3 cameraRotation = rotateCamera(cameraTranslation, cameraTarget, worldUp);
 
 	float time = m2Timing::instance().elapsedTime();
+	float period = sinf(time) * 0.5f + 0.5f;
 
-	//glm::vec3 cubeScale(1.2f);
-	//glm::quat cubeRotation(glm::angleAxis(time, glm::vec3(0.0f, 1.0f, 0.0f)));
+	//glm::vec3 modelScale(1.2f);
+	//glm::quat modelRotation(glm::angleAxis(time, glm::vec3(0.0f, 1.0f, 0.0f)));
 
 	//It didn't kick in that transformation order is reversed before because we were translating and rotating around the same axis.
-	glm::vec3 cubeTranslation = glm::vec3(-2.0f, 0.0f, 0.0f) * -1.0f;
-	glm::mat3 cubeRotation(glm::rotate(glm::mat4(1.0f), -time, glm::vec3(0.0f, 1.0f, 0.0f)));
-	glm::mat4 cubeTransform(cubeRotation);
-	cubeTransform *= glm::translate(glm::mat4(1.0f), cubeTranslation);
+	glm::vec3 modelTranslation = glm::vec3(-2.0f * cosf(time), 0.0f, 0.0f) * -1.0f;
+	glm::mat3 modelRotation(glm::rotate(glm::mat4(1.0f), -time, glm::vec3(0.0f, 1.0f, 0.0f)));
+	glm::mat4 modelTransform(modelRotation);
+	modelTransform *= glm::translate(glm::mat4(1.0f), modelTranslation);
 
 	//Above (negation and pre-multiplication) is cheaper than inverse and [regular] post-multiplication.
-	//glm::mat4 cubeTranslation = glm::translate(glm::mat4(1.0f), glm::vec3(-2.0f, 0.0f, 0.0f));
-	//glm::mat4 cubeRotation(glm::rotate(glm::mat4(1.0f), time, glm::vec3(0.0f, 1.0f, 0.0f)));
-	//glm::mat4 cubeTransform = glm::inverse(cubeTranslation * cubeRotation);
+	//glm::mat4 modelTranslation = glm::translate(glm::mat4(1.0f), glm::vec3(-2.0f * cosf(time), 0.0f, 0.0f));
+	//glm::mat4 modelRotation(glm::rotate(glm::mat4(1.0f), time, glm::vec3(0.0f, 1.0f, 0.0f)));
+	//glm::mat4 modelTransform = glm::inverse(modelTranslation * modelRotation);
 
 	static bool run = true;
 	if (run) {
@@ -76,8 +77,7 @@ void m2RayMarcher::marchCircle()
 	program.bind();
 
 	//Models
-	program.setMat4("u_cubeTransform", cubeTransform);
-	//program.setMat3("u_rotation", cubeRotation);
+	program.setMat4("u_modelTransform", modelTransform);
 
 	//View
 	program.setMat3("u_cameraRotation", cameraRotation);
@@ -91,6 +91,7 @@ void m2RayMarcher::marchCircle()
 
 	//Utility
 	program.setFloat("u_time", time);
+	program.setFloat("u_period", period);
 
 	render();
 }
