@@ -37,6 +37,17 @@ inline glm::mat3 rotateCamera(const glm::vec3& eye, const glm::vec3& centre, con
 	);
 }
 
+glm::mat3 rotateY(float theta) {
+	float c = cos(theta);
+	float s = sin(theta);
+
+	return glm::mat3(
+		glm::vec3(c, 0, s),
+		glm::vec3(0, 1, 0),
+		glm::vec3(-s, 0, c)
+	);
+}
+
 void m2RayMarcher::marchCircle()
 {
 	//The distance to the projection plane is the screen resolution * the tangent of half the field of view.
@@ -59,8 +70,18 @@ void m2RayMarcher::marchCircle()
 
 	//Good old fashioned transformation matrices:
 	//glm::mat4 u_cubeTransform;
-	glm::mat3 cubeTransform3(glm::transpose((glm::rotate(glm::mat4(1.0f), time, glm::vec3(0.0f, 1.0f, 0.0f)))));
+
+	//Let's break this down xD
+	//glm::mat3 cubeTransform3(glm::transpose((glm::rotate(glm::mat4(1.0f), time, glm::vec3(0.0f, 1.0f, 0.0f)))));
+	glm::mat3 rotation = glm::rotate(glm::mat4(1.0f), time, glm::vec3(0.0f, 1.0f, 0.0f));
+	glm::mat3 inverseRotation = glm::transpose(rotation);
+	glm::mat3 otherRotation = rotateY(time);
 	//m2Utils::printMatrix(cubeTransform3);
+
+	printf("Glm matrix:\n");
+	m2Utils::printMatrix(inverseRotation);
+	printf("Euler matrix:\n");
+	m2Utils::printMatrix(otherRotation);
 
 	static bool run = true;
 	if (run) {
@@ -71,7 +92,8 @@ void m2RayMarcher::marchCircle()
 	program.bind();
 
 	//Models
-	program.setMat3("u_cubeTransform3", cubeTransform3);
+	//program.setMat3("u_cubeTransform3", cubeTransform3);
+	program.setMat3("u_rotation", inverseRotation);
 
 	//View
 	program.setMat3("u_cameraRotation", cameraRotation);
