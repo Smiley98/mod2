@@ -17,6 +17,9 @@ const int MAX_MARCHING_STEPS = 255;
 //Extremely small value to ensure our comparisons work the way we want due to floating point precision.
 const float EPSILON = 0.0001;
 
+//Model transforms.
+mat3 u_cubeTransform3;
+
 //Camera transform (NOT view [inverse camera] transform) spread between rotation and translation. 
 uniform mat3 u_cameraRotation;
 uniform vec3 u_cameraTranslation;
@@ -29,6 +32,18 @@ uniform float u_farPlane;
 
 //Utility uniforms.
 uniform float u_time;
+
+float intersectSDF(float a, float b) {
+    return max(a, b);
+}
+
+float unionSDF(float a, float b) {
+    return min(a, b);
+}
+
+float differenceSDF(float a, float b) {
+    return max(a, -b);
+}
 
 //Signed distance function for a sphere centered at the origin with an arbitrary radius.
 float sphereSDF(vec3 point, float radius) {
@@ -53,22 +68,27 @@ float cubeSDF(vec3 point, float sideLength) {
 
 //Function describing all the scene geometry (currently just one circle with a radius of one about the orgin).
 float sceneSDF(vec3 point) {
-    /*float yAsX = u_resolution.x / u_resolution.y;
-    float uniformTranslation = 0.25f;
-    return cubeSDF(point - vec3(uniformTranslation, uniformTranslation * yAsX, 0.0), 0.75);*/
-
-    //return sphereSDF(point, 1.0);
-    return cubeSDF(point, 1.0);
+    //Apply transformations to the sample point in order to transform geometry.
+    //float sphere = sphereSDF(point, 1.0);
+    //float cube = cubeSDF(point * 1.2 + vec3(0.0, 2.2 * (sin(u_time) * 0.5 + 0.5), 0.0), 1.0);
+    //return intersectSDF(sphere, cube);
+    //return unionSDF(sphere, cube);
+    point = u_cubeTransform3 * point;
+    float cube = cubeSDF(point, 1.0);
+    return cube;
 }
+
 
 //Distance between the ray and surface geometry. Very fundamental.
 float marchScene(vec3 eye, vec3 rayDirection, float near, float far) {
+    //For geometry before the near plane, the rays will exceed them until either the far plane is hit or the step limit is reached.
     float depth = near;
     for (int i = 0; i < MAX_MARCHING_STEPS; i++) {
         //The first iteration always takes us from the eye to the image plane because depth is initially 0. This 0 value is multiplied by the ray direction, effectively removing it for the iteration.
         float rayStep = sceneSDF(eye + depth * rayDirection);
-        //Return the cumulative distance if the ray intersects with geometry (SDF evalutates to a negative number [distance less than epsilon]).
-        if (rayStep < EPSILON) {//(Change this to 0 for a dissolve effect [not sure why this happens])!
+        //(Change this to 0 for a dissolve effect. This is because not every point is exactly inside the surface geometry due to precision.
+        if (rayStep < EPSILON) {
+            //Return the cumulative distance if the ray intersects with geometry (SDF evalutates to a negative number [distance less than epsilon]).
 			return depth - near;
         }
         depth += rayStep;

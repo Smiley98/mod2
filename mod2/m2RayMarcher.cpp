@@ -41,15 +41,26 @@ void m2RayMarcher::marchCircle()
 {
 	//The distance to the projection plane is the screen resolution * the tangent of half the field of view.
 	static const glm::vec2 resolution(window.getClientWidth(), window.getClientHeight());
-	static const float fieldOfView = glm::radians(120.0f);
+	static const float fieldOfView = glm::radians(45.0f);
 	static const float projectionDistance = -(min(resolution.x, resolution.y) * 0.5f * (tanf(fieldOfView * 0.5f)));
 	static const float nearPlane = 0.001f;
 	static const float farPlane = 100.0f;
 
-	static const glm::vec3 cameraTranslation(8.0f, 5.0f, 7.0f);	//Eye.
+	static const glm::vec3 cameraTranslation(2.0f);				//Eye.
 	static const glm::vec3 cameraTarget(0.0f);					//Centre.
 	static const glm::vec3 worldUp(0.0f, 1.0f, 0.0f);			//Up (y-axis).
 	static const glm::mat3 cameraRotation = rotateCamera(cameraTranslation, cameraTarget, worldUp);
+
+	float time = m2Timing::instance().elapsedTime();
+	//Test these later.
+	//glm::vec3 cubeScale(1.2f);
+	//glm::quat cubeRotation(glm::angleAxis(time, glm::vec3(0.0f, 1.0f, 0.0f)));
+	//glm::vec3 cubeTranslation(0.0f, 2.2f * (sinf(time) * 0.5f + 0.5f), 0.0f);
+
+	//Good old fashioned transformation matrices:
+	//glm::mat4 u_cubeTransform;
+	glm::mat3 cubeTransform3(glm::transpose((glm::rotate(glm::mat4(1.0f), time, glm::vec3(0.0f, 1.0f, 0.0f)))));
+	//m2Utils::printMatrix(cubeTransform3);
 
 	static bool run = true;
 	if (run) {
@@ -59,16 +70,21 @@ void m2RayMarcher::marchCircle()
 	m2ShaderProgram& program = m2ShaderProgram::getProgram(RAYMARCH_SANDBOX);
 	program.bind();
 
-	//Easier to work with separately because its nice to be able to multiply mat3 by vec3 instead of extract from a 3x4 or 4x4 camera matrix.
+	//Models
+	program.setMat3("u_cubeTransform3", cubeTransform3);
+
+	//View
 	program.setMat3("u_cameraRotation", cameraRotation);
 	program.setVec3("u_cameraTranslation", cameraTranslation);
 
+	//Projection
 	program.setVec2("u_resolution", resolution);
 	program.setFloat("u_projectionDistance", projectionDistance);
 	program.setFloat("u_nearPlane", nearPlane);
 	program.setFloat("u_farPlane", farPlane);
 
-	program.setFloat("u_time", m2Timing::instance().elapsedTime());
+	//Utility
+	program.setFloat("u_time", time);
 
 	render();
 }
