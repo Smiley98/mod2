@@ -56,10 +56,16 @@ void m2RayMarcher::marchCircle()
 	//glm::vec3 cubeScale(1.2f);
 	//glm::quat cubeRotation(glm::angleAxis(time, glm::vec3(0.0f, 1.0f, 0.0f)));
 
-	glm::vec3 cubeTranslation(0.0f, 2.2f * (sinf(time) * 0.5f + 0.5f), 0.0f);
-	glm::mat3 cubeRotation(glm::transpose(glm::rotate(glm::mat4(1.0f), time, glm::vec3(0.0f, 1.0f, 0.0f))));
+	//It didn't kick in that transformation order is reversed before because we were translating and rotating around the same axis.
+	glm::vec3 cubeTranslation = glm::vec3(-2.0f, 0.0f, 0.0f) * -1.0f;
+	glm::mat3 cubeRotation(glm::rotate(glm::mat4(1.0f), -time, glm::vec3(0.0f, 1.0f, 0.0f)));
 	glm::mat4 cubeTransform(cubeRotation);
-	cubeTransform[3] = glm::vec4(cubeTranslation, 1.0);
+	cubeTransform *= glm::translate(glm::mat4(1.0f), cubeTranslation);
+
+	//Above (negation and pre-multiplication) is cheaper than inverse and [regular] post-multiplication.
+	//glm::mat4 cubeTranslation = glm::translate(glm::mat4(1.0f), glm::vec3(-2.0f, 0.0f, 0.0f));
+	//glm::mat4 cubeRotation(glm::rotate(glm::mat4(1.0f), time, glm::vec3(0.0f, 1.0f, 0.0f)));
+	//glm::mat4 cubeTransform = glm::inverse(cubeTranslation * cubeRotation);
 
 	static bool run = true;
 	if (run) {

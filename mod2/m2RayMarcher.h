@@ -1,4 +1,5 @@
 #pragma once
+#define GLM_FORCE_SWIZZLE
 #include "m2Effects.h"
 class m2RayMarcher :
 	public m2Effects

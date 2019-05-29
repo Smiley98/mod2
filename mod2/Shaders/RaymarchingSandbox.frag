@@ -89,7 +89,7 @@ float sceneSDF(vec3 point) {
     //vec3 rotatedPoint = vec3(u_rotation * point);
     //float cube = cubeSDF(rotatedPoint, 1.0);
     vec4 transformedPoint = u_cubeTransform * vec4(point, 1.0);
-    float cube = cubeSDF(transformedPoint.xyz, 1.0);
+    float cube = cubeSDF(transformedPoint.xyz * 0.6, 1.0) / 0.6;
     return cube;
 }
 
