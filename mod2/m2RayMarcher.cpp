@@ -53,7 +53,13 @@ void m2RayMarcher::marchCircle()
 
 	float time = m2Timing::instance().elapsedTime();
 
+	//glm::vec3 cubeScale(1.2f);
+	//glm::quat cubeRotation(glm::angleAxis(time, glm::vec3(0.0f, 1.0f, 0.0f)));
+
+	glm::vec3 cubeTranslation(0.0f, 2.2f * (sinf(time) * 0.5f + 0.5f), 0.0f);
 	glm::mat3 cubeRotation(glm::transpose(glm::rotate(glm::mat4(1.0f), time, glm::vec3(0.0f, 1.0f, 0.0f))));
+	glm::mat4 cubeTransform(cubeRotation);
+	cubeTransform[3] = glm::vec4(cubeTranslation, 1.0);
 
 	static bool run = true;
 	if (run) {
@@ -64,7 +70,8 @@ void m2RayMarcher::marchCircle()
 	program.bind();
 
 	//Models
-	program.setMat3("u_rotation", cubeRotation);
+	program.setMat4("u_cubeTransform", cubeTransform);
+	//program.setMat3("u_rotation", cubeRotation);
 
 	//View
 	program.setMat3("u_cameraRotation", cameraRotation);

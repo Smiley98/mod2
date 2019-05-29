@@ -80,12 +80,16 @@ mat3 rotateY(float theta) {
 //float sphere = sphereSDF(point, 1.0);
 //float cube = cubeSDF(point * 1.2, 1.0);
 //return intersectSDF(sphere, cube);
-uniform mat3 u_rotation;
+
+uniform mat4 u_cubeTransform;
+//uniform mat3 u_rotation;
 //Function describing all the scene geometry (currently just one circle with a radius of one about the orgin).
 float sceneSDF(vec3 point) {
     //Apply transformations to the sample point in order to transform geometry.
-    vec3 rotatedPoint = vec3(u_rotation * point);
-    float cube = cubeSDF(rotatedPoint, 1.0);
+    //vec3 rotatedPoint = vec3(u_rotation * point);
+    //float cube = cubeSDF(rotatedPoint, 1.0);
+    vec4 transformedPoint = u_cubeTransform * vec4(point, 1.0);
+    float cube = cubeSDF(transformedPoint.xyz, 1.0);
     return cube;
 }
 
