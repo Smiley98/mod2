@@ -86,7 +86,7 @@ public:
 	}
 	
 	static void remove(void* memory) {
-		//Overwrite the memory which we want to remove with last active element. (Stuff won't be sorted, but we are guarenteed all active elements are contiguous and at the front).
+		//Overwrite the memory at the removal location with the data in the last active index while simultaniously shrinking the size.
 		*reinterpret_cast<T*>(memory) = m_memory[--m_index];
 	}
 
@@ -101,7 +101,7 @@ public:
 private:
 	static T* m_memory;			//Generic array.
 	static size_t m_bytesPerElement;
-	static u_int m_index;		//Next open slot.
+	static u_int m_index;		//*First* *open* slot. Basically the count (number of elements), but we start at 1 instead of 0 hence the count - 1 for last active element.
 	static u_int m_capacity;	//Size of the array.
 
 	static inline void _resize(u_int capacity) {

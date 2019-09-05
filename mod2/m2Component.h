@@ -6,6 +6,7 @@
 #include <cstdio>
 
 class m2GameObject;
+//This shouldn't be templated. Can be fixed by properly indexing the memory manager ie using referencing a global vector instead of a static template.
 template<class T>
 class m2Component {
 public:

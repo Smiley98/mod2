@@ -61,6 +61,9 @@
     <Filter Include="Math\Geometry\Boxes\Object-Oriented">
       <UniqueIdentifier>{15f71dc5-8d00-4882-ba99-126d39c78544}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Events">
+      <UniqueIdentifier>{a77987d4-0a9f-48c7-b17b-980467142f85}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="m2Component.h">
@@ -143,6 +146,15 @@
     </ClInclude>
     <ClInclude Include="m2RayMarcher.h">
       <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="m2IDelegate.h">
+      <Filter>Events</Filter>
+    </ClInclude>
+    <ClInclude Include="m2Delegate.h">
+      <Filter>Events</Filter>
+    </ClInclude>
+    <ClInclude Include="m2MemberDelegate.h">
+      <Filter>Events</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -13,6 +13,8 @@ m2GameObject::~m2GameObject()
 {	//Can automatically remove if we don't include transform in m_components.
 	if (componentExists(m2ComponentType::TRANSFORM))
 		removeComponent<m2TransformComponent>();
+	//If we made removeComponent take an enum rather than a template we could iterate here.
+	//Would be a cool google search to see if its possible to obtain a class type (not rtti).
 
 	/*if (exists(m2ComponentType::RENDERER))
 		removeComponent<m2Renderer>();

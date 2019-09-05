@@ -6,6 +6,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/euler_angles.hpp>
 
+#include "m2MemberDelegate.h"
+
 //I can't believe I can't figure this out on my own...
 #ifndef min
 #define min(a,b) (((a) < (b)) ? (a) : (b))
@@ -37,6 +39,13 @@ inline glm::mat3 rotateCamera(const glm::vec3& eye, const glm::vec3& centre, con
 	);
 }
 
+struct DelegateTest {
+	int meme(float a) {
+		printf("Called back meme!\n");
+		return a * 2;
+	}
+};
+
 void m2RayMarcher::marchCircle()
 {
 	//The distance to the projection plane is the screen resolution * the tangent of half the field of view.
@@ -62,6 +71,11 @@ void m2RayMarcher::marchCircle()
 	glm::mat3 modelRotation(glm::rotate(glm::mat4(1.0f), -time, glm::vec3(0.0f, 1.0f, 0.0f)));
 	glm::mat4 modelTransform(modelRotation);
 	modelTransform *= glm::translate(glm::mat4(1.0f), modelTranslation);
+
+	//Takes in a float, returns an int.
+	DelegateTest dm;
+	//<ClassType, ReturnType, ParameterType...
+	m2MemberDelegate<DelegateTest, int, float> callback(dm, &dm.meme, 5.0f);
 
 	//Above (negation and pre-multiplication) is cheaper than inverse and [regular] post-multiplication.
 	//glm::mat4 modelTranslation = glm::translate(glm::mat4(1.0f), glm::vec3(-2.0f * cosf(time), 0.0f, 0.0f));
