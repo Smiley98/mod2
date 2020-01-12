@@ -25,7 +25,7 @@
 #define MILLISECONDS_PER_FRAME 1.0 / FRAMES_PER_SECOND
 #define LIMIT_FPS true
 
-float hault(std::chrono::high_resolution_clock::time_point start) {
+float halt(std::chrono::high_resolution_clock::time_point start) {
 	using namespace std::chrono;
 	float frameTime = duration_cast<duration<float>>(high_resolution_clock::now() - start).count();
 #if LIMIT_FPS
@@ -60,7 +60,7 @@ void m2Application::run()
 		update();
 		render();
 		
-		tick(hault(start));
+		tick(halt(start));
 		//Swapping at a fixed interval ensures a smooth framerate. Simply comment above for uncapped fps.
 		m_window.swapBuffers();
 	}

@@ -13,15 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Components">
-      <UniqueIdentifier>{b5ee359b-e3d4-45ab-ad02-97a3037181f1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Entities">
-      <UniqueIdentifier>{b0ababd5-5948-4396-a25e-93dee63e853e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Systems">
-      <UniqueIdentifier>{a98b9337-6a13-4130-9852-edf5bb9bf24e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Definitions">
       <UniqueIdentifier>{ea1f213a-7526-4668-8ec0-ed2e96e4d77f}</UniqueIdentifier>
     </Filter>
@@ -64,25 +55,34 @@
     <Filter Include="Events">
       <UniqueIdentifier>{a77987d4-0a9f-48c7-b17b-980467142f85}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ECS">
+      <UniqueIdentifier>{39f4f515-2b48-405d-8061-182495a237fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ECS\Entities">
+      <UniqueIdentifier>{b0ababd5-5948-4396-a25e-93dee63e853e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ECS\Components">
+      <UniqueIdentifier>{b5ee359b-e3d4-45ab-ad02-97a3037181f1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ECS\Systems">
+      <UniqueIdentifier>{a98b9337-6a13-4130-9852-edf5bb9bf24e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="m2Component.h">
-      <Filter>Components</Filter>
+      <Filter>ECS\Components</Filter>
     </ClInclude>
     <ClInclude Include="m2ComponentDef.h">
-      <Filter>Components</Filter>
+      <Filter>ECS\Components</Filter>
     </ClInclude>
     <ClInclude Include="m2EntityFactory.h">
-      <Filter>Entities</Filter>
+      <Filter>ECS\Entities</Filter>
     </ClInclude>
     <ClInclude Include="m2GameObject.h">
-      <Filter>Entities</Filter>
+      <Filter>ECS\Entities</Filter>
     </ClInclude>
     <ClInclude Include="m2ComponentManager.h">
-      <Filter>Systems</Filter>
-    </ClInclude>
-    <ClInclude Include="m2MemoryManager.h">
-      <Filter>Systems</Filter>
+      <Filter>ECS\Systems</Filter>
     </ClInclude>
     <ClInclude Include="m2MemDef.h">
       <Filter>Definitions</Filter>
@@ -91,7 +91,7 @@
       <Filter>Definitions</Filter>
     </ClInclude>
     <ClInclude Include="m2TransformComponent.h">
-      <Filter>Components</Filter>
+      <Filter>ECS\Components</Filter>
     </ClInclude>
     <ClInclude Include="m2Transform.h">
       <Filter>Math</Filter>
@@ -156,19 +156,22 @@
     <ClInclude Include="m2MemberDelegate.h">
       <Filter>Events</Filter>
     </ClInclude>
+    <ClInclude Include="m2MemoryManager.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="m2EntityFactory.cpp">
-      <Filter>Entities</Filter>
+      <Filter>ECS\Entities</Filter>
     </ClCompile>
     <ClCompile Include="m2GameObject.cpp">
-      <Filter>Entities</Filter>
+      <Filter>ECS\Entities</Filter>
     </ClCompile>
     <ClCompile Include="m2ComponentManager.cpp">
-      <Filter>Systems</Filter>
+      <Filter>ECS\Systems</Filter>
     </ClCompile>
     <ClCompile Include="m2TransformComponent.cpp">
-      <Filter>Components</Filter>
+      <Filter>ECS\Components</Filter>
     </ClCompile>
     <ClCompile Include="m2Transform.cpp">
       <Filter>Math</Filter>

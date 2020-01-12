@@ -6,7 +6,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/euler_angles.hpp>
 
-#include "m2MemberDelegate.h"
+//#include "m2MemberDelegate.h"
 
 //I can't believe I can't figure this out on my own...
 #ifndef min
@@ -39,13 +39,6 @@ inline glm::mat3 rotateCamera(const glm::vec3& eye, const glm::vec3& centre, con
 	);
 }
 
-struct DelegateTest {
-	int meme(float a) {
-		printf("Called back meme!\n");
-		return a * 2;
-	}
-};
-
 void m2RayMarcher::marchCircle()
 {
 	//The distance to the projection plane is the screen resolution * the tangent of half the field of view.
@@ -55,7 +48,7 @@ void m2RayMarcher::marchCircle()
 	static const float nearPlane = 0.001f;
 	static const float farPlane = 100.0f;
 
-	static const glm::vec3 cameraTranslation(2.0f);				//Eye.
+	static const glm::vec3 cameraTranslation(0.0f, 4.0f, -2.0f);	//Eye.
 	static const glm::vec3 cameraTarget(0.0f);					//Centre.
 	static const glm::vec3 worldUp(0.0f, 1.0f, 0.0f);			//Up (y-axis).
 	static const glm::mat3 cameraRotation = rotateCamera(cameraTranslation, cameraTarget, worldUp);
@@ -66,16 +59,11 @@ void m2RayMarcher::marchCircle()
 	//glm::vec3 modelScale(1.2f);
 	//glm::quat modelRotation(glm::angleAxis(time, glm::vec3(0.0f, 1.0f, 0.0f)));
 
-	//It didn't kick in that transformation order is reversed before because we were translating and rotating around the same axis.
+	//It didn't kick in that transformation order was reversed before because we were translating and rotating around the same axis.
 	glm::vec3 modelTranslation = glm::vec3(-2.0f * cosf(time), 0.0f, 0.0f) * -1.0f;
 	glm::mat3 modelRotation(glm::rotate(glm::mat4(1.0f), -time, glm::vec3(0.0f, 1.0f, 0.0f)));
 	glm::mat4 modelTransform(modelRotation);
 	modelTransform *= glm::translate(glm::mat4(1.0f), modelTranslation);
-
-	//Takes in a float, returns an int.
-	DelegateTest dm;
-	//<ClassType, ReturnType, ParameterType...
-	m2MemberDelegate<DelegateTest, int, float> callback(dm, &dm.meme, 5.0f);
 
 	//Above (negation and pre-multiplication) is cheaper than inverse and [regular] post-multiplication.
 	//glm::mat4 modelTranslation = glm::translate(glm::mat4(1.0f), glm::vec3(-2.0f * cosf(time), 0.0f, 0.0f));

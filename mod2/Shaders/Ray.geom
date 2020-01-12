@@ -18,6 +18,7 @@ uniform float u_rayOrigin;
 uniform float u_clientY;
 uniform float u_clientHeight;
 
+//Faster to do space conversions on the gpu.
 float screenToNdcY(float y) {
 	return (y - u_clientY) / (u_clientHeight * 0.5f) - 1.0f; 
 }

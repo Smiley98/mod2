@@ -63,10 +63,11 @@ public:
 
 private:
 	glm::mat4 m_transformation;
-	glm::quat m_orientation;
+	glm::quat m_orientation;//Consider making a euler rotation as well for ease of access unless I can make a quick getter to deduce form the quat.
 	glm::vec3 m_scale;
 	m2Transform* m_parent;
-	//Encode the pointer across xy and the dirty flag in z! 
+	//Encode the pointer across xy and the dirty flag in z!
+	//Actually don't cause then you'll fuck concatenation.
 
 	static const glm::mat4 s_mIdentity;
 	static const glm::vec4 s_vIdentity;

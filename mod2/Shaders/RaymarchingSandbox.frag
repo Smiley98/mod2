@@ -171,7 +171,7 @@ void main() {
     float intersectionDistance = marchScene(u_cameraTranslation, rayCameraSpace, u_nearPlane, u_farPlane);
 
     //Colour background and discard if the ray intersection test failed (either exceeded the far plane or number of steps).
-	if (intersectionDistance > u_farPlane - EPSILON) {//(Remove EPSILON to get a grey background. I think it ends up being on the far plan so we get a subtle influence from lighting).
+	if (intersectionDistance > u_farPlane - EPSILON) {
         outColour = vec4(0.0, 0.0, 0.0, 1.0);
 		return;
     }

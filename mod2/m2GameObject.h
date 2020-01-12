@@ -11,7 +11,8 @@ public:
 	~m2GameObject();
 
 	template<typename T, typename... Args>
-	T& addComponent(Args&&...);
+	T& addComponent(Args&&...);//rvalue reference because constructor calls are usually with literals.
+	//I'm kind of confused. What would happen if we passed something other than an rvalue reference? Would it be okay?
 
 	template<typename T>
 	T& getComponent();
