@@ -167,8 +167,12 @@ vec3 phongIllumination(vec3 diffuse, vec3 specular, float alpha, vec3 point, vec
 }
 
 void main() {
-    //Shoot a ray from world origin - distance to projection plane towards the current fragment.
+    //Shoot a ray from world origin towards the current fragment.
 	vec3 rayWorldSpace = rayDirection(u_resolution, gl_FragCoord.xy);
+
+    //Sadly the corrected direction doesn't wanna work.
+    //vec3 rayWorldSpace = vec3((-u_resolution + 2.0 * gl_FragCoord.xy) / gl_FragCoord.y, 0.0);
+
     //Apply the camera's rotation to the ray.
     vec3 rayCameraSpace = vec3(u_cameraRotation * rayWorldSpace);
 

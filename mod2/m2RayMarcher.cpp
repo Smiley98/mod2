@@ -45,6 +45,14 @@ void m2RayMarcher::marchCircle()
 	static const glm::vec2 resolution(window.getClientWidth(), window.getClientHeight());
 	static const float fieldOfView = glm::radians(45.0f);
 	static const float projectionDistance = -(min(resolution.x, resolution.y) * 0.5f * (tanf(fieldOfView * 0.5f)));
+
+	//printf("%f\n", projectionDistance);-223.
+	//Warning, the projection math is wrong! Should be as follows:
+	//const float opp = max(resolution.x, resolution.y) * 0.5f;
+	//const float tanTheta = tanf(fieldOfView * 0.5f);//Fov should be changed from 45 to something above 60 after this fix.
+	//const float invAdj = tanTheta / opp;
+	//static const float projectionDistance = 1 / invAdj;
+
 	static const float nearPlane = 0.001f;
 	static const float farPlane = 100.0f;
 
