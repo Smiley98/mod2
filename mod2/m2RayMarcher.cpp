@@ -27,7 +27,7 @@ m2RayMarcher::~m2RayMarcher()
 {
 }
 
-inline glm::mat3 rotateCamera(const glm::vec3& eye, const glm::vec3& centre, const glm::vec3& up) {
+inline glm::mat3 lookAtDirection(const glm::vec3& eye, const glm::vec3& centre, const glm::vec3& up) {
 	glm::vec3 front = glm::normalize(centre - eye);
 	glm::vec3 right = glm::normalize(glm::cross(front, up));
 	glm::vec3 above = glm::cross(right, front);
@@ -48,27 +48,16 @@ void m2RayMarcher::marchCircle()
 	static const float nearPlane = 0.001f;
 	static const float farPlane = 100.0f;
 
-	static const glm::vec3 cameraTranslation(0.0f, 4.0f, -2.0f);	//Eye.
+	static const glm::vec3 cameraTranslation(0.0f, 0.0f, 3.0f);	//Eye.
 	static const glm::vec3 cameraTarget(0.0f);					//Centre.
 	static const glm::vec3 worldUp(0.0f, 1.0f, 0.0f);			//Up (y-axis).
-	static const glm::mat3 cameraRotation = rotateCamera(cameraTranslation, cameraTarget, worldUp);
+	static const glm::mat3 cameraRotation = lookAtDirection(cameraTranslation, cameraTarget, worldUp);
 
 	float time = m2Timing::instance().elapsedTime();
 	float period = sinf(time) * 0.5f + 0.5f;
 
-	//glm::vec3 modelScale(1.2f);
-	//glm::quat modelRotation(glm::angleAxis(time, glm::vec3(0.0f, 1.0f, 0.0f)));
-
-	//It didn't kick in that transformation order was reversed before because we were translating and rotating around the same axis.
-	glm::vec3 modelTranslation = glm::vec3(-2.0f * cosf(time), 0.0f, 0.0f) * -1.0f;
-	glm::mat3 modelRotation(glm::rotate(glm::mat4(1.0f), -time, glm::vec3(0.0f, 1.0f, 0.0f)));
-	glm::mat4 modelTransform(modelRotation);
-	modelTransform *= glm::translate(glm::mat4(1.0f), modelTranslation);
-
-	//Above (negation and pre-multiplication) is cheaper than inverse and [regular] post-multiplication.
-	//glm::mat4 modelTranslation = glm::translate(glm::mat4(1.0f), glm::vec3(-2.0f * cosf(time), 0.0f, 0.0f));
-	//glm::mat4 modelRotation(glm::rotate(glm::mat4(1.0f), time, glm::vec3(0.0f, 1.0f, 0.0f)));
-	//glm::mat4 modelTransform = glm::inverse(modelTranslation * modelRotation);
+	glm::mat4 modelTransform(1.0f);
+	modelTransform[3] = glm::vec4(2.0f, 0.0f, 0.0f, 1.0f);
 
 	static bool run = true;
 	if (run) {

@@ -80,10 +80,15 @@ mat3 rotateY(float theta) {
 
 //Function describing all the scene geometry (currently just one circle with a radius of one about the orgin).
 float sceneSDF(vec3 point) {
-    vec4 transformedPoint = u_modelTransform * vec4(point, 1.0);
-    float cube = cubeSDF(transformedPoint.xyz / u_period, 1.0) * u_period;
-    float sphere = sphereSDF(transformedPoint.xyz, 1.0);
-    return intersectSDF(sphere, cube);
+    mat4 transformationMatrix = u_modelTransform;
+    vec4 point4 = vec4(point, 1.0);
+    vec3 cube1 = (transformationMatrix * point4).xyz;
+    transformationMatrix[3] = vec4(-2.0, 0.0, 0.0, 1.0);
+    vec3 cube2 = (transformationMatrix * point4).xyz;
+
+    float nearestPoint = cubeSDF(cube1, 1.0);
+    nearestPoint = unionSDF(nearestPoint, cubeSDF(cube2, 1.0));
+    return nearestPoint;
 }
 
 //Distance between the ray and surface geometry. Very fundamental.
@@ -165,7 +170,6 @@ void main() {
     //Shoot a ray from world origin - distance to projection plane towards the current fragment.
 	vec3 rayWorldSpace = rayDirection(u_resolution, gl_FragCoord.xy);
     //Apply the camera's rotation to the ray.
-    //(We're modelling how the camera functions in the world. No need to transform everything relative to the camera in this pipeline).
     vec3 rayCameraSpace = vec3(u_cameraRotation * rayWorldSpace);
 
     float intersectionDistance = marchScene(u_cameraTranslation, rayCameraSpace, u_nearPlane, u_farPlane);
