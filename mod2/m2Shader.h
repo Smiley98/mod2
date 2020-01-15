@@ -10,6 +10,8 @@ enum m2ShaderPrograms : GLenum {
 	RAY,
 	QUAD_TEST,
 	RAYMARCH_SANDBOX,
+	UNIFORM_TEST_1,
+	UNIFORM_TEST_2,
 	NUM_SHADERS
 };
 

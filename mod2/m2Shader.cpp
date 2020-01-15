@@ -236,6 +236,9 @@ void m2ShaderProgram::init()
 	m2Shader f_screenQuadTest(FRAGMENT, sdir + "ScreenQuadTest.frag");
 	m2Shader f_raymarchingSandbox(FRAGMENT, sdir + "RaymarchingSandbox.frag");
 
+	m2Shader f_uniformTest1(FRAGMENT, sdir + "UniformTest1.frag");
+	m2Shader f_uniformTest2(FRAGMENT, sdir + "UniformTest2.frag");
+
 //Programs:
 	s_programs[LINE].add(v_passThrough);
 	s_programs[LINE].add(g_line);
@@ -255,6 +258,14 @@ void m2ShaderProgram::init()
 	s_programs[RAYMARCH_SANDBOX].add(v_screenQuad);
 	s_programs[RAYMARCH_SANDBOX].add(f_raymarchingSandbox);
 	s_programs[RAYMARCH_SANDBOX].link();
+
+	s_programs[UNIFORM_TEST_1].add(v_screenQuad);
+	s_programs[UNIFORM_TEST_1].add(f_uniformTest1);
+	s_programs[UNIFORM_TEST_1].link();
+
+	s_programs[UNIFORM_TEST_2].add(v_screenQuad);
+	s_programs[UNIFORM_TEST_2].add(f_uniformTest2);
+	s_programs[UNIFORM_TEST_2].link();
 }
 
 void m2ShaderProgram::shutdown()
