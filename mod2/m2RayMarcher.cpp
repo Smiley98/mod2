@@ -67,11 +67,6 @@ void m2RayMarcher::marchCircle()
 	glm::mat4 modelTransform(1.0f);
 	modelTransform[3] = glm::vec4(2.0f, 0.0f, 0.0f, 1.0f);
 
-	static bool run = true;
-	if (run) {
-		run = false;
-	}
-
 	m2ShaderProgram& program = m2ShaderProgram::getProgram(RAYMARCH_SANDBOX);
 	program.bind();
 
@@ -92,22 +87,5 @@ void m2RayMarcher::marchCircle()
 	program.setFloat("u_time", time);
 	program.setFloat("u_period", period);
 
-	static bool once = true;
-	if (once) {
-		once = false;
-		program = m2ShaderProgram::getProgram(UNIFORM_TEST_1);
-		program.bind();
-		program.setVec3("u_colour1", glm::vec3(1.0f, 0.0f, 0.0f));
-		render();
-		program.unbind();
-	}
-
-	program = m2ShaderProgram::getProgram(UNIFORM_TEST_2);
-	program.bind();
 	render();
-	
-	//Uncomment for proof that uniforms are persistent (no need to update per-frame unless changed) and program-specific (not global).
-	//program = m2ShaderProgram::getProgram(UNIFORM_TEST_1);
-	//program.bind();
-	//render();
 }

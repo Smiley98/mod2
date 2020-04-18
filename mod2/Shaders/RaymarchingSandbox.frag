@@ -81,13 +81,13 @@ mat3 rotateY(float theta) {
 //Function describing all the scene geometry (currently just one circle with a radius of one about the orgin).
 float sceneSDF(vec3 point) {
     mat4 transformationMatrix = u_modelTransform;
-    vec4 point4 = vec4(point, 1.0);
-    vec3 cube1 = (transformationMatrix * point4).xyz;
+    vec4 point4d = vec4(point, 1.0);
+    vec3 obj1 = (transformationMatrix * point4d).xyz;
     transformationMatrix[3] = vec4(-2.0, 0.0, 0.0, 1.0);
-    vec3 cube2 = (transformationMatrix * point4).xyz;
+    vec3 obj2 = (transformationMatrix * point4d).xyz;
 
-    float nearestPoint = cubeSDF(cube1, 1.0);
-    nearestPoint = unionSDF(nearestPoint, cubeSDF(cube2, 1.0));
+    float nearestPoint = cubeSDF(obj1, 1.0);
+    nearestPoint = unionSDF(nearestPoint, sphereSDF(obj2, 1.0));
     return nearestPoint;
 }
 
