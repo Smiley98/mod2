@@ -28,14 +28,26 @@
     <Filter Include="Entry Point">
       <UniqueIdentifier>{8352c631-70f2-48fa-aea1-cc24251a5ba1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Rendering">
-      <UniqueIdentifier>{e215f2d0-7056-4699-baca-c7c5cd7cb083}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Math\Geometry">
       <UniqueIdentifier>{e5b1c99f-3b68-41f8-a109-7e3bbf2d1a48}</UniqueIdentifier>
     </Filter>
     <Filter Include="Math\Geometry\Lines">
       <UniqueIdentifier>{506b9da7-2285-4128-a51d-6a661bb6da4b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Textures">
+      <UniqueIdentifier>{4782e5e4-60ef-42ea-98c9-f5be66de21a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Examples">
+      <UniqueIdentifier>{9ea536b9-abd1-429b-a5c1-767a732acf0b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Examples\Raycasting">
+      <UniqueIdentifier>{c5e944be-7768-40af-9adb-51a148cfcd1d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Examples\Raymarching">
+      <UniqueIdentifier>{ca571ccd-8957-45da-8db7-369113f11ab8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{e215f2d0-7056-4699-baca-c7c5cd7cb083}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -58,10 +70,7 @@
       <Filter>Entry Point</Filter>
     </ClInclude>
     <ClInclude Include="m2Shader.h">
-      <Filter>Rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="m2Renderer.h">
-      <Filter>Rendering</Filter>
+      <Filter>Shaders</Filter>
     </ClInclude>
     <ClInclude Include="m2Line3.h">
       <Filter>Math\Geometry\Lines</Filter>
@@ -70,13 +79,16 @@
       <Filter>Math\Geometry\Lines</Filter>
     </ClInclude>
     <ClInclude Include="m2Effects.h">
-      <Filter>Rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="m2RayRenderer.h">
-      <Filter>Rendering</Filter>
+      <Filter>Examples\Raymarching</Filter>
     </ClInclude>
     <ClInclude Include="m2RayMarcher.h">
-      <Filter>Rendering</Filter>
+      <Filter>Examples\Raymarching</Filter>
+    </ClInclude>
+    <ClInclude Include="m2Renderer.h">
+      <Filter>Examples\Raycasting</Filter>
+    </ClInclude>
+    <ClInclude Include="m2RayRenderer.h">
+      <Filter>Examples\Raycasting</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -102,7 +114,7 @@
       <Filter>Entry Point</Filter>
     </ClCompile>
     <ClCompile Include="m2Shader.cpp">
-      <Filter>Rendering</Filter>
+      <Filter>Shaders</Filter>
     </ClCompile>
     <ClCompile Include="m2Line2.cpp">
       <Filter>Math\Geometry\Lines</Filter>
@@ -111,13 +123,13 @@
       <Filter>Math\Geometry\Lines</Filter>
     </ClCompile>
     <ClCompile Include="m2Effects.cpp">
-      <Filter>Rendering</Filter>
-    </ClCompile>
-    <ClCompile Include="m2RayRenderer.cpp">
-      <Filter>Rendering</Filter>
+      <Filter>Examples\Raymarching</Filter>
     </ClCompile>
     <ClCompile Include="m2RayMarcher.cpp">
-      <Filter>Rendering</Filter>
+      <Filter>Examples\Raymarching</Filter>
+    </ClCompile>
+    <ClCompile Include="m2RayRenderer.cpp">
+      <Filter>Examples\Raycasting</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
