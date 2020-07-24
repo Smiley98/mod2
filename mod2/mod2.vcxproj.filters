@@ -40,14 +40,20 @@
     <Filter Include="Examples">
       <UniqueIdentifier>{9ea536b9-abd1-429b-a5c1-767a732acf0b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Examples\Raycasting">
-      <UniqueIdentifier>{c5e944be-7768-40af-9adb-51a148cfcd1d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Examples\Raymarching">
       <UniqueIdentifier>{ca571ccd-8957-45da-8db7-369113f11ab8}</UniqueIdentifier>
     </Filter>
     <Filter Include="Shaders">
       <UniqueIdentifier>{e215f2d0-7056-4699-baca-c7c5cd7cb083}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Examples\Persistent Mapping">
+      <UniqueIdentifier>{cdd1f4f6-c653-42fe-ab89-7290e0716b5d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rendering">
+      <UniqueIdentifier>{c9d83b97-fa12-4be8-a632-162228980041}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Examples\Batched Line Rendering">
+      <UniqueIdentifier>{c5e944be-7768-40af-9adb-51a148cfcd1d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -78,17 +84,20 @@
     <ClInclude Include="m2Line2.h">
       <Filter>Math\Geometry\Lines</Filter>
     </ClInclude>
-    <ClInclude Include="m2Effects.h">
-      <Filter>Examples\Raymarching</Filter>
-    </ClInclude>
     <ClInclude Include="m2RayMarcher.h">
       <Filter>Examples\Raymarching</Filter>
     </ClInclude>
-    <ClInclude Include="m2Renderer.h">
-      <Filter>Examples\Raycasting</Filter>
-    </ClInclude>
     <ClInclude Include="m2RayRenderer.h">
-      <Filter>Examples\Raycasting</Filter>
+      <Filter>Examples\Batched Line Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="m2ArrayObject.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="m2ScreenQuad.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="m2MappingDemo.h">
+      <Filter>Examples\Persistent Mapping</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -122,14 +131,17 @@
     <ClCompile Include="m2Line3.cpp">
       <Filter>Math\Geometry\Lines</Filter>
     </ClCompile>
-    <ClCompile Include="m2Effects.cpp">
-      <Filter>Examples\Raymarching</Filter>
-    </ClCompile>
     <ClCompile Include="m2RayMarcher.cpp">
       <Filter>Examples\Raymarching</Filter>
     </ClCompile>
     <ClCompile Include="m2RayRenderer.cpp">
-      <Filter>Examples\Raycasting</Filter>
+      <Filter>Examples\Batched Line Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="m2ScreenQuad.cpp">
+      <Filter>Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="m2MappingDemo.cpp">
+      <Filter>Examples\Persistent Mapping</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

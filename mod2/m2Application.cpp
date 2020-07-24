@@ -13,9 +13,9 @@
 #include "m2Utilities.h"
 
 #include "m2Shader.h"
-#include "m2Effects.h"
 #include "m2RayRenderer.h"
 #include "m2RayMarcher.h"
+#include "m2MappingDemo.h"
 
 #define FRAMES_PER_SECOND 60.0
 #define MILLISECONDS_PER_FRAME 1.0 / FRAMES_PER_SECOND
@@ -37,13 +37,13 @@ m2Application::m2Application() :
 	m_timing(m2Timing::instance())
 {
 	m2ShaderProgram::init();
-	m2Effects::init();
+	m2ScreenQuad::init();
 }
 
 m2Application::~m2Application()
 {
 	m2ShaderProgram::shutdown();
-	m2Effects::shutdown();
+	m2ScreenQuad::shutdown();
 }
 
 void m2Application::run()
@@ -61,9 +61,7 @@ void m2Application::run()
 }
 
 inline void m2Application::update()
-{	//Can't run this cause Transform doesn't update.
-	//std::thread transforms(m2ComponentManager::updateComponentsOfType<m2TransformComponent>);
-	//transforms.join();
+{
 	glfwPollEvents();
 }
 
@@ -71,14 +69,17 @@ inline void m2Application::render()
 {
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	//m_scene->render();//Scenes should internally switch renderers if I implement such capabilities.
 
-	//Draws a single line. Not yet flexible (doesn't take point arguments).
-	//m2ShaderProgram::drawLine();
-
-	static m2RayRenderer rayRenderer(0, m_window.getClientWidth(), 1);
+	//Batched line rendering demo:
+	//static m2RayRenderer rayRenderer(0, m_window.getClientWidth(), 1);
 	//rayRenderer.render();
-	m2RayMarcher::marchCircle();
+
+	//Raymarching demo:
+	//m2RayMarcher::render();
+
+	//Persistend mapping demo:
+	static m2MappingDemo mappingDemo;
+	mappingDemo.render();
 }
 
 inline void m2Application::tick(float frameTime)

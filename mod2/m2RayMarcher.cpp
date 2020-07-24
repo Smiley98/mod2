@@ -1,4 +1,5 @@
 #include "m2RayMarcher.h"
+#include "m2ScreenQuad.h"
 #include "m2Shader.h"
 #include "m2Window.h"
 #include "m2Timing.h"
@@ -39,7 +40,7 @@ inline glm::mat3 lookAtDirection(const glm::vec3& eye, const glm::vec3& centre, 
 	);
 }
 
-void m2RayMarcher::marchCircle()
+void m2RayMarcher::render()
 {
 	//The distance to the projection plane is the screen resolution * the tangent of half the field of view.
 	static const glm::vec2 resolution(window.getClientWidth(), window.getClientHeight());
@@ -87,5 +88,5 @@ void m2RayMarcher::marchCircle()
 	program.setFloat("u_time", time);
 	program.setFloat("u_period", period);
 
-	render();
+	m2ScreenQuad::render();
 }

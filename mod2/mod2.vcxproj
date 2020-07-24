@@ -123,11 +123,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="m2Application.h" />
-    <ClInclude Include="m2Effects.h" />
+    <ClInclude Include="m2ScreenQuad.h" />
     <ClInclude Include="m2Line2.h" />
     <ClInclude Include="m2Line3.h" />
     <ClInclude Include="m2RayMarcher.h" />
-    <ClInclude Include="m2Renderer.h" />
+    <ClInclude Include="m2ArrayObject.h" />
     <ClInclude Include="m2Shader.h" />
     <ClInclude Include="m2Timing.h" />
     <ClInclude Include="m2Transform.h" />
@@ -135,11 +135,12 @@
     <ClInclude Include="m2Utilities.h" />
     <ClInclude Include="m2Window.h" />
     <ClInclude Include="m2RayRenderer.h" />
+    <ClInclude Include="m2MappingDemo.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="m2Application.cpp" />
     <ClCompile Include="glad.c" />
-    <ClCompile Include="m2Effects.cpp" />
+    <ClCompile Include="m2ScreenQuad.cpp" />
     <ClCompile Include="m2Line2.cpp" />
     <ClCompile Include="m2Line3.cpp" />
     <ClCompile Include="m2RayMarcher.cpp" />
@@ -150,6 +151,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="m2Utilities.cpp" />
     <ClCompile Include="m2RayRenderer.cpp" />
+    <ClCompile Include="m2MappingDemo.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
