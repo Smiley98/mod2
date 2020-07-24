@@ -1,3 +1,0 @@
-#pragma once
-#define MIN_CONTAINER_SIZE 2U
-#define MAX_CONTAINER_SIZE 4096U
