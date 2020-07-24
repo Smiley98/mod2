@@ -1,2 +1,0 @@
-Some things like lines don't need a polymorphic renderer class.
-Best left as a namespace or static class. Just send up two points in world space and multiply them by the view-projection matrix.

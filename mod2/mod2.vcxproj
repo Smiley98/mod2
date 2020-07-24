@@ -122,52 +122,30 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="m2AABB2.h" />
-    <ClInclude Include="m2AABB3.h" />
     <ClInclude Include="m2Application.h" />
-    <ClInclude Include="m2Component.h" />
-    <ClInclude Include="m2ComponentDef.h" />
-    <ClInclude Include="m2ComponentManager.h" />
-    <ClInclude Include="m2Delegate.h" />
     <ClInclude Include="m2Effects.h" />
-    <ClInclude Include="m2EntityFactory.h" />
-    <ClInclude Include="m2IDelegate.h" />
     <ClInclude Include="m2Line2.h" />
     <ClInclude Include="m2Line3.h" />
-    <ClInclude Include="m2MemberDelegate.h" />
-    <ClInclude Include="m2MemDef.h" />
-    <ClInclude Include="m2GameObject.h" />
-    <ClInclude Include="m2MemoryManager.h" />
-    <ClInclude Include="m2OOBB2.h" />
-    <ClInclude Include="m2OOBB3.h" />
     <ClInclude Include="m2RayMarcher.h" />
     <ClInclude Include="m2Renderer.h" />
     <ClInclude Include="m2Shader.h" />
     <ClInclude Include="m2Timing.h" />
     <ClInclude Include="m2Transform.h" />
-    <ClInclude Include="m2TransformComponent.h" />
-    <ClInclude Include="m2TypeDef.h" />
     <ClInclude Include="m2Singleton.h" />
     <ClInclude Include="m2Utilities.h" />
-    <ClInclude Include="m2VertexBuffer.h" />
     <ClInclude Include="m2Window.h" />
     <ClInclude Include="m2RayRenderer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="m2Application.cpp" />
     <ClCompile Include="glad.c" />
-    <ClCompile Include="m2ComponentManager.cpp" />
     <ClCompile Include="m2Effects.cpp" />
-    <ClCompile Include="m2EntityFactory.cpp" />
-    <ClCompile Include="m2GameObject.cpp" />
     <ClCompile Include="m2Line2.cpp" />
     <ClCompile Include="m2Line3.cpp" />
     <ClCompile Include="m2RayMarcher.cpp" />
     <ClCompile Include="m2Shader.cpp" />
     <ClCompile Include="m2Timing.cpp" />
     <ClCompile Include="m2Transform.cpp" />
-    <ClCompile Include="m2TransformComponent.cpp" />
-    <ClCompile Include="m2VertexBuffer.cpp" />
     <ClCompile Include="m2Window.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="m2Utilities.cpp" />

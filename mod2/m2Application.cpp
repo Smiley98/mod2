@@ -10,10 +10,6 @@
 #include "m2Window.h"
 #include "m2Timing.h"
 
-#include "m2EntityFactory.h"
-#include "m2GameObject.h"
-#include "m2ComponentManager.h"
-#include "m2TransformComponent.h"
 #include "m2Utilities.h"
 
 #include "m2Shader.h"
@@ -40,14 +36,12 @@ m2Application::m2Application() :
 	m_window(m2Window::instance()),
 	m_timing(m2Timing::instance())
 {
-	m2ComponentManager::init();
 	m2ShaderProgram::init();
 	m2Effects::init();
 }
 
 m2Application::~m2Application()
 {
-	m2ComponentManager::shutdown();
 	m2ShaderProgram::shutdown();
 	m2Effects::shutdown();
 }
@@ -90,7 +84,7 @@ inline void m2Application::render()
 inline void m2Application::tick(float frameTime)
 {
 	static float frameTimeAverage = 0.0f;
-	static u_int counter = 0;
+	static unsigned int counter = 0;
 	frameTimeAverage += frameTime;
 	if (counter >= 10) {
 		frameTimeAverage /= (float)counter;

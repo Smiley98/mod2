@@ -1,2 +1,0 @@
-Transform will make use of a dirty flag for every setter.
-It will either update once per frame (better performance, but not guarenteed to have the most up-to-date information on get), or it will internally update on get.

@@ -13,9 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Definitions">
-      <UniqueIdentifier>{ea1f213a-7526-4668-8ec0-ed2e96e4d77f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Math">
       <UniqueIdentifier>{fecf82aa-5bcf-4a98-bcca-54fb7c955f65}</UniqueIdentifier>
     </Filter>
@@ -37,62 +34,11 @@
     <Filter Include="Math\Geometry">
       <UniqueIdentifier>{e5b1c99f-3b68-41f8-a109-7e3bbf2d1a48}</UniqueIdentifier>
     </Filter>
-    <Filter Include="OpenGL Object Wrappers">
-      <UniqueIdentifier>{c4f08457-7c88-4e1a-af83-15bfdf9cd352}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Math\Geometry\Lines">
       <UniqueIdentifier>{506b9da7-2285-4128-a51d-6a661bb6da4b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Math\Geometry\Boxes">
-      <UniqueIdentifier>{75d93e63-a92d-40ce-a172-b8a3140120d6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Math\Geometry\Boxes\Axis-Aligned">
-      <UniqueIdentifier>{25b316e2-82ae-4b74-81da-6e5d09fcb0b8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Math\Geometry\Boxes\Object-Oriented">
-      <UniqueIdentifier>{15f71dc5-8d00-4882-ba99-126d39c78544}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Events">
-      <UniqueIdentifier>{a77987d4-0a9f-48c7-b17b-980467142f85}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ECS">
-      <UniqueIdentifier>{39f4f515-2b48-405d-8061-182495a237fa}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ECS\Entities">
-      <UniqueIdentifier>{b0ababd5-5948-4396-a25e-93dee63e853e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ECS\Components">
-      <UniqueIdentifier>{b5ee359b-e3d4-45ab-ad02-97a3037181f1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ECS\Systems">
-      <UniqueIdentifier>{a98b9337-6a13-4130-9852-edf5bb9bf24e}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="m2Component.h">
-      <Filter>ECS\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="m2ComponentDef.h">
-      <Filter>ECS\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="m2EntityFactory.h">
-      <Filter>ECS\Entities</Filter>
-    </ClInclude>
-    <ClInclude Include="m2GameObject.h">
-      <Filter>ECS\Entities</Filter>
-    </ClInclude>
-    <ClInclude Include="m2ComponentManager.h">
-      <Filter>ECS\Systems</Filter>
-    </ClInclude>
-    <ClInclude Include="m2MemDef.h">
-      <Filter>Definitions</Filter>
-    </ClInclude>
-    <ClInclude Include="m2TypeDef.h">
-      <Filter>Definitions</Filter>
-    </ClInclude>
-    <ClInclude Include="m2TransformComponent.h">
-      <Filter>ECS\Components</Filter>
-    </ClInclude>
     <ClInclude Include="m2Transform.h">
       <Filter>Math</Filter>
     </ClInclude>
@@ -117,26 +63,11 @@
     <ClInclude Include="m2Renderer.h">
       <Filter>Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="m2VertexBuffer.h">
-      <Filter>OpenGL Object Wrappers</Filter>
-    </ClInclude>
     <ClInclude Include="m2Line3.h">
       <Filter>Math\Geometry\Lines</Filter>
     </ClInclude>
     <ClInclude Include="m2Line2.h">
       <Filter>Math\Geometry\Lines</Filter>
-    </ClInclude>
-    <ClInclude Include="m2AABB2.h">
-      <Filter>Math\Geometry\Boxes\Axis-Aligned</Filter>
-    </ClInclude>
-    <ClInclude Include="m2AABB3.h">
-      <Filter>Math\Geometry\Boxes\Axis-Aligned</Filter>
-    </ClInclude>
-    <ClInclude Include="m2OOBB3.h">
-      <Filter>Math\Geometry\Boxes\Object-Oriented</Filter>
-    </ClInclude>
-    <ClInclude Include="m2OOBB2.h">
-      <Filter>Math\Geometry\Boxes\Object-Oriented</Filter>
     </ClInclude>
     <ClInclude Include="m2Effects.h">
       <Filter>Rendering</Filter>
@@ -147,32 +78,8 @@
     <ClInclude Include="m2RayMarcher.h">
       <Filter>Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="m2IDelegate.h">
-      <Filter>Events</Filter>
-    </ClInclude>
-    <ClInclude Include="m2Delegate.h">
-      <Filter>Events</Filter>
-    </ClInclude>
-    <ClInclude Include="m2MemberDelegate.h">
-      <Filter>Events</Filter>
-    </ClInclude>
-    <ClInclude Include="m2MemoryManager.h">
-      <Filter>Utilities</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="m2EntityFactory.cpp">
-      <Filter>ECS\Entities</Filter>
-    </ClCompile>
-    <ClCompile Include="m2GameObject.cpp">
-      <Filter>ECS\Entities</Filter>
-    </ClCompile>
-    <ClCompile Include="m2ComponentManager.cpp">
-      <Filter>ECS\Systems</Filter>
-    </ClCompile>
-    <ClCompile Include="m2TransformComponent.cpp">
-      <Filter>ECS\Components</Filter>
-    </ClCompile>
     <ClCompile Include="m2Transform.cpp">
       <Filter>Math</Filter>
     </ClCompile>
@@ -196,9 +103,6 @@
     </ClCompile>
     <ClCompile Include="m2Shader.cpp">
       <Filter>Rendering</Filter>
-    </ClCompile>
-    <ClCompile Include="m2VertexBuffer.cpp">
-      <Filter>OpenGL Object Wrappers</Filter>
     </ClCompile>
     <ClCompile Include="m2Line2.cpp">
       <Filter>Math\Geometry\Lines</Filter>
