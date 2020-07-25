@@ -12,9 +12,8 @@ public:
     void render();
 
 private:
-    unsigned char* m_test;
-    GLuint test_texture;
-
     std::vector<unsigned char*> m_images;
-    GLuint m_textures[5];
+    GLuint m_texture;
+    //GLuint m_textures[5];
+    int m_width, m_height;
 };

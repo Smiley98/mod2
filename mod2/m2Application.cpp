@@ -19,7 +19,8 @@
 
 #define FRAMES_PER_SECOND 60.0
 #define MILLISECONDS_PER_FRAME 1.0 / FRAMES_PER_SECOND
-#define LIMIT_FPS true
+#define LIMIT_FPS false
+#define LOG_FPS true
 
 float halt(std::chrono::high_resolution_clock::time_point start) {
 	using namespace std::chrono;
@@ -90,6 +91,9 @@ inline void m2Application::tick(float frameTime)
 	if (counter >= 10) {
 		frameTimeAverage /= (float)counter;
 		m_timing.m_frameTimeSmoothed = frameTimeAverage;
+#if LOG_FPS
+		printf("%f fps.\n", 1.0f / frameTimeAverage);
+#endif
 		frameTimeAverage = 0.0f;
 		counter = 0;
 	}
