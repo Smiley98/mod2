@@ -15,7 +15,8 @@
 #include "m2Shader.h"
 #include "m2RayRenderer.h"
 #include "m2RayMarcher.h"
-#include "m2MappingDemo.h"
+#include "m2TextureDemo.h"
+#include "m2PBODemo.h"
 
 #define FRAMES_PER_SECOND 60.0
 #define MILLISECONDS_PER_FRAME 1.0 / FRAMES_PER_SECOND
@@ -78,9 +79,12 @@ inline void m2Application::render()
 	//Raymarching demo:
 	//m2RayMarcher::render();
 
-	//Persistend mapping demo:
-	static m2MappingDemo mappingDemo;
-	mappingDemo.render();
+	//Naive vs accelerated texturing demos:
+	static m2TextureDemo naiveDemo;
+	naiveDemo.render();
+
+	//static m2PBODemo acceleratedDemo;
+	//acceleratedDemo.render();
 }
 
 inline void m2Application::tick(float frameTime)
