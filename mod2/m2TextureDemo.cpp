@@ -12,9 +12,8 @@ const size_t m2TextureDemo::s_imageCount = 5;
 m2TextureDemo::m2TextureDemo()
 {
 	initialize();
-	m2ShaderProgram& sp = m2ShaderProgram::getProgram(TEXTURE_TEST);
-	sp.bind();
-	sp.setInt("u_texture", 0);
+	//Internal format (first format parameter) = image format (CPU). Format (last format parameter) = pixel format (GPU).
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_width, m_height, 0, GL_BGR, GL_UNSIGNED_BYTE, nullptr);
 }
 
 m2TextureDemo::~m2TextureDemo()
@@ -35,9 +34,11 @@ void m2TextureDemo::initialize()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	//Internal format (first format parameter) = image format (CPU). Format (last format parameter) = pixel format (GPU).
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_width, m_height, 0, GL_BGR, GL_UNSIGNED_BYTE, /*m_images[(rand() % 5)]//unnecessary*/nullptr);
 	glActiveTexture(GL_TEXTURE0);
+
+	m2ShaderProgram& sp = m2ShaderProgram::getProgram(TEXTURE_TEST);
+	sp.bind();
+	sp.setInt("u_texture", 0);
 }
 
 void m2TextureDemo::render()

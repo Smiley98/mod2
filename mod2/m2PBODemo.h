@@ -9,6 +9,11 @@ public:
     virtual void render() override;
 
 private:
+    GLuint m_bufferStorage = 0;
+    unsigned char* m_memoryRegion = nullptr;
+    GLsync m_fence = nullptr;
 
+    void fence();
+    void wait();
 };
 
