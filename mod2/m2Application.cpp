@@ -80,11 +80,22 @@ inline void m2Application::render()
 	//m2RayMarcher::render();
 
 	//Naive vs accelerated texturing demos:
-	//static m2TextureDemo naiveDemo;
-	//naiveDemo.render();
-
+	/*
+	static m2TextureDemo naiveDemo;
+	naiveDemo.render();
+	//*/
+	
+	///*
 	static m2PBODemo acceleratedDemo;
 	acceleratedDemo.render();
+	//*/
+
+	//Conclusion: PBOs are benefitial if streaming can be done in the background.
+	//Naive = system -> texture object
+	//PBO = system -> PBO in the background, PBO -> texture object.
+	//*The fewer textures uploaded per frame, the less performance benefits from PBOs.
+	//For Taiga, even if we're only uploading 1 image per frame, spreading the process throughout the frame still significantly improves performance since work is done in parallel!
+	//(ie stream from camera to PBO at start of frame [while the CPU is doing other stuff], then from PBO to texture object at end of frame before draw call).
 }
 
 inline void m2Application::tick(float frameTime)

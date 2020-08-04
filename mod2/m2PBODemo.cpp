@@ -1,6 +1,5 @@
 #include "m2PBODemo.h"
 #include "m2ScreenQuad.h"
-#include <thread>
 
 m2PBODemo::m2PBODemo()
 {	//initialize() called implicitly.
@@ -19,15 +18,22 @@ m2PBODemo::~m2PBODemo()
 
 void m2PBODemo::render()
 {
-	//Make sure the GPU doesn't read while we're writing to here.
-	wait();
+	//The following runs at the same speed as the naive solution because the driver is doing essentially the same thing.
+	//for (size_t i = 0; i < 64; i++) {
+	//	wait();
+	//	memcpy(m_memory, m_images[rand() % s_imageCount], m_imageSize);
+	//	fence();
+	//	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, m_width, m_height, GL_BGR, GL_UNSIGNED_BYTE, nullptr);
+	//}
+	//m2ScreenQuad::render();
+
+	//However, if we can asynchronously transfer data into the PBOs we see a significant performance improvement.
+	//Simulate parallelism by memcpying once instead of on a per-image basis as a real application would've streamed images into the PBO in the background.
 	memcpy(m_memory, m_images[rand() % s_imageCount], m_imageSize);
-	
-	//Add a fence here before issuing calls we'll want to wait for before next frame's write.
-	fence();
-	for (size_t i = 0; i < 100; i++)
+	for (size_t i = 0; i < 64; i++)
 		glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, m_width, m_height, GL_BGR, GL_UNSIGNED_BYTE, nullptr);
-	
+	//We have to call finish otherwise the driver may not schedule the uploads till future draw calls!
+	glFinish();
 	m2ScreenQuad::render();
 }
 

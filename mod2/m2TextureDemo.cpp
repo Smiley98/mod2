@@ -46,7 +46,7 @@ void m2TextureDemo::initialize()
 void m2TextureDemo::render()
 {
 	//Naive approach that doesn't take advantage of hardware accelerated transfering.
-	for (size_t i = 0; i < 100; i++)
+	for (size_t i = 0; i < 64; i++)
 		glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, m_width, m_height, GL_BGR, GL_UNSIGNED_BYTE, m_images[(rand() % s_imageCount)]);
 	m2ScreenQuad::render();
 }
