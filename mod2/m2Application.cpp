@@ -80,11 +80,11 @@ inline void m2Application::render()
 	//m2RayMarcher::render();
 
 	//Naive vs accelerated texturing demos:
-	static m2TextureDemo naiveDemo;
-	naiveDemo.render();
+	//static m2TextureDemo naiveDemo;
+	//naiveDemo.render();
 
-	//static m2PBODemo acceleratedDemo;
-	//acceleratedDemo.render();
+	static m2PBODemo acceleratedDemo;
+	acceleratedDemo.render();
 }
 
 inline void m2Application::tick(float frameTime)

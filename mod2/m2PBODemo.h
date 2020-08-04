@@ -1,5 +1,6 @@
 #pragma once
 #include "m2TextureDemo.h"
+#include <array>
 class m2PBODemo :
     public m2TextureDemo
 {
@@ -9,8 +10,8 @@ public:
     virtual void render() override;
 
 private:
-    GLuint m_bufferStorage = 0;
-    unsigned char* m_memoryRegion = nullptr;
+    GLuint m_pbo = GL_NONE;
+    GLubyte* m_memory = nullptr;
     GLsync m_fence = nullptr;
 
     void fence();
