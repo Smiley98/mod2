@@ -21,10 +21,12 @@ m2TextureDemo::~m2TextureDemo()
 
 void m2TextureDemo::initialize()
 {
+	m_images.resize(s_imageCount);
 	std::string tdir = "Textures/";
 	for (size_t i = 1; i < s_imageCount + 1; i++)
-		m_images.push_back(stbi_load((tdir + std::to_string(i) + ".jpg").c_str(), &m_width, &m_height, &m_channels, 0));
+		m_images[i - 1] = stbi_load((tdir + std::to_string(i) + ".jpg").c_str(), &m_width, &m_height, &m_channels, 0);
 	m_imageSize = m_width * m_height * m_channels;
+	printf("Channels: %i\n", m_channels);
 
 	glGenTextures(1, &m_texture);
 	glBindTexture(GL_TEXTURE_2D, m_texture);
