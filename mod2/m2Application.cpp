@@ -90,12 +90,11 @@ inline void m2Application::render()
 	acceleratedDemo.render();
 	//*/
 
-	//Conclusion: PBOs are benefitial if streaming can be done in the background.
+	//Conclusion: PBOs are benefitial if streaming can be done in the background. Persistent memory shows insignificant improvements.
 	//Naive = system -> texture object
-	//PBO = system -> PBO in the background, PBO -> texture object.
-	//*The fewer textures uploaded per frame, the less performance benefits from PBOs.
-	//For Taiga, even if we're only uploading 1 image per frame, spreading the process throughout the frame still significantly improves performance since work is done in parallel!
-	//(ie stream from camera to PBO at start of frame [while the CPU is doing other stuff], then from PBO to texture object at end of frame before draw call).
+	//PBO = system -> PBO, PBO -> texture object (all asynchronous).
+	//Benefit depends nearly entirely on how much streaming we can do in the background
+	//(if main thread waits on streaming threads most of the time, little benefit).
 }
 
 inline void m2Application::tick(float frameTime)
