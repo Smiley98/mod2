@@ -13,13 +13,15 @@
 #include "m2Utilities.h"
 
 #include "m2Shader.h"
-#include "m2Effects.h"
 #include "m2RayRenderer.h"
 #include "m2RayMarcher.h"
+#include "m2TextureDemo.h"
+#include "m2PBODemo.h"
 
 #define FRAMES_PER_SECOND 60.0
 #define MILLISECONDS_PER_FRAME 1.0 / FRAMES_PER_SECOND
-#define LIMIT_FPS true
+#define LIMIT_FPS false
+#define LOG_FPS true
 
 float halt(std::chrono::high_resolution_clock::time_point start) {
 	using namespace std::chrono;
@@ -37,13 +39,13 @@ m2Application::m2Application() :
 	m_timing(m2Timing::instance())
 {
 	m2ShaderProgram::init();
-	m2Effects::init();
+	m2ScreenQuad::init();
 }
 
 m2Application::~m2Application()
 {
 	m2ShaderProgram::shutdown();
-	m2Effects::shutdown();
+	m2ScreenQuad::shutdown();
 }
 
 void m2Application::run()
@@ -61,9 +63,7 @@ void m2Application::run()
 }
 
 inline void m2Application::update()
-{	//Can't run this cause Transform doesn't update.
-	//std::thread transforms(m2ComponentManager::updateComponentsOfType<m2TransformComponent>);
-	//transforms.join();
+{
 	glfwPollEvents();
 }
 
@@ -71,14 +71,30 @@ inline void m2Application::render()
 {
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	//m_scene->render();//Scenes should internally switch renderers if I implement such capabilities.
 
-	//Draws a single line. Not yet flexible (doesn't take point arguments).
-	//m2ShaderProgram::drawLine();
-
-	static m2RayRenderer rayRenderer(0, m_window.getClientWidth(), 1);
+	//Batched line rendering demo:
+	//static m2RayRenderer rayRenderer(0, m_window.getClientWidth(), 1);
 	//rayRenderer.render();
-	m2RayMarcher::marchCircle();
+
+	//Raymarching demo:
+	//m2RayMarcher::render();
+
+	//Naive vs accelerated texturing demos:
+	/*
+	static m2TextureDemo naiveDemo;
+	naiveDemo.render();
+	//*/
+	
+	///*
+	static m2PBODemo acceleratedDemo;
+	acceleratedDemo.render();
+	//*/
+
+	//Conclusion: PBOs are benefitial if streaming can be done in the background. Persistent memory shows insignificant improvements.
+	//Naive = system -> texture object
+	//PBO = system -> PBO, PBO -> texture object (all asynchronous).
+	//Benefit depends nearly entirely on how much streaming we can do in the background
+	//(if main thread waits on streaming threads most of the time, little benefit).
 }
 
 inline void m2Application::tick(float frameTime)
@@ -89,6 +105,9 @@ inline void m2Application::tick(float frameTime)
 	if (counter >= 10) {
 		frameTimeAverage /= (float)counter;
 		m_timing.m_frameTimeSmoothed = frameTimeAverage;
+#if LOG_FPS
+		printf("%f fps.\n", 1.0f / frameTimeAverage);
+#endif
 		frameTimeAverage = 0.0f;
 		counter = 0;
 	}

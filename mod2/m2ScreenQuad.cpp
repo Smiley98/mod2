@@ -1,15 +1,15 @@
-#include "m2Effects.h"
+#include "m2ScreenQuad.h"
 
 static GLuint screenQuadVao;
 static GLuint screenQuadVbo;
 
-void m2Effects::render()
+void m2ScreenQuad::render()
 {
 	glBindVertexArray(screenQuadVao);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 }
 
-void m2Effects::init()
+void m2ScreenQuad::init()
 {
 	float quadData[] =
 	{
@@ -36,9 +36,8 @@ void m2Effects::init()
 	glBindVertexArray(GL_NONE);
 }
 
-void m2Effects::shutdown()
+void m2ScreenQuad::shutdown()
 {
 	glDeleteVertexArrays(1, &screenQuadVao);
 	glDeleteBuffers(1, &screenQuadVbo);
 }
-

@@ -27,6 +27,10 @@ void framebuffer_callback(GLFWwindow* window, int width, int height) {
 	printf("Client resized to %ix%i.\n", width, height);
 }
 
+void focus_callback(GLFWwindow* window, int param) {
+
+}
+
 m2Window::m2Window() : m_window(nullptr)
 {
 	//1. Initialize window and other primary initial glfw code like setting the error callback.
@@ -52,6 +56,7 @@ m2Window::m2Window() : m_window(nullptr)
 	glfwSetKeyCallback(m_window, key_callback);
 	//Causing errors at the moment, as with a lot of other windowing nonsense...
 	//glfwSetFramebufferSizeCallback(m_window, framebuffer_callback);
+	//glfwSetWindowFocusCallback(m_window, focus_callback);
 
 	//int fwidth, fheight;
 	//glfwGetFramebufferSize(m_window, &fwidth, &fheight);

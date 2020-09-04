@@ -12,6 +12,7 @@ enum m2ShaderPrograms : GLenum {
 	RAYMARCH_SANDBOX,
 	UNIFORM_TEST_1,
 	UNIFORM_TEST_2,
+	TEXTURE_TEST,
 	NUM_SHADERS
 };
 
@@ -39,6 +40,12 @@ class m2ShaderProgram {
 public:
 	m2ShaderProgram();
 	~m2ShaderProgram();
+
+	static void init();
+	static void shutdown();
+
+	static m2ShaderProgram& getProgram(m2ShaderPrograms);
+	static void drawLine();
 
 	m2ShaderProgram& add(const m2Shader&);
 	m2ShaderProgram& link();
@@ -81,12 +88,6 @@ public:
 	//glBindAttribLocation or glBindFragDataLocation specifies input/output.
 	//It might be worth while to do this for each shader so that we're guarenteed we're reading/writing what we expec to.
 	//ie ensure we're not pointing to normals when we think we're pointing to uvs.
-
-	static void init();
-	static void shutdown();
-
-	static m2ShaderProgram& getProgram(m2ShaderPrograms);
-	static void drawLine();
 
 private:
 	//Cache uniform locations.

@@ -1,13 +1,12 @@
 #pragma once
 #define GLM_FORCE_SWIZZLE
-#include "m2Effects.h"
-class m2RayMarcher :
-	public m2Effects
+#include "m2ScreenQuad.h"
+class m2RayMarcher
 {
 public:
 	m2RayMarcher();
 	~m2RayMarcher();
 
-	static void marchCircle();
+	static void render();
 };
 
