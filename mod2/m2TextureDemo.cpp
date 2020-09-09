@@ -6,6 +6,8 @@
 #include <stb/stb_image.h>
 #include <string>
 #include <ctime>
+#include <chrono>
+#include <thread>
 
 const size_t m2TextureDemo::s_imageCount = 5;
 
@@ -45,9 +47,16 @@ void m2TextureDemo::initialize()
 
 void m2TextureDemo::render()
 {
-	//Naive approach that doesn't take advantage of hardware accelerated transfering.
-	for (size_t i = 0; i < 64; i++)
-		glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, m_width, m_height, GL_BGR, GL_UNSIGNED_BYTE, m_images[(rand() % s_imageCount)]);
+	using namespace std::chrono;
+	steady_clock::time_point start = steady_clock::now();
+
+	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, m_width, m_height, GL_BGR, GL_UNSIGNED_BYTE, m_images[(rand() % s_imageCount)]);
+
+	steady_clock::time_point stop = steady_clock::now();
+	float elapsed = duration_cast<milliseconds>(stop - start).count();
+	printf("%f\n", elapsed);
+
+	std::this_thread::sleep_for(seconds(1));
 	m2ScreenQuad::render();
 }
 

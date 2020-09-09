@@ -1,5 +1,7 @@
 #include "m2PBODemo.h"
 #include "m2ScreenQuad.h"
+#include <chrono>
+#include <thread>
 
 m2PBODemo::m2PBODemo()
 {
@@ -18,18 +20,26 @@ m2PBODemo::~m2PBODemo()
 
 void m2PBODemo::render()
 {
-	//The following runs at the same speed as the naive solution because the driver is doing essentially the same thing.
-	//Even with 2k textures, it seems persistent memory improves very little. The only possible benefit to PBOs is streaming which isn't demonstrated here.
-	for (size_t i = 0; i < 64; i++) {
-		//Waits for fence to become signalled.
-		//Fences become signalled once prior commands finish ie draw() fence() signals fence after draw completes.
-		wait();
-		//Thanks to GL_MAP_COHERENT_BIT, the memory is visible to the driver the moment the CPU finishes writing.
-		//Since we called wait() we know its safe to write to the memory since OGL is no longer reading it for rendering.
-		memcpy(m_memory, m_images[rand() % s_imageCount], m_imageSize);
-		glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, m_width, m_height, GL_BGR, GL_UNSIGNED_BYTE, nullptr);
-		fence();
-	}
+	//wait();
+	//memcpy(m_memory, m_images[rand() % s_imageCount], m_imageSize);
+	//glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, m_width, m_height, GL_BGR, GL_UNSIGNED_BYTE, nullptr);
+	//fence();
+
+	wait();
+	memcpy(m_memory, m_images[rand() % s_imageCount], m_imageSize);
+
+	using namespace std::chrono;
+	steady_clock::time_point start = steady_clock::now();
+
+	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, m_width, m_height, GL_BGR, GL_UNSIGNED_BYTE, nullptr);
+	fence();
+
+	steady_clock::time_point stop = steady_clock::now();
+
+	float elapsed = duration_cast<milliseconds>(stop - start).count();
+	printf("%f\n", elapsed);
+
+	std::this_thread::sleep_for(seconds(1));
 	m2ScreenQuad::render();
 }
 

@@ -21,7 +21,7 @@
 #define FRAMES_PER_SECOND 60.0
 #define MILLISECONDS_PER_FRAME 1.0 / FRAMES_PER_SECOND
 #define LIMIT_FPS false
-#define LOG_FPS true
+#define LOG_FPS false
 
 float halt(std::chrono::high_resolution_clock::time_point start) {
 	using namespace std::chrono;
