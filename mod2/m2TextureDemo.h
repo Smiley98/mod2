@@ -1,6 +1,7 @@
 #pragma once
 #include "m2ArrayObject.h"
 #include <vector>
+#include <chrono>
 
 class m2TextureDemo : 
     public m2ArrayObject
@@ -14,9 +15,10 @@ public:
     void shutdown();
 
 protected:
-    std::vector<unsigned char*> m_images;
-    GLuint m_texture;
-    int m_width, m_height, m_channels, m_imageSize;
+    GLuint m_texture = GL_NONE;
+    unsigned char* m_image = nullptr;
+    int m_width = 0, m_height = 0, m_imageSize = 0;
 
-    static const size_t s_imageCount;
+    void upload();
+    void elapsed(std::chrono::steady_clock::time_point start);
 };

@@ -16,5 +16,6 @@ private:
 
     void fence();
     void wait();
-};
 
+    void upload_async();
+};
