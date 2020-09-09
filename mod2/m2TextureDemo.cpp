@@ -23,8 +23,8 @@ void m2TextureDemo::initialize()
 {
 	std::string tdir = "Textures/";
 	int channels;
-	m_image = stbi_load((tdir + "big_texture.jpg").c_str(), &m_width, &m_height, &channels, 0);
-	m_imageSize = m_width * m_height * channels;
+	m_image = stbi_load((tdir + "big_texture.jpg").c_str(), &m_width, &m_height, &channels, STBI_rgb_alpha);
+	m_imageSize = m_width * m_height * STBI_rgb_alpha;
 
 	glGenTextures(1, &m_texture);
 	glBindTexture(GL_TEXTURE_2D, m_texture);
@@ -34,7 +34,8 @@ void m2TextureDemo::initialize()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
 	//Internal format (first format parameter) = image format (CPU). Format (last format parameter) = pixel format (GPU).
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_width, m_height, 0, GL_BGR, GL_UNSIGNED_BYTE, nullptr);
+	//Also, apparently my understanding of formats is wrong cause if we use BGRA on the GPU we crash...
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, m_width, m_height, 0, GL_BGRA, GL_UNSIGNED_BYTE, nullptr);
 	glActiveTexture(GL_TEXTURE0);
 
 	m2ShaderProgram& sp = m2ShaderProgram::getProgram(TEXTURE_TEST);
@@ -67,7 +68,7 @@ void m2TextureDemo::shutdown()
 
 void m2TextureDemo::upload()
 {
-	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, m_width, m_height, GL_BGR, GL_UNSIGNED_BYTE, m_image);
+	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, m_width, m_height, GL_BGRA, GL_UNSIGNED_BYTE, m_image);
 }
 
 void m2TextureDemo::elapsed(std::chrono::steady_clock::time_point start)
