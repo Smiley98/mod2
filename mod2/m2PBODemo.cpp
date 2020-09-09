@@ -19,11 +19,15 @@ m2PBODemo::~m2PBODemo()
 
 void m2PBODemo::render()
 {
-	//Apparently my GPU doesn't support asynchronous DMA transfer...
 	upload_async();
+	fence();
+
 	std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
+	//Apparently my GPU doesn't support asynchronous DMA transfer...
+	//upload_async() shouldn't block, wait() should!
 	wait();
 	elapsed(start);
+
 	m2ScreenQuad::render();
 }
 
