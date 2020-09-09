@@ -22,11 +22,10 @@ void m2PBODemo::render()
 	//Even with 2k textures, it seems persistent memory improves very little. The only possible benefit to PBOs is streaming which isn't demonstrated here.
 	for (size_t i = 0; i < 64; i++) {
 		//Waits for fence to become signalled.
-		//Fences become signalled once prior commands finish.
-		//ie draw() fence() waits on draw() but
-		//fence() draw() waits on nothing assuming the GPU was idle before fence insertion.
-		//(Since our helper functions verify that the fence exists there won't be any frame 1 silliness).
+		//Fences become signalled once prior commands finish ie draw() fence() signals fence after draw completes.
 		wait();
+		//Thanks to GL_MAP_COHERENT_BIT, the memory is visible to the driver the moment the CPU finishes writing.
+		//Since we called wait() we know its safe to write to the memory since OGL is no longer reading it for rendering.
 		memcpy(m_memory, m_images[rand() % s_imageCount], m_imageSize);
 		glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, m_width, m_height, GL_BGR, GL_UNSIGNED_BYTE, nullptr);
 		fence();
