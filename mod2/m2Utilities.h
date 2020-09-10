@@ -1,6 +1,7 @@
 #pragma once
 #include <glm/glm.hpp>
 #include <string>
+#include <chrono>
 #include <cstdio>
 
 namespace m2Utils {
@@ -30,4 +31,7 @@ namespace m2Utils {
 			printf("%f ", vector[i]);
 		printf("\n");
 	}
+
+	//Benchmark timer. Don't use in more than once place otherwise data won't be useful.
+	void elapsed(std::chrono::steady_clock::time_point start);
 }

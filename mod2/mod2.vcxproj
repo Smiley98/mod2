@@ -137,6 +137,7 @@
     <ClInclude Include="m2Window.h" />
     <ClInclude Include="m2RayRenderer.h" />
     <ClInclude Include="m2TextureDemo.h" />
+    <ClInclude Include="Texture.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="m2Application.cpp" />
@@ -154,6 +155,7 @@
     <ClCompile Include="m2Utilities.cpp" />
     <ClCompile Include="m2RayRenderer.cpp" />
     <ClCompile Include="m2TextureDemo.cpp" />
+    <ClCompile Include="Texture.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

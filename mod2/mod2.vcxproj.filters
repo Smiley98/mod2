@@ -102,6 +102,9 @@
     <ClInclude Include="m2PBODemo.h">
       <Filter>Examples\Texturing</Filter>
     </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>Textures</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="m2Transform.cpp">
@@ -148,6 +151,9 @@
     </ClCompile>
     <ClCompile Include="m2PBODemo.cpp">
       <Filter>Examples\Texturing</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>Textures</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

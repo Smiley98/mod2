@@ -1,4 +1,7 @@
 #pragma once
+#include "Texture.h"
+#include <array>
+
 //Forward declaring won't shorten compile times cause nothing includes m2Application, but it does make it clear which dependencies are in use.
 class m2Window;
 class m2Timing;
@@ -13,6 +16,8 @@ public:
 private:
 	m2Window& m_window;
 	m2Timing& m_timing;
+
+	std::array<Texture, 5> m_textures;
 
 	inline void update();
 	inline void render();

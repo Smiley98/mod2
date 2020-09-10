@@ -1,4 +1,5 @@
 #include "m2PBODemo.h"
+/*
 #include "m2ScreenQuad.h"
 #include <thread>
 
@@ -49,6 +50,8 @@ void m2PBODemo::wait()
 
 void m2PBODemo::upload_async()
 {
+	memcpy(m_memory, m_image, m_imageSize);	//Aids, but can do this in a separate thread!
 	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, m_width, m_height, GL_BGRA, GL_UNSIGNED_BYTE, nullptr);
 	fence();
 }
+*/

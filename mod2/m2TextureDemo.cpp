@@ -1,4 +1,5 @@
 #include "m2TextureDemo.h"
+/*
 #include "m2ScreenQuad.h"
 #include "m2Shader.h"
 
@@ -70,22 +71,4 @@ void m2TextureDemo::upload()
 {
 	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, m_width, m_height, GL_BGRA, GL_UNSIGNED_BYTE, m_image);
 }
-
-void m2TextureDemo::elapsed(std::chrono::steady_clock::time_point start)
-{
-	static short index;
-	static std::array<long long, 16> counters;
-
-	using namespace std::chrono;
-	steady_clock::time_point stop = steady_clock::now();
-	counters[index] = duration_cast<milliseconds>(stop - start).count();
-	index++;
-	if (index > counters.size() - 1) {
-		index = 0;
-		long long average = 0;
-		for (long long i : counters)
-			average += i;
-		average /= counters.size();
-		printf("%I64d\n", average);
-	}
-}
+//*/

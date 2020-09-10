@@ -1,5 +1,6 @@
 #include "m2Utilities.h"
 #include "m2Window.h"
+#include <array>
 #include <fstream>
 
 static m2Window& window = m2Window::instance();
@@ -9,6 +10,25 @@ void m2Utils::printMatrix(const glm::mat4 & matrix)
 	for (int i = 0; i < 4; i++)
 		printf("%f %f %f %f\n", matrix[0][i], matrix[1][i], matrix[2][i], matrix[3][i]);
 	printf("\n");
+}
+
+void m2Utils::elapsed(std::chrono::steady_clock::time_point start)
+{
+	static short index;
+	static std::array<long long, 16> counters;
+
+	using namespace std::chrono;
+	steady_clock::time_point stop = steady_clock::now();
+	counters[index] = duration_cast<milliseconds>(stop - start).count();
+	index++;
+	if (index > counters.size() - 1) {
+		index = 0;
+		long long average = 0;
+		for (long long i : counters)
+			average += i;
+		average /= counters.size();
+		printf("%I64d\n", average);
+	}
 }
 
 std::string m2Utils::loadTextFile(const std::string& path) {

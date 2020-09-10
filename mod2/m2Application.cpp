@@ -40,6 +40,15 @@ m2Application::m2Application() :
 {
 	m2ShaderProgram::init();
 	m2ScreenQuad::init();
+
+	//for (size_t i = 0; i < m_textures.size(); i++)
+	//	m_textures[i].initialize("4k/" + std::to_string(i + 1) + ".jpg");
+	m_textures[0].initialize("big_texture.jpg");
+
+	m2ShaderProgram& sp = m2ShaderProgram::getProgram(TEXTURE_TEST);
+	sp.bind();
+	sp.setInt("u_texture", 0);
+	glActiveTexture(GL_TEXTURE0);
 }
 
 m2Application::~m2Application()
@@ -72,6 +81,11 @@ inline void m2Application::render()
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+	std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
+	m_textures[0].uploadBegin();
+	m_textures[0].uploadEnd();
+	m2Utils::elapsed(start);
+	m2ScreenQuad::render();
 	//Batched line rendering demo:
 	//static m2RayRenderer rayRenderer(0, m_window.getClientWidth(), 1);
 	//rayRenderer.render();
@@ -80,12 +94,12 @@ inline void m2Application::render()
 	//m2RayMarcher::render();
 
 	//Naive vs accelerated texturing demos:
-	/*
+	/*//150ms
 	static m2TextureDemo naiveDemo;
 	naiveDemo.render();
 	//*/
 	
-	///*
+	/*//140ms: 50ms memcpy + 90ms upload. memcpy can be done in background but upload must wait on memcpy.
 	static m2PBODemo acceleratedDemo;
 	acceleratedDemo.render();
 	//*/
