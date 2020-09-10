@@ -41,9 +41,9 @@ m2Application::m2Application() :
 	m2ShaderProgram::init();
 	m2ScreenQuad::init();
 
-	//for (size_t i = 0; i < m_textures.size(); i++)
-	//	m_textures[i].initialize("4k/" + std::to_string(i + 1) + ".jpg");
-	m_textures[0].initialize("big_texture.jpg");
+	for (size_t i = 0; i < m_textures.size(); i++)
+		m_textures[i].initialize("4k/" + std::to_string(i + 1) + ".jpg");
+	//m_textures[0].initialize("big_texture.jpg");
 
 	m2ShaderProgram& sp = m2ShaderProgram::getProgram(TEXTURE_TEST);
 	sp.bind();
@@ -74,6 +74,12 @@ void m2Application::run()
 inline void m2Application::update()
 {
 	glfwPollEvents();
+	
+	for (size_t i = 0; i < m_textures.size(); i++)
+		m_threads[i] = std::thread([this, i] {m_textures[i].copy(); });
+
+	for (std::thread& t : m_threads)
+		t.join();
 }
 
 inline void m2Application::render()
@@ -82,10 +88,17 @@ inline void m2Application::render()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
-	m_textures[0].uploadBegin();
-	m_textures[0].uploadEnd();
+
+	for (size_t i = 0; i < m_textures.size(); i++)
+		m_textures[i].uploadBegin();
+
 	m2Utils::elapsed(start);
+
+	for (size_t i = 0; i < m_textures.size(); i++)
+		m_textures[i].uploadEnd();
+
 	m2ScreenQuad::render();
+
 	//Batched line rendering demo:
 	//static m2RayRenderer rayRenderer(0, m_window.getClientWidth(), 1);
 	//rayRenderer.render();

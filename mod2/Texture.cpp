@@ -2,16 +2,18 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb/stb_image.h>
 
+namespace {
+	const GLbitfield flags = GL_MAP_PERSISTENT_BIT | GL_MAP_COHERENT_BIT;
+	const GLenum uploadTarget = GL_PIXEL_UNPACK_BUFFER;
+	//const GLenum downloadTarget = GL_PIXEL_PACK_BUFFER;
+}
+
 void Texture::initialize(const std::string& fileName)
 {	//Image loading is taken care of in the xr engine. We just need to transfer data asynchronously.
 	static std::string tdir = "Textures/";
 	int channels;
 	m_image = stbi_load((tdir + fileName).c_str(), &m_width, &m_height, &channels, STBI_rgb_alpha);
 	m_imageSize = m_width * m_height * STBI_rgb_alpha;
-
-	static const GLbitfield flags = GL_MAP_PERSISTENT_BIT | GL_MAP_COHERENT_BIT;
-	static const GLenum uploadTarget = GL_PIXEL_UNPACK_BUFFER;
-	//static const GLenum downloadTarget = GL_PIXEL_PACK_BUFFER;
 	
 	glGenBuffers(1, &m_uploadPBO);
 	glBindBuffer(uploadTarget, m_uploadPBO);
@@ -44,9 +46,16 @@ void Texture::shutdown()
 	//stbi_image_free(m_image);
 }
 
-void Texture::uploadBegin()
+void Texture::copy()
 {
 	memcpy(m_uploadMemory, m_image, m_imageSize);
+}
+
+void Texture::uploadBegin()
+{
+	//memcpy(m_uploadMemory, m_image, m_imageSize);
+	glBindTexture(GL_TEXTURE_2D, m_texture);
+	glBindBuffer(uploadTarget, m_uploadPBO);
 	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, m_width, m_height, GL_BGRA, GL_UNSIGNED_BYTE, nullptr);
 	fence(m_uploadFence);
 }
