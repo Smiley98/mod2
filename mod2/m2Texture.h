@@ -2,7 +2,7 @@
 #include <glad/glad.h>
 #include <string>
 
-class Texture
+class m2Texture
 {
 public:
 	void initialize(const std::string& fileName);

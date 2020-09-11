@@ -43,7 +43,7 @@ m2Application::m2Application() :
 
 	for (size_t i = 0; i < m_textures.size(); i++)
 		m_textures[i].initialize("4k/" + std::to_string(i + 1) + ".jpg");
-	//m_textures[0].initialize("big_texture.jpg");
+	m_textures[0].initialize("big_texture.jpg");
 
 	m2ShaderProgram& sp = m2ShaderProgram::getProgram(TEXTURE_TEST);
 	sp.bind();
@@ -59,6 +59,7 @@ m2Application::~m2Application()
 
 void m2Application::run()
 {	//1. Update 2. Render 3. Swap.
+	printf("Lit!\n");
 	while (m_window.isOpen()) {
 		std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
 
@@ -76,8 +77,8 @@ inline void m2Application::update()
 	glfwPollEvents();
 	
 	for (size_t i = 0; i < m_textures.size(); i++)
-		m_threads[i] = std::thread([this, i] {m_textures[i].copy(); });
-
+		m_threads[i] = std::thread([this, i] { m_textures[i].copy(); });
+	
 	for (std::thread& t : m_threads)
 		t.join();
 }
@@ -91,12 +92,12 @@ inline void m2Application::render()
 
 	for (size_t i = 0; i < m_textures.size(); i++)
 		m_textures[i].uploadBegin();
-
+	
 	m2Utils::elapsed(start);
-
+	
 	for (size_t i = 0; i < m_textures.size(); i++)
 		m_textures[i].uploadEnd();
-
+	
 	m2ScreenQuad::render();
 
 	//Batched line rendering demo:
@@ -106,22 +107,17 @@ inline void m2Application::render()
 	//Raymarching demo:
 	//m2RayMarcher::render();
 
-	//Naive vs accelerated texturing demos:
-	/*//150ms
+	//Naive texture upload benchmark:
+	/*
 	static m2TextureDemo naiveDemo;
 	naiveDemo.render();
 	//*/
 	
-	/*//140ms: 50ms memcpy + 90ms upload. memcpy can be done in background but upload must wait on memcpy.
+	//Accelerated texture upload benchmark:
+	/*
 	static m2PBODemo acceleratedDemo;
 	acceleratedDemo.render();
 	//*/
-
-	//Conclusion: PBOs are benefitial if streaming can be done in the background. Persistent memory shows insignificant improvements.
-	//Naive = system -> texture object
-	//PBO = system -> PBO, PBO -> texture object (all asynchronous).
-	//Benefit depends nearly entirely on how much streaming we can do in the background
-	//(if main thread waits on streaming threads most of the time, little benefit).
 }
 
 inline void m2Application::tick(float frameTime)

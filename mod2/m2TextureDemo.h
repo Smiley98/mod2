@@ -1,16 +1,13 @@
 #pragma once
-#include "m2ArrayObject.h"
-#include <chrono>
-
+#include <glad/glad.h>
 class m2TextureDemo 
 {
-/*
 public:
     m2TextureDemo();
     ~m2TextureDemo();
 
     void initialize();
-    virtual void render();
+    void render();
     void shutdown();
 
 protected:
@@ -20,5 +17,4 @@ protected:
 
 private:
     void upload();
-    //*/
 };

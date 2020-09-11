@@ -130,6 +130,7 @@
     <ClInclude Include="m2RayMarcher.h" />
     <ClInclude Include="m2ArrayObject.h" />
     <ClInclude Include="m2Shader.h" />
+    <ClInclude Include="m2StreamingDemo.h" />
     <ClInclude Include="m2Timing.h" />
     <ClInclude Include="m2Transform.h" />
     <ClInclude Include="m2Singleton.h" />
@@ -137,7 +138,7 @@
     <ClInclude Include="m2Window.h" />
     <ClInclude Include="m2RayRenderer.h" />
     <ClInclude Include="m2TextureDemo.h" />
-    <ClInclude Include="Texture.h" />
+    <ClInclude Include="m2Texture.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="m2Application.cpp" />
@@ -148,6 +149,7 @@
     <ClCompile Include="m2Line3.cpp" />
     <ClCompile Include="m2RayMarcher.cpp" />
     <ClCompile Include="m2Shader.cpp" />
+    <ClCompile Include="m2StreamingDemo.cpp" />
     <ClCompile Include="m2Timing.cpp" />
     <ClCompile Include="m2Transform.cpp" />
     <ClCompile Include="m2Window.cpp" />
@@ -155,7 +157,7 @@
     <ClCompile Include="m2Utilities.cpp" />
     <ClCompile Include="m2RayRenderer.cpp" />
     <ClCompile Include="m2TextureDemo.cpp" />
-    <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="m2Texture.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

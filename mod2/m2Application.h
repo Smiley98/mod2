@@ -1,5 +1,5 @@
 #pragma once
-#include "Texture.h"
+#include "m2Texture.h"
 #include <array>
 #include <thread>
 
@@ -18,7 +18,7 @@ private:
 	m2Window& m_window;
 	m2Timing& m_timing;
 
-	std::array<Texture, 5> m_textures;
+	std::array<m2Texture, 5> m_textures;
 	std::array<std::thread, 5> m_threads;
 
 	inline void update();

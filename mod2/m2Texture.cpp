@@ -1,4 +1,6 @@
-#include "Texture.h"
+#include "m2Texture.h"
+
+//Apparently I only need to define this once, no compiler/link order jank!?
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb/stb_image.h>
 
@@ -8,7 +10,7 @@ namespace {
 	//const GLenum downloadTarget = GL_PIXEL_PACK_BUFFER;
 }
 
-void Texture::initialize(const std::string& fileName)
+void m2Texture::initialize(const std::string& fileName)
 {	//Image loading is taken care of in the xr engine. We just need to transfer data asynchronously.
 	static std::string tdir = "Textures/";
 	int channels;
@@ -38,20 +40,20 @@ void Texture::initialize(const std::string& fileName)
 	//We need separate storage for the buffer. Think of the persistent storage as a Vulkan staging buffer, and this as Vulkan image memory (with optimal tiling xD).
 }
 
-void Texture::shutdown()
+void m2Texture::shutdown()
 {
 	glDeleteTextures(1, &m_texture);
 	glDeleteBuffers(1, &m_uploadPBO);
 	//glDeleteBuffers(1, &m_downloadPBO);
-	//stbi_image_free(m_image);
+	stbi_image_free(m_image);
 }
 
-void Texture::copy()
+void m2Texture::copy()
 {
 	memcpy(m_uploadMemory, m_image, m_imageSize);
 }
 
-void Texture::uploadBegin()
+void m2Texture::uploadBegin()
 {
 	//memcpy(m_uploadMemory, m_image, m_imageSize);
 	glBindTexture(GL_TEXTURE_2D, m_texture);
@@ -60,26 +62,26 @@ void Texture::uploadBegin()
 	fence(m_uploadFence);
 }
 
-void Texture::uploadEnd()
+void m2Texture::uploadEnd()
 {
 	wait(m_uploadFence);
 }
 
-void Texture::downloadBegin()
+void m2Texture::downloadBegin()
 {
 	//glGetTextureSubImage is also an option, core in GL 4.5
 	//glReadPixels(0, 0, m_width, m_height, GL_BGRA, GL_UNSIGNED_BYTE, nullptr);
 	//fence(m_downloadFence);
 }
 
-void Texture::downloadEnd()
+void m2Texture::downloadEnd()
 {
 	//wait(m_downloadFence);
 	//memcpy to some external buffer or return data?
 	//return m_downloadMemory;//Be careful with this. Be sure to copy rather than reassign this as its GL mapped memory!
 }
 
-void Texture::fence(GLsync& sync)
+void m2Texture::fence(GLsync& sync)
 {
 	//Create a new sync point and delete the old one.
 	if (sync)
@@ -87,7 +89,7 @@ void Texture::fence(GLsync& sync)
 	sync = glFenceSync(GL_SYNC_GPU_COMMANDS_COMPLETE, 0);
 }
 
-void Texture::wait(const GLsync& sync)
+void m2Texture::wait(const GLsync& sync)
 {
 	//Stall CPU until fence is signalled.
 	if (sync) {

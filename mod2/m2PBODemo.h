@@ -3,10 +3,10 @@
 class m2PBODemo :
     public m2TextureDemo
 {
-/*public:
+public:
     m2PBODemo();
-    virtual ~m2PBODemo() override;
-    virtual void render() override;
+    ~m2PBODemo();
+    void render();
 
 private:
     GLuint m_pbo = GL_NONE;
@@ -16,5 +16,5 @@ private:
     void fence();
     void wait();
     
-    void upload_async();*/
+    void upload();
 };

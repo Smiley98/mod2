@@ -1,7 +1,6 @@
 #include "m2PBODemo.h"
-/*
 #include "m2ScreenQuad.h"
-#include <thread>
+#include "m2Utilities.h"
 
 m2PBODemo::m2PBODemo()
 {
@@ -10,7 +9,6 @@ m2PBODemo::m2PBODemo()
 	glBindBuffer(GL_PIXEL_UNPACK_BUFFER, m_pbo);
 	glBufferStorage(GL_PIXEL_UNPACK_BUFFER, m_imageSize, nullptr, flags | GL_DYNAMIC_STORAGE_BIT);
 	m_memory = static_cast<GLubyte*>(glMapBufferRange(GL_PIXEL_UNPACK_BUFFER, 0, m_imageSize, flags));
-	//memcpy is a bottlekneck when dealing with textures (ideally write some aligned copy function), but is sufficient for testing!
 	memcpy(m_memory, m_image, m_imageSize);
 }
 
@@ -22,13 +20,10 @@ m2PBODemo::~m2PBODemo()
 void m2PBODemo::render()
 {
 	std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
-
-	upload_async();
-	//Insert work simulation (make current thread sleep) code here.
-	//Wrap upload_async() or wait() in elapsed() to verify upload is asynchronous or transfer is faster than naive!
+	upload();
+	//Lift elapsed(start); to here for proof that the upload itself is being done asynchronously!
 	wait();
-
-	elapsed(start);
+	m2Utils::elapsed(start);
 	m2ScreenQuad::render();
 }
 
@@ -48,10 +43,9 @@ void m2PBODemo::wait()
 	}
 }
 
-void m2PBODemo::upload_async()
+void m2PBODemo::upload()
 {
 	memcpy(m_memory, m_image, m_imageSize);	//Aids, but can do this in a separate thread!
 	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, m_width, m_height, GL_BGRA, GL_UNSIGNED_BYTE, nullptr);
 	fence();
 }
-*/

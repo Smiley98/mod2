@@ -102,8 +102,11 @@
     <ClInclude Include="m2PBODemo.h">
       <Filter>Examples\Texturing</Filter>
     </ClInclude>
-    <ClInclude Include="Texture.h">
+    <ClInclude Include="m2Texture.h">
       <Filter>Textures</Filter>
+    </ClInclude>
+    <ClInclude Include="m2StreamingDemo.h">
+      <Filter>Examples\Texturing</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -152,8 +155,11 @@
     <ClCompile Include="m2PBODemo.cpp">
       <Filter>Examples\Texturing</Filter>
     </ClCompile>
-    <ClCompile Include="Texture.cpp">
+    <ClCompile Include="m2Texture.cpp">
       <Filter>Textures</Filter>
+    </ClCompile>
+    <ClCompile Include="m2StreamingDemo.cpp">
+      <Filter>Examples\Texturing</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
