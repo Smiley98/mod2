@@ -8,8 +8,6 @@ public:
 	void initialize(const std::string& fileName);
 	void shutdown();
 
-	//Need this as a separate method so I can verify asynchronous dispatch of GL calls...
-	//Should be part of uploadBegin() but at the same time can be done in the background so this does serve as a nice reminder.
 	void copy();
 	void uploadBegin();
 	void uploadEnd();
