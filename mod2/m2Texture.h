@@ -5,6 +5,8 @@
 class m2Texture
 {
 public:
+	static void queryOptimalFormat();
+
 	void initialize(const std::string& fileName);
 	void shutdown();
 
@@ -16,6 +18,7 @@ public:
 	void downloadEnd();
 
 private:
+	static GLint s_format;
 	GLuint m_texture = GL_NONE;
 	unsigned char* m_image = nullptr;
 

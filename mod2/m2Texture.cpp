@@ -10,6 +10,13 @@ namespace {
 	//const GLenum downloadTarget = GL_PIXEL_PACK_BUFFER;
 }
 
+GLint m2Texture::s_format;
+
+void m2Texture::queryOptimalFormat()
+{
+	glGetInternalformativ(GL_TEXTURE_2D, GL_RGBA8, GL_TEXTURE_IMAGE_FORMAT, 1, &s_format);
+}
+
 void m2Texture::initialize(const std::string& fileName)
 {	//Image loading is taken care of in the xr engine. We just need to transfer data asynchronously.
 	static std::string tdir = "Textures/";
@@ -36,8 +43,7 @@ void m2Texture::initialize(const std::string& fileName)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, m_width, m_height, 0, GL_BGRA, GL_UNSIGNED_BYTE, nullptr);
-	//We need separate storage for the buffer. Think of the persistent storage as a Vulkan staging buffer, and this as Vulkan image memory (with optimal tiling xD).
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, m_width, m_height, 0, s_format, GL_UNSIGNED_BYTE, nullptr);
 }
 
 void m2Texture::shutdown()
@@ -58,7 +64,7 @@ void m2Texture::uploadBegin()
 	//memcpy(m_uploadMemory, m_image, m_imageSize);
 	glBindTexture(GL_TEXTURE_2D, m_texture);
 	glBindBuffer(uploadTarget, m_uploadPBO);
-	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, m_width, m_height, GL_BGRA, GL_UNSIGNED_BYTE, nullptr);
+	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, m_width, m_height, s_format, GL_UNSIGNED_BYTE, nullptr);
 	fence(m_uploadFence);
 }
 

@@ -19,12 +19,9 @@ m2StreamingDemo::~m2StreamingDemo()
 }
 
 void m2StreamingDemo::update()
-{
+{	//This must happen sequentially since a rendering context cannot be current for more than one thread :(
 	for (size_t i = 0; i < m_textures.size(); i++)
-		m_threads[i] = std::thread([this, i] { m_textures[i].copy(); });
-
-	for (std::thread& t : m_threads)
-		t.join();
+		m_textures[i].copy();
 }
 
 void m2StreamingDemo::render()
